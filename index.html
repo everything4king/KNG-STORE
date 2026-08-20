@@ -1,1974 +1,3449 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <meta name="description" content="KNG — Official online store. Shop premium Nigerian streetwear, clothing and accessories.">
-  <meta name="keywords" content="KNG, KNGwears, KNG clothing, KNG Nigeria, Nigerian fashion, streetwear, hoodies, sweatpants, t-shirts">
-  <meta name="author" content="KNG">
-
-  <meta property="og:title" content="KNG — Official Store">
-  <meta property="og:description" content="Built Different. Wear the Crown. Be the Standard.">
-  <meta property="og:type" content="website">
-
-  <title>KNG — Official Store</title>
-
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      background: #050505;
-      color: #f5f2e9;
-      min-height: 100vh;
-    }
-
-    button,
-    input,
-    select {
-      font: inherit;
-    }
-
-    button {
-      cursor: pointer;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    /* =========================
-       HEADER
-    ========================= */
-
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      height: 78px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 6%;
-      background: rgba(5, 5, 5, 0.94);
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      backdrop-filter: blur(15px);
-    }
-
-    .logo {
-      font-size: 28px;
-      font-weight: 900;
-      letter-spacing: -2px;
-    }
-
-    .logo span {
-      color: #d5af37;
-    }
-
-    nav {
-      display: flex;
-      gap: 30px;
-      align-items: center;
-    }
-
-    nav a {
-      font-size: 12px;
-      letter-spacing: 2px;
-      color: #c9c5bb;
-      transition: 0.3s;
-    }
-
-    nav a:hover {
-      color: #d5af37;
-    }
-
-    .header-actions {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-    }
-
-    .icon-btn {
-      width: 43px;
-      height: 43px;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: transparent;
-      color: white;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      font-size: 17px;
-      transition: 0.3s;
-    }
-
-    .icon-btn:hover {
-      border-color: #d5af37;
-      color: #d5af37;
-    }
-
-    .cart-btn {
-      position: relative;
-    }
-
-    .cart-count {
-      position: absolute;
-      top: -4px;
-      right: -4px;
-      min-width: 19px;
-      height: 19px;
-      padding: 0 5px;
-      border-radius: 20px;
-      background: #d5af37;
-      color: #050505;
-      font-size: 10px;
-      font-weight: bold;
-      display: grid;
-      place-items: center;
-    }
-
-    .menu-btn {
-      display: none;
-    }
-
-    /* =========================
-       HERO
-    ========================= */
-
-    .hero {
-      min-height: 650px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-      padding: 80px 20px;
-      background:
-        radial-gradient(circle at center, rgba(213,175,55,0.10), transparent 30%),
-        radial-gradient(circle at center, transparent 30%, #050505 72%);
-    }
-
-    .hero::before,
-    .hero::after {
-      content: "";
-      position: absolute;
-      border: 1px solid rgba(213,175,55,0.12);
-      border-radius: 50%;
-      pointer-events: none;
-    }
-
-    .hero::before {
-      width: 700px;
-      height: 700px;
-    }
-
-    .hero::after {
-      width: 420px;
-      height: 420px;
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      max-width: 850px;
-    }
-
-    .eyebrow {
-      color: #d5af37;
-      font-size: 12px;
-      letter-spacing: 5px;
-      margin-bottom: 25px;
-      font-weight: bold;
-    }
-
-    .hero h1 {
-      font-size: clamp(55px, 10vw, 125px);
-      line-height: 0.85;
-      letter-spacing: -6px;
-      font-weight: 900;
-      margin-bottom: 30px;
-    }
-
-    .hero h1 span {
-      color: #d5af37;
-    }
-
-    .hero p {
-      color: #aaa59a;
-      letter-spacing: 4px;
-      font-size: 13px;
-      margin-bottom: 38px;
-    }
-
-    .hero-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      border: 1px solid #3a3935;
-      background: transparent;
-      color: #f5f2e9;
-      padding: 16px 28px;
-      font-size: 11px;
-      letter-spacing: 2px;
-      transition: 0.3s;
-    }
-
-    .btn:hover {
-      border-color: #d5af37;
-      color: #d5af37;
-    }
-
-    .btn-gold {
-      background: #d5af37;
-      border-color: #d5af37;
-      color: #050505;
-      font-weight: bold;
-    }
-
-    .btn-gold:hover {
-      background: #f0ce55;
-      color: #050505;
-    }
-
-    /* =========================
-       STORE INTRO
-    ========================= */
-
-    .section {
-      padding: 100px 6%;
-    }
-
-    .section-heading {
-      text-align: center;
-      margin-bottom: 55px;
-    }
-
-    .section-heading small {
-      color: #d5af37;
-      font-size: 10px;
-      letter-spacing: 4px;
-    }
-
-    .section-heading h2 {
-      font-size: clamp(32px, 5vw, 60px);
-      margin-top: 12px;
-      letter-spacing: -2px;
-    }
-
-    .section-heading p {
-      color: #85827b;
-      margin-top: 15px;
-      font-size: 14px;
-    }
-
-    /* =========================
-       CATEGORY CARDS
-    ========================= */
-
-    .categories {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-    }
-
-    .category {
-      min-height: 350px;
-      border: 1px solid rgba(255,255,255,0.09);
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      padding: 30px;
-      position: relative;
-      overflow: hidden;
-      background:
-        radial-gradient(circle at 50% 30%, rgba(213,175,55,0.12), transparent 35%),
-        #0b0b0b;
-      transition: 0.4s;
-    }
-
-    .category:hover {
-      transform: translateY(-6px);
-      border-color: rgba(213,175,55,0.5);
-    }
-
-    .category-number {
-      position: absolute;
-      top: 20px;
-      right: 25px;
-      color: #d5af37;
-      font-size: 11px;
-      letter-spacing: 2px;
-    }
-
-    .category h3 {
-      font-size: 30px;
-      margin-bottom: 8px;
-    }
-
-    .category p {
-      color: #89867e;
-      font-size: 12px;
-      margin-bottom: 20px;
-    }
-
-    .category button {
-      align-self: flex-start;
-    }
-
-    /* =========================
-       SHOP
-    ========================= */
-
-    .shop {
-      background: #080808;
-    }
-
-    .shop-toolbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 20px;
-      margin-bottom: 35px;
-      flex-wrap: wrap;
-    }
-
-    .filters {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .filter-btn {
-      background: transparent;
-      border: 1px solid #292929;
-      color: #aaa59a;
-      padding: 11px 18px;
-      font-size: 10px;
-      letter-spacing: 1.5px;
-      transition: 0.3s;
-    }
-
-    .filter-btn.active,
-    .filter-btn:hover {
-      border-color: #d5af37;
-      color: #d5af37;
-    }
-
-    .search {
-      background: #111;
-      border: 1px solid #292929;
-      color: white;
-      padding: 12px 15px;
-      width: 230px;
-      outline: none;
-    }
-
-    .search:focus {
-      border-color: #d5af37;
-    }
-
-    .products {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
-    }
-
-    .product {
-      border: 1px solid rgba(255,255,255,0.08);
-      background: #0d0d0d;
-      overflow: hidden;
-      transition: 0.35s;
-    }
-
-    .product:hover {
-      transform: translateY(-5px);
-      border-color: rgba(213,175,55,0.35);
-    }
-
-    .product-image {
-      height: 330px;
-      background:
-        radial-gradient(circle at center, rgba(213,175,55,0.13), transparent 35%),
-        linear-gradient(145deg, #161616, #080808);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    }
-
-    .product-image::after {
-      content: "KNG";
-      color: rgba(255,255,255,0.05);
-      font-size: 65px;
-      font-weight: 900;
-      letter-spacing: -5px;
-    }
-
-    .product-badge {
-      position: absolute;
-      top: 15px;
-      left: 15px;
-      background: #d5af37;
-      color: #050505;
-      padding: 6px 9px;
-      font-size: 8px;
-      font-weight: bold;
-      letter-spacing: 1px;
-      z-index: 2;
-    }
-
-    .product-info {
-      padding: 20px;
-    }
-
-    .product-category {
-      color: #d5af37;
-      font-size: 9px;
-      letter-spacing: 2px;
-      margin-bottom: 8px;
-    }
-
-    .product h3 {
-      font-size: 17px;
-      margin-bottom: 8px;
-    }
-
-    .product-price {
-      color: #aaa59a;
-      font-size: 13px;
-      margin-bottom: 17px;
-    }
-
-    .product-actions {
-      display: flex;
-      gap: 8px;
-    }
-
-    .add-btn {
-      flex: 1;
-      padding: 11px;
-      border: 1px solid #d5af37;
-      background: transparent;
-      color: #d5af37;
-      font-size: 9px;
-      letter-spacing: 1.5px;
-      transition: 0.3s;
-    }
-
-    .add-btn:hover {
-      background: #d5af37;
-      color: #050505;
-    }
-
-    /* =========================
-       BRAND STATEMENT
-    ========================= */
-
-    .statement {
-      text-align: center;
-      padding: 130px 8%;
-      background:
-        radial-gradient(circle, rgba(213,175,55,0.08), transparent 45%),
-        #050505;
-    }
-
-    .statement h2 {
-      font-size: clamp(38px, 7vw, 85px);
-      letter-spacing: -4px;
-      line-height: 0.95;
-      max-width: 1000px;
-      margin: auto;
-    }
-
-    .statement h2 span {
-      color: #d5af37;
-    }
-
-    .statement p {
-      margin-top: 30px;
-      color: #88847c;
-      letter-spacing: 3px;
-      font-size: 11px;
-    }
-
-    /* =========================
-       FOOTER
-    ========================= */
-
-    footer {
-      border-top: 1px solid rgba(255,255,255,0.08);
-      padding: 55px 6% 30px;
-      background: #030303;
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description"
+content="KNG — Official online store. Premium Nigerian streetwear built different. Wear the crown. Be the standard.">
+
+<meta name="keywords"
+content="KNG, KNGwears, KNG clothing, Nigerian fashion, Nigerian streetwear, hoodies, sweatpants, t-shirts, jorts, beanies, face caps, lapel pins">
+
+<meta name="author" content="KNG">
+
+<meta property="og:title" content="KNG — Official Store">
+<meta property="og:description" content="Built Different. Wear the Crown. Be the Standard.">
+<meta property="og:type" content="website">
+
+<title>KNG — Official Store</title>
+
+<style>
+/* =========================================================
+   KNG STORE
+   BLACK / GOLD / CREAM
+========================================================= */
+
+:root {
+    --black: #050505;
+    --black-2: #0a0a0a;
+    --black-3: #111111;
+    --gold: #e5b92f;
+    --gold-dark: #b89019;
+    --cream: #f5f1e8;
+    --muted: #99948a;
+    --border: rgba(255,255,255,0.10);
+    --border-gold: rgba(229,185,47,0.45);
+    --success: #55c878;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: var(--black);
+    color: var(--cream);
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+    overflow-x: hidden;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    height: 88px;
+    background: rgba(5,5,5,0.96);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+}
+
+.navbar {
+    max-width: 1350px;
+    height: 100%;
+    margin: auto;
+    padding: 0 35px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    font-size: 34px;
+    font-weight: 1000;
+    letter-spacing: -3px;
+    color: var(--cream);
+    cursor: pointer;
+}
+
+.logo span {
+    color: var(--gold);
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 42px;
+}
+
+.nav-links button {
+    border: none;
+    background: none;
+    color: #bcb8af;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 13px;
+    font-weight: 700;
+    transition: 0.25s;
+}
+
+.nav-links button:hover {
+    color: var(--gold);
+}
+
+.nav-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.icon-btn {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--cream);
+    position: relative;
+    transition: 0.25s;
+}
+
+.icon-btn:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    transform: translateY(-2px);
+}
+
+.cart-count {
+    position: absolute;
+    top: -5px;
+    right: -2px;
+    min-width: 23px;
+    height: 23px;
+    border-radius: 50%;
+    background: var(--gold);
+    color: #000;
+    font-size: 11px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mobile-menu {
+    display: none;
+}
+
+/* =========================================================
+   GENERAL
+========================================================= */
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+.section {
+    max-width: 1350px;
+    margin: auto;
+    padding: 100px 35px;
+}
+
+.eyebrow {
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 6px;
+    font-size: 12px;
+    font-weight: 800;
+    margin-bottom: 20px;
+}
+
+.section-title {
+    font-size: clamp(42px, 6vw, 82px);
+    line-height: 0.95;
+    text-transform: uppercase;
+    font-weight: 1000;
+    letter-spacing: -4px;
+}
+
+.section-subtitle {
+    color: var(--muted);
+    font-size: 17px;
+    margin-top: 22px;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero {
+    min-height: calc(100vh - 88px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at center,
+        rgba(229,185,47,0.08),
+        transparent 45%),
+        var(--black);
+}
+
+.hero::before,
+.hero::after {
+    content: "";
+    position: absolute;
+    border: 1px solid rgba(229,185,47,0.12);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.hero::before {
+    width: 850px;
+    height: 850px;
+}
+
+.hero::after {
+    width: 500px;
+    height: 500px;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 1100px;
+    padding: 60px 25px;
+}
+
+.hero-kicker {
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 8px;
+    font-size: 13px;
+    font-weight: 800;
+    margin-bottom: 35px;
+}
+
+.hero-title {
+    font-size: clamp(65px, 12vw, 170px);
+    line-height: 0.82;
+    font-weight: 1000;
+    letter-spacing: -9px;
+    text-transform: uppercase;
+}
+
+.hero-title .gold {
+    color: var(--gold);
+}
+
+.hero-description {
+    margin: 35px auto;
+    color: #aaa59b;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    font-size: 13px;
+}
+
+.hero-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 45px;
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.btn {
+    min-height: 58px;
+    padding: 0 30px;
+    border: 1px solid var(--gold);
+    background: var(--gold);
+    color: #050505;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 12px;
+    font-weight: 900;
+    transition: 0.25s;
+}
+
+.btn:hover {
+    background: transparent;
+    color: var(--gold);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--cream);
+    border-color: rgba(255,255,255,0.25);
+}
+
+.btn-outline:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+}
+
+/* =========================================================
+   FIND YOUR STANDARD
+========================================================= */
+
+.collections {
+    padding-top: 120px;
+}
+
+.collections-heading {
+    text-align: center;
+    margin-bottom: 65px;
+}
+
+.collection-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.collection-card {
+    min-height: 530px;
+    border: 1px solid var(--border);
+    background:
+        radial-gradient(circle at center,
+        rgba(229,185,47,0.08),
+        transparent 45%),
+        #0a0a0a;
+    padding: 38px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    position: relative;
+    overflow: hidden;
+    transition: 0.35s;
+}
+
+.collection-card:hover {
+    border-color: var(--border-gold);
+    transform: translateY(-8px);
+}
+
+.collection-number {
+    position: absolute;
+    right: 35px;
+    top: 35px;
+    color: var(--gold);
+    letter-spacing: 3px;
+    font-size: 12px;
+}
+
+.collection-visual {
+    position: absolute;
+    inset: 80px 40px 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.collection-visual::before {
+    content: "KNG";
+    font-size: 130px;
+    font-weight: 1000;
+    letter-spacing: -10px;
+    color: rgba(255,255,255,0.025);
+}
+
+.collection-title {
+    position: relative;
+    z-index: 2;
+    font-size: 38px;
+    text-transform: uppercase;
+    font-weight: 1000;
+}
+
+.collection-description {
+    position: relative;
+    z-index: 2;
+    color: #8e8a82;
+    margin: 13px 0 28px;
+    line-height: 1.6;
+}
+
+.collection-card .btn {
+    position: relative;
+    z-index: 2;
+    width: fit-content;
+}
+
+/* =========================================================
+   WARDROBE
+========================================================= */
+
+.wardrobe-header {
+    padding: 85px 35px 45px;
+    max-width: 1350px;
+    margin: auto;
+}
+
+.back-link {
+    border: none;
+    background: none;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 12px;
+    margin-bottom: 35px;
+    transition: 0.2s;
+}
+
+.back-link:hover {
+    color: var(--gold);
+}
+
+.wardrobe-tools {
+    max-width: 1350px;
+    margin: auto;
+    padding: 0 35px 45px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.filter-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: #aaa59b;
+    padding: 13px 18px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.filter-btn.active,
+.filter-btn:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+}
+
+.search-box {
+    width: 280px;
+    position: relative;
+}
+
+.search-box input {
+    width: 100%;
+    background: #0d0d0d;
+    border: 1px solid var(--border);
+    color: white;
+    padding: 16px 18px;
+    outline: none;
+}
+
+.search-box input:focus {
+    border-color: var(--gold);
+}
+
+/* =========================================================
+   PRODUCTS
+========================================================= */
+
+.product-grid {
+    max-width: 1350px;
+    margin: auto;
+    padding: 0 35px 100px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+}
+
+.product-card {
+    background: #0b0b0b;
+    border: 1px solid var(--border);
+    transition: 0.3s;
+    overflow: hidden;
+}
+
+.product-card:hover {
+    border-color: rgba(229,185,47,0.4);
+    transform: translateY(-5px);
+}
+
+.product-image {
+    height: 360px;
+    background:
+        radial-gradient(circle at center,
+        rgba(229,185,47,0.12),
+        transparent 48%),
+        #101010;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.product-image::after {
+    content: "KNG";
+    font-size: 75px;
+    font-weight: 1000;
+    letter-spacing: -7px;
+    color: rgba(255,255,255,0.035);
+}
+
+.new-badge {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    z-index: 2;
+    background: var(--gold);
+    color: #000;
+    padding: 9px 12px;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 2px;
+}
+
+.product-info {
+    padding: 25px;
+}
+
+.product-category {
+    color: var(--gold);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 10px;
+}
+
+.product-name {
+    font-size: 21px;
+    font-weight: 800;
+    margin-bottom: 12px;
+}
+
+.product-price {
+    color: #aaa59b;
+    margin-bottom: 22px;
+}
+
+.product-card .btn {
+    width: 100%;
+    min-height: 50px;
+}
+
+/* =========================================================
+   PRODUCT MODAL
+========================================================= */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.82);
+    z-index: 2000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 25px;
+}
+
+.modal-overlay.open {
+    display: flex;
+}
+
+.product-modal {
+    width: min(900px, 100%);
+    max-height: 90vh;
+    overflow-y: auto;
+    background: #0b0b0b;
+    border: 1px solid var(--border-gold);
+    position: relative;
+}
+
+.close-modal {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: #080808;
+    color: white;
+    z-index: 3;
+}
+
+.product-modal-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.modal-image {
+    min-height: 600px;
+    background:
+        radial-gradient(circle at center,
+        rgba(229,185,47,0.12),
+        transparent 45%),
+        #101010;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-image span {
+    font-size: 130px;
+    font-weight: 1000;
+    letter-spacing: -10px;
+    color: rgba(255,255,255,0.035);
+}
+
+.modal-details {
+    padding: 70px 40px 40px;
+}
+
+.modal-details h2 {
+    font-size: 38px;
+    margin-bottom: 15px;
+}
+
+.modal-price {
+    color: var(--gold);
+    font-size: 22px;
+    margin-bottom: 35px;
+}
+
+.option-group {
+    margin-bottom: 25px;
+}
+
+.option-group label {
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 11px;
+    color: #999;
+    margin-bottom: 10px;
+}
+
+.option-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.option-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--cream);
+    padding: 12px 16px;
+}
+
+.option-btn.selected,
+.option-btn:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+}
+
+.modal-add {
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* =========================================================
+   CART DRAWER
+========================================================= */
+
+.drawer-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    z-index: 2500;
+    display: none;
+}
+
+.drawer-overlay.open {
+    display: block;
+}
+
+.cart-drawer {
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: min(500px, 100%);
+    background: #090909;
+    border-left: 1px solid var(--border);
+    z-index: 2600;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.cart-drawer.open {
+    transform: translateX(0);
+}
+
+.drawer-header {
+    padding: 25px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.drawer-header h2 {
+    text-transform: uppercase;
+    font-size: 20px;
+}
+
+.drawer-close {
+    border: none;
+    background: none;
+    color: white;
+    font-size: 25px;
+}
+
+.cart-items {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.empty-cart {
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--muted);
+}
+
+.cart-item {
+    display: grid;
+    grid-template-columns: 85px 1fr;
+    gap: 15px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.cart-item-image {
+    height: 90px;
+    background:
+        radial-gradient(circle,
+        rgba(229,185,47,0.10),
+        transparent),
+        #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cart-item-image::after {
+    content: "K";
+    color: rgba(255,255,255,0.08);
+    font-size: 35px;
+    font-weight: 1000;
+}
+
+.cart-item-name {
+    font-weight: 800;
+    margin-bottom: 7px;
+}
+
+.cart-item-meta {
+    color: #888;
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+.cart-item-price {
+    color: var(--gold);
+    font-size: 13px;
+}
+
+.cart-controls {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 12px;
+}
+
+.qty-btn {
+    width: 28px;
+    height: 28px;
+    background: transparent;
+    color: white;
+    border: 1px solid var(--border);
+}
+
+.remove-btn {
+    border: none;
+    background: none;
+    color: #777;
+    font-size: 11px;
+    margin-left: 10px;
+}
+
+.remove-btn:hover {
+    color: #ff6565;
+}
+
+.cart-footer {
+    border-top: 1px solid var(--border);
+    padding: 25px;
+}
+
+.cart-total {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.cart-footer .btn {
+    width: 100%;
+}
+
+/* =========================================================
+   CHECKOUT
+========================================================= */
+
+.checkout-page {
+    min-height: calc(100vh - 88px);
+}
+
+.checkout-layout {
+    max-width: 1200px;
+    margin: auto;
+    padding: 70px 35px 100px;
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 50px;
+}
+
+.checkout-form,
+.order-summary {
+    background: #0b0b0b;
+    border: 1px solid var(--border);
+    padding: 35px;
+}
+
+.checkout-form h2,
+.order-summary h2 {
+    margin-bottom: 30px;
+    text-transform: uppercase;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.form-field {
+    margin-bottom: 18px;
+}
+
+.form-field.full {
+    grid-column: 1 / -1;
+}
+
+.form-field label {
+    display: block;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-size: 10px;
+    margin-bottom: 8px;
+}
+
+.form-field input,
+.form-field textarea,
+.form-field select {
+    width: 100%;
+    padding: 15px;
+    background: #080808;
+    color: white;
+    border: 1px solid var(--border);
+    outline: none;
+}
+
+.form-field input:focus,
+.form-field textarea:focus,
+.form-field select:focus {
+    border-color: var(--gold);
+}
+
+.payment-note {
+    margin-top: 25px;
+    padding: 18px;
+    border: 1px solid var(--border-gold);
+    background: rgba(229,185,47,0.04);
+    color: #aaa;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    color: #aaa;
+    font-size: 13px;
+}
+
+.summary-total {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 25px;
+    font-size: 21px;
+    font-weight: 900;
+}
+
+.checkout-button {
+    width: 100%;
+    margin-top: 25px;
+}
+
+/* =========================================================
+   ABOUT
+========================================================= */
+
+.about-section {
+    max-width: 950px;
+    margin: auto;
+    padding: 130px 35px;
+    text-align: center;
+}
+
+.about-text {
+    color: #999;
+    font-size: 18px;
+    line-height: 1.9;
+    margin-top: 30px;
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer {
+    border-top: 1px solid var(--border);
+    background: #050505;
+}
+
+.footer-inner {
+    max-width: 1350px;
+    margin: auto;
+    padding: 80px 35px 30px;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 50px;
+}
+
+.footer-logo {
+    font-size: 48px;
+    font-weight: 1000;
+    letter-spacing: -5px;
+}
+
+.footer-logo span {
+    color: var(--gold);
+}
+
+.footer-description {
+    max-width: 330px;
+    color: #777;
+    line-height: 1.7;
+    margin-top: 25px;
+}
+
+.footer-title {
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 11px;
+    margin-bottom: 25px;
+    font-weight: 900;
+}
+
+.footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.footer-links button,
+.footer-links a {
+    border: none;
+    background: none;
+    text-align: left;
+    color: #777;
+    transition: 0.2s;
+}
+
+.footer-links button:hover,
+.footer-links a:hover {
+    color: var(--cream);
+}
+
+.footer-bottom {
+    margin-top: 70px;
+    padding-top: 25px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    color: #555;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast {
+    position: fixed;
+    right: 25px;
+    bottom: 25px;
+    z-index: 5000;
+    background: var(--gold);
+    color: #000;
+    padding: 16px 22px;
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transform: translateY(120px);
+    opacity: 0;
+    transition: 0.3s;
+}
+
+.toast.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 1000px) {
+
+    .nav-links {
+        display: none;
+    }
+
+    .mobile-menu {
+        display: block;
+    }
+
+    .collection-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .checkout-layout {
+        grid-template-columns: 1fr;
     }
 
     .footer-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr;
-      gap: 40px;
-      margin-bottom: 55px;
-    }
-
-    .footer-brand {
-      font-size: 40px;
-      font-weight: 900;
-      letter-spacing: -3px;
-    }
-
-    .footer-brand span {
-      color: #d5af37;
-    }
-
-    footer h4 {
-      font-size: 10px;
-      color: #d5af37;
-      letter-spacing: 2px;
-      margin-bottom: 18px;
-    }
-
-    footer a {
-      display: block;
-      color: #77736c;
-      font-size: 12px;
-      margin-bottom: 11px;
-    }
-
-    footer a:hover {
-      color: white;
-    }
-
-    .copyright {
-      border-top: 1px solid rgba(255,255,255,0.07);
-      padding-top: 25px;
-      display: flex;
-      justify-content: space-between;
-      gap: 20px;
-      color: #555;
-      font-size: 10px;
-      letter-spacing: 1px;
-    }
-
-    /* =========================
-       CART DRAWER
-    ========================= */
-
-    .cart-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.7);
-      z-index: 2000;
-      display: none;
-    }
-
-    .cart-overlay.open {
-      display: block;
-    }
-
-    .cart {
-      position: absolute;
-      right: 0;
-      top: 0;
-      width: min(430px, 100%);
-      height: 100%;
-      background: #0b0b0b;
-      border-left: 1px solid rgba(255,255,255,0.1);
-      padding: 28px;
-      overflow-y: auto;
-    }
-
-    .cart-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 22px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .cart-header h2 {
-      font-size: 24px;
-    }
-
-    .close-cart {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 25px;
-    }
-
-    .cart-items {
-      padding: 20px 0;
-    }
-
-    .cart-item {
-      display: flex;
-      justify-content: space-between;
-      gap: 15px;
-      padding: 15px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.07);
-    }
-
-    .cart-item h4 {
-      font-size: 13px;
-      margin-bottom: 6px;
-    }
-
-    .cart-item p {
-      color: #888;
-      font-size: 11px;
-    }
-
-    .remove-item {
-      background: none;
-      border: none;
-      color: #777;
-      font-size: 11px;
-    }
-
-    .remove-item:hover {
-      color: #d5af37;
-    }
-
-    .empty-cart {
-      color: #777;
-      text-align: center;
-      padding: 60px 20px;
-      font-size: 13px;
-    }
-
-    .cart-bottom {
-      border-top: 1px solid rgba(255,255,255,0.08);
-      padding-top: 22px;
-    }
-
-    .total {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 20px;
-      font-size: 17px;
-    }
-
-    .checkout {
-      width: 100%;
-      padding: 16px;
-      border: none;
-      background: #d5af37;
-      color: #050505;
-      font-weight: bold;
-      letter-spacing: 2px;
-    }
-
-    .checkout:hover {
-      background: #f0ce55;
-    }
-
-    /* =========================
-       MOBILE
-    ========================= */
-
-    @media (max-width: 1000px) {
-      .products {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .categories {
-        grid-template-columns: 1fr;
-      }
-
-      .footer-grid {
         grid-template-columns: 1fr 1fr;
-      }
+    }
+}
+
+@media (max-width: 650px) {
+
+    header {
+        height: 72px;
     }
 
-    @media (max-width: 700px) {
-      header {
-        height: 68px;
-        padding: 0 5%;
-      }
+    .navbar {
+        padding: 0 18px;
+    }
 
-      nav {
-        display: none;
-        position: absolute;
-        top: 68px;
-        left: 0;
-        width: 100%;
-        padding: 25px;
-        background: #080808;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
+    .logo {
+        font-size: 28px;
+    }
+
+    .icon-btn {
+        width: 44px;
+        height: 44px;
+    }
+
+    .hero {
+        min-height: calc(100vh - 72px);
+    }
+
+    .hero-title {
+        font-size: 62px;
+        letter-spacing: -5px;
+    }
+
+    .hero-description {
+        line-height: 1.8;
+    }
+
+    .hero-buttons {
         flex-direction: column;
-      }
+    }
 
-      nav.open {
-        display: flex;
-      }
+    .section {
+        padding: 75px 20px;
+    }
 
-      .menu-btn {
-        display: grid;
-      }
+    .section-title {
+        letter-spacing: -2px;
+    }
 
-      .hero {
-        min-height: 580px;
-      }
+    .collection-card {
+        min-height: 470px;
+    }
 
-      .hero h1 {
-        letter-spacing: -4px;
-      }
+    .wardrobe-header {
+        padding: 60px 20px 35px;
+    }
 
-      .products {
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-      }
-
-      .product-image {
-        height: 220px;
-      }
-
-      .product-info {
-        padding: 14px;
-      }
-
-      .product h3 {
-        font-size: 14px;
-      }
-
-      .section {
-        padding: 75px 5%;
-      }
-
-      .shop-toolbar {
+    .wardrobe-tools {
+        padding: 0 20px 35px;
+        flex-direction: column;
         align-items: stretch;
-      }
+    }
 
-      .search {
+    .search-box {
         width: 100%;
-      }
+    }
 
-      .footer-grid {
+    .product-grid {
+        padding: 0 20px 70px;
         grid-template-columns: 1fr;
-      }
+    }
 
-      .copyright {
+    .product-image {
+        height: 390px;
+    }
+
+    .product-modal-content {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-image {
+        min-height: 330px;
+    }
+
+    .modal-details {
+        padding: 35px 25px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-field.full {
+        grid-column: auto;
+    }
+
+    .footer-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-bottom {
         flex-direction: column;
-      }
+        gap: 15px;
     }
-
-    @media (max-width: 450px) {
-      .products {
-        grid-template-columns: 1fr;
-      }
-
-      .product-image {
-        height: 300px;
-      }
-
-      .header-actions .icon-btn:first-child {
-        display: none;
-      }
-    }
-  </style>
+}
+</style>
 </head>
 
 <body>
 
-  <!-- =========================
-       HEADER
-  ========================== -->
+<!-- =====================================================
+     HEADER
+===================================================== -->
 
-  <header>
-    <a href="#top" class="logo">KNG<span>.</span></a>
+<header>
 
-    <nav id="nav">
-      <a href="#shop">SHOP</a>
-      <a href="#categories">CATEGORIES</a>
-      <a href="#about">ABOUT</a>
+    <div class="navbar">
 
-      <!-- Existing KNG profile website -->
-      <a href="https://everything4king.github.io/KNG/" target="_blank">
-        KNG PROFILE
-      </a>
-    </nav>
+        <div class="logo" onclick="goHome()">
+            KNG<span>.</span>
+        </div>
 
-    <div class="header-actions">
+        <nav class="nav-links">
 
-      <button class="icon-btn" onclick="focusSearch()" aria-label="Search">
-        ⌕
-      </button>
+            <button onclick="goHome()">
+                Home
+            </button>
 
-      <button class="icon-btn cart-btn" onclick="openCart()" aria-label="Shopping cart">
-        🛒
-        <span class="cart-count" id="cartCount">0</span>
-      </button>
+            <button onclick="goToCollections()">
+                Categories
+            </button>
 
-      <button class="icon-btn menu-btn" onclick="toggleMenu()" aria-label="Menu">
-        ☰
-      </button>
+            <button onclick="openWardrobe('men')">
+                Men
+            </button>
+
+            <button onclick="openWardrobe('women')">
+                Women
+            </button>
+
+            <button onclick="openWardrobe('accessories')">
+                Accessories
+            </button>
+
+            <button onclick="showPage('about')">
+                About
+            </button>
+
+        </nav>
+
+        <div class="nav-actions">
+
+            <button
+                class="icon-btn"
+                onclick="openSearch()"
+                aria-label="Search">
+                ⌕
+            </button>
+
+            <button
+                class="icon-btn"
+                onclick="openCart()"
+                aria-label="Cart">
+                🛒
+                <span class="cart-count" id="cartCount">
+                    0
+                </span>
+            </button>
+
+            <button
+                class="icon-btn mobile-menu"
+                onclick="toggleMobileMenu()">
+                ☰
+            </button>
+
+        </div>
 
     </div>
-  </header>
+
+</header>
 
 
-  <main id="top">
+<!-- =====================================================
+     HOME PAGE
+===================================================== -->
 
-    <!-- =========================
-         HERO
-    ========================== -->
+<main id="homePage" class="page active">
 
     <section class="hero">
 
-      <div class="hero-content">
+        <div class="hero-content">
 
-        <div class="eyebrow">
-          KNG / OFFICIAL STORE
+            <div class="hero-kicker">
+                KNG / OFFICIAL STORE
+            </div>
+
+            <h1 class="hero-title">
+                WEAR THE
+                <span class="gold">CROWN.</span>
+            </h1>
+
+            <p class="hero-description">
+                BUILT DIFFERENT. / WEAR THE CROWN. / BE THE STANDARD.
+            </p>
+
+            <div class="hero-buttons">
+
+                <button
+                    class="btn"
+                    onclick="goToCollections()">
+                    SHOP THE COLLECTION
+                </button>
+
+                <button
+                    class="btn btn-outline"
+                    onclick="showPage('about')">
+                    ABOUT KNG
+                </button>
+
+            </div>
+
         </div>
 
-        <h1>
-          WEAR THE<br>
-          <span>CROWN.</span>
+    </section>
+
+
+    <!-- FIND YOUR STANDARD -->
+
+    <section
+        class="section collections"
+        id="collections">
+
+        <div class="collections-heading">
+
+            <div class="eyebrow">
+                THE COLLECTIONS
+            </div>
+
+            <h2 class="section-title">
+                FIND YOUR STANDARD.
+            </h2>
+
+            <p class="section-subtitle">
+                Choose your collection and enter your KNG wardrobe.
+            </p>
+
+        </div>
+
+
+        <div class="collection-grid">
+
+            <!-- MEN -->
+
+            <article class="collection-card">
+
+                <span class="collection-number">
+                    01
+                </span>
+
+                <div class="collection-visual"></div>
+
+                <h3 class="collection-title">
+                    Men
+                </h3>
+
+                <p class="collection-description">
+                    Upper body, lower body and statement pieces
+                    built for the KNG standard.
+                </p>
+
+                <button
+                    class="btn btn-outline"
+                    onclick="openWardrobe('men')">
+                    ENTER MEN'S WARDROBE →
+                </button>
+
+            </article>
+
+
+            <!-- WOMEN -->
+
+            <article class="collection-card">
+
+                <span class="collection-number">
+                    02
+                </span>
+
+                <div class="collection-visual"></div>
+
+                <h3 class="collection-title">
+                    Women
+                </h3>
+
+                <p class="collection-description">
+                    Designed differently. Built for confidence.
+                    Enter the women's KNG wardrobe.
+                </p>
+
+                <button
+                    class="btn btn-outline"
+                    onclick="openWardrobe('women')">
+                    ENTER WOMEN'S WARDROBE →
+                </button>
+
+            </article>
+
+
+            <!-- ACCESSORIES -->
+
+            <article class="collection-card">
+
+                <span class="collection-number">
+                    03
+                </span>
+
+                <div class="collection-visual"></div>
+
+                <h3 class="collection-title">
+                    Accessories
+                </h3>
+
+                <p class="collection-description">
+                    Finish the fit with KNG beanies,
+                    face caps and branded lapel pins.
+                </p>
+
+                <button
+                    class="btn btn-outline"
+                    onclick="openWardrobe('accessories')">
+                    ENTER ACCESSORIES →
+                </button>
+
+            </article>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- =====================================================
+     WARDROBE PAGE
+===================================================== -->
+
+<main id="wardrobePage" class="page">
+
+    <section class="wardrobe-header">
+
+        <button
+            class="back-link"
+            onclick="goHome()">
+            ← BACK TO COLLECTIONS
+        </button>
+
+        <div class="eyebrow" id="wardrobeEyebrow">
+            KNG / COLLECTION
+        </div>
+
+        <h1
+            class="section-title"
+            id="wardrobeTitle">
+            MEN'S WARDROBE.
         </h1>
 
-        <p>
-          BUILT DIFFERENT. / WEAR THE CROWN. / BE THE STANDARD.
+        <p
+            class="section-subtitle"
+            id="wardrobeSubtitle">
+            Select your pieces. Build your standard.
         </p>
 
-        <div class="hero-buttons">
-
-          <a href="#shop" class="btn btn-gold">
-            SHOP THE COLLECTION
-          </a>
-
-          <a
-            href="https://everything4king.github.io/KNG/"
-            target="_blank"
-            class="btn"
-          >
-            VISIT KNG PROFILE
-          </a>
-
-        </div>
-
-      </div>
-
     </section>
 
 
-    <!-- =========================
-         CATEGORIES
-    ========================== -->
+    <div class="wardrobe-tools">
 
-    <section class="section" id="categories">
-
-      <div class="section-heading">
-        <small>THE COLLECTIONS</small>
-        <h2>FIND YOUR STANDARD.</h2>
-        <p>Explore the KNG world.</p>
-      </div>
-
-      <div class="categories">
-
-        <div class="category">
-
-          <span class="category-number">01</span>
-
-          <h3>MEN</h3>
-
-          <p>
-            Upper body, lower body and statement pieces.
-          </p>
-
-          <button
-            class="btn"
-            onclick="filterProducts('men')"
-          >
-            SHOP MEN →
-          </button>
-
+        <div
+            class="filters"
+            id="filters">
         </div>
 
+        <div class="search-box">
 
-        <div class="category">
-
-          <span class="category-number">02</span>
-
-          <h3>WOMEN</h3>
-
-          <p>
-            Built for confidence. Designed differently.
-          </p>
-
-          <button
-            class="btn"
-            onclick="filterProducts('women')"
-          >
-            SHOP WOMEN →
-          </button>
+            <input
+                type="text"
+                id="productSearch"
+                placeholder="Search this wardrobe..."
+                oninput="renderProducts()">
 
         </div>
-
-
-        <div class="category">
-
-          <span class="category-number">03</span>
-
-          <h3>ACCESSORIES</h3>
-
-          <p>
-            Complete the crown.
-          </p>
-
-          <button
-            class="btn"
-            onclick="filterProducts('accessories')"
-          >
-            SHOP ACCESSORIES →
-          </button>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================
-         SHOP
-    ========================== -->
-
-    <section class="section shop" id="shop">
-
-      <div class="section-heading">
-
-        <small>KNG STORE</small>
-
-        <h2>SHOP THE DROP.</h2>
-
-        <p>
-          Select your pieces. Build your standard.
-        </p>
-
-      </div>
-
-
-      <div class="shop-toolbar">
-
-        <div class="filters">
-
-          <button
-            class="filter-btn active"
-            onclick="filterProducts('all', this)"
-          >
-            ALL
-          </button>
-
-          <button
-            class="filter-btn"
-            onclick="filterProducts('men', this)"
-          >
-            MEN
-          </button>
-
-          <button
-            class="filter-btn"
-            onclick="filterProducts('women', this)"
-          >
-            WOMEN
-          </button>
-
-          <button
-            class="filter-btn"
-            onclick="filterProducts('accessories', this)"
-          >
-            ACCESSORIES
-          </button>
-
-        </div>
-
-
-        <input
-          type="text"
-          id="searchInput"
-          class="search"
-          placeholder="Search KNG..."
-          oninput="searchProducts()"
-        >
-
-      </div>
-
-
-      <div class="products" id="products">
-
-        <!-- PRODUCT 1 -->
-
-        <article
-          class="product"
-          data-category="men"
-          data-name="KNG Signature Hoodie"
-        >
-
-          <div class="product-image">
-
-            <span class="product-badge">
-              NEW
-            </span>
-
-          </div>
-
-          <div class="product-info">
-
-            <div class="product-category">
-              MEN / UPPER BODY
-            </div>
-
-            <h3>KNG Signature Hoodie</h3>
-
-            <div class="product-price">
-              ₦45,000
-            </div>
-
-            <div class="product-actions">
-
-              <button
-                class="add-btn"
-                onclick="addToCart('KNG Signature Hoodie', 45000)"
-              >
-                ADD TO CART
-              </button>
-
-            </div>
-
-          </div>
-
-        </article>
-
-
-        <!-- PRODUCT 2 -->
-
-        <article
-          class="product"
-          data-category="men"
-          data-name="KNG Baggy Sweatpants"
-        >
-
-          <div class="product-image"></div>
-
-          <div class="product-info">
-
-            <div class="product-category">
-              MEN / LOWER BODY
-            </div>
-
-            <h3>KNG Baggy Sweatpants</h3>
-
-            <div class="product-price">
-              ₦38,000
-            </div>
-
-            <div class="product-actions">
-
-              <button
-                class="add-btn"
-                onclick="addToCart('KNG Baggy Sweatpants', 38000)"
-              >
-                ADD TO CART
-              </button>
-
-            </div>
-
-          </div>
-
-        </article>
-
-
-        <!-- PRODUCT 3 -->
-
-        <article
-          class="product"
-          data-category="men"
-          data-name="KNG Oversized Tee"
-        >
-
-          <div class="product-image"></div>
-
-          <div class="product-info">
-
-            <div class="product-category">
-              MEN / UPPER BODY
-            </div>
-
-            <h3>KNG Oversized Tee</h3>
-
-            <div class="product-price">
-              ₦25,000
-            </div>
-
-            <div class="product-actions">
-
-              <button
-                class="add-btn"
-                onclick="addToCart('KNG Oversized Tee', 25000)"
-              >
-                ADD TO CART
-              </button>
-
-            </div>
-
-          </div>
-
-        </article>
-
-
-        <!-- PRODUCT 4 -->
-
-        <article
-          class="product"
-          data-category="men"
-          data-name="KNG Jorts"
-        >
-
-          <div class="product-image"></div>
-
-          <div class="product-info">
-
-            <div class="product-category">
-              MEN / LOWER BODY
-            </div>
-
-            <h3>KNG Jorts</h3>
-
-            <div class="product-price">
-              ₦30,000
-            </div>
-
-            <div class="product-actions">
-
-              <button
-                class="add-btn"
-                onclick="addToCart('KNG Jorts', 30000)"
-              >
-                ADD TO CART
-              </button>
-
-            </div>
-
-          </div>
-
-        </article>
-
-
-        <!-- PRODUCT 5 -->
-
-        <article
-          class="product"
-          data-category="women"
-          data-name="KNG Women's Hoodie"
-        >
-
-          <div class="product-image">
-
-            <span class="product-badge">
-              NEW
-            </span>
-
-          </div>
-
-          <div class="product-info">
-
-            <div class="product-category">
-              WOMEN / UPPER BODY
-            </div>
-
-            <h3>KNG Women's Hoodie</h3>
-
-            <div class="product-price">
-              ₦45,000
-            </div>
-
-            <div class="product-actions">
-
-              <button
-                class="add-btn"
-                onclick="addToCart('KNG Women’s Hoodie', 45000)"
-              >
-                ADD TO CART
-              </button>
-
-            </div>
-
-          </div>
-
-        </article>
-
-
-        <!-- PRODUCT 6 -->
-
-        <article
-          class="product"
-          data-category="women"
-          data-name="KNG Banded Sweat Pants"
-        >
-
-          <div class="product-image"></div>
-
-          <div class="product-info">
-
-            <div class="product-category">
-              WOMEN / LOWER BODY
-            </div>
-
-            <h3>KNG Banded Sweat Pants</h3>
-
-            <div class="product-price">
-              ₦38,000
-            </div>
-
-            <div class="product-actions">
-
-              <button
-                class="add-btn"
-                onclick="addToCart('KNG Banded Sweat Pants', 38000)"
-              >
-                ADD TO CART
-              </button>
-
-            </div>
-
-          </div>
-
-        </article>
-
-
-        <!-- PRODUCT 7 -->
-
-        <article
-          class="product"
-          data-category="women"
-          data-name="KNG Women's Tee"
-        >
-
-          <div class="product-image"></div>
-
-          <div class="product-info">
-
-            <div class="product-category">
-              WOMEN / UPPER BODY
-            </div>
-
-            <h3>KNG Women's Tee</h3>
-
-            <div class="product-price">
-              ₦25,000
-            </div>
-
-            <div class="product-actions">
-
-              <button
-                class="add-btn"
-                onclick="addToCart('KNG Women’s Tee', 25000)"
-              >
-                ADD TO CART
-              </button>
-
-            </div>
-
-          </div>
-
-        </article>
-
-
-        <!-- PRODUCT 8 -->
-
-        <article
-          class="product"
-          data-category="women"
-          data-name="KNG Women's Jorts"
-        >
-
-          <div class="product-image"></div>
-
-          <div class="product-info">
-
-            <div class="product-category">
-              WOMEN / LOWER BODY
-            </div>
-
-            <h3>KNG Women's Jorts</h3>
-
-            <div class="product-price">
-              ₦30,000
-            </div>
-
-            <div class="product-actions">
-
-              <button
-                class="add-btn"
-                onclick="addToCart('KNG Women’s Jorts', 30000)"
-              >
-                ADD TO CART
-              </button>
-
-            </div>
-
-          </div>
-
-        </article>
-
-
-        <!-- PRODUCT 9 -->
-
-        <article
-          class="product"
-          data-category="accessories"
-          data-name="KNG Face Cap"
-        >
-
-          <div class="product-image"></div>
-
-          <div class="product-info">
-
-            <div class="product-category">
-              ACCESSORIES
-            </div>
-
-            <h3>KNG Face Cap</h3>
-
-            <div class="product-price">
-              ₦18,000
-            </div>
-
-            <div class="product-actions">
-
-              <button
-                class="add-btn"
-                onclick="addToCart('KNG Face Cap', 18000)"
-              >
-                ADD TO CART
-              </button>
-
-            </div>
-
-          </div>
-
-        </article>
-
-
-        <!-- PRODUCT 10 -->
-
-        <article
-          class="product"
-          data-category="accessories"
-          data-name="KNG Beanie"
-        >
-
-          <div class="product-image"></div>
-
-          <div class="product-info">
-
-            <div class="product-category">
-              ACCESSORIES
-            </div>
-
-            <h3>KNG Beanie</h3>
-
-            <div class="product-price">
-              ₦15,000
-            </div>
-
-            <div class="product-actions">
-
-              <button
-                class="add-btn"
-                onclick="addToCart('KNG Beanie', 15000)"
-              >
-                ADD TO CART
-              </button>
-
-            </div>
-
-          </div>
-
-        </article>
-
-
-        <!-- PRODUCT 11 -->
-
-        <article
-          class="product"
-          data-category="accessories"
-          data-name="KNG Bag"
-        >
-
-          <div class="product-image"></div>
-
-          <div class="product-info">
-
-            <div class="product-category">
-              ACCESSORIES
-            </div>
-
-            <h3>KNG Bag</h3>
-
-            <div class="product-price">
-              ₦28,000
-            </div>
-
-            <div class="product-actions">
-
-              <button
-                class="add-btn"
-                onclick="addToCart('KNG Bag', 28000)"
-              >
-                ADD TO CART
-              </button>
-
-            </div>
-
-          </div>
-
-        </article>
-
-
-        <!-- PRODUCT 12 -->
-
-        <article
-          class="product"
-          data-category="accessories"
-          data-name="KNG Crown Pin"
-        >
-
-          <div class="product-image"></div>
-
-          <div class="product-info">
-
-            <div class="product-category">
-              ACCESSORIES
-            </div>
-
-            <h3>KNG Crown Pin</h3>
-
-            <div class="product-price">
-              ₦8,000
-            </div>
-
-            <div class="product-actions">
-
-              <button
-                class="add-btn"
-                onclick="addToCart('KNG Crown Pin', 8000)"
-              >
-                ADD TO CART
-              </button>
-
-            </div>
-
-          </div>
-
-        </article>
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================
-         BRAND STATEMENT
-    ========================== -->
-
-    <section class="statement" id="about">
-
-      <h2>
-        BUILT <span>DIFFERENT.</span><br>
-        WEAR THE CROWN.
-      </h2>
-
-      <p>
-        BE THE STANDARD.
-      </p>
-
-    </section>
-
-  </main>
-
-
-  <!-- =========================
-       FOOTER
-  ========================== -->
-
-  <footer>
-
-    <div class="footer-grid">
-
-      <div>
-        <div class="footer-brand">
-          KNG<span>.</span>
-        </div>
-
-        <p style="color:#666; max-width:300px; margin-top:15px; font-size:12px; line-height:1.7;">
-          A Nigerian fashion brand built different.
-          Wear the crown. Be the standard.
-        </p>
-      </div>
-
-
-      <div>
-        <h4>SHOP</h4>
-
-        <a href="#shop" onclick="filterProducts('men')">
-          Men
-        </a>
-
-        <a href="#shop" onclick="filterProducts('women')">
-          Women
-        </a>
-
-        <a href="#shop" onclick="filterProducts('accessories')">
-          Accessories
-        </a>
-      </div>
-
-
-      <div>
-        <h4>KNG</h4>
-
-        <a
-          href="https://everything4king.github.io/KNG/"
-          target="_blank"
-        >
-          Profile Website
-        </a>
-
-        <a href="#about">
-          About
-        </a>
-
-        <a href="#top">
-          Back to Top
-        </a>
-      </div>
-
-
-      <div>
-        <h4>CONTACT</h4>
-
-        <a href="mailto:kngwear@gmail.com">
-          Email
-        </a>
-
-        <a
-          href="https://wa.me/2347077747561"
-          target="_blank"
-        >
-          WhatsApp
-        </a>
-
-        <a
-          href="https://www.instagram.com/kngwears001/"
-          target="_blank"
-        >
-          Instagram
-        </a>
-      </div>
 
     </div>
 
 
-    <div class="copyright">
-
-      <span>
-        © 2026 KNG. ALL RIGHTS RESERVED.
-      </span>
-
-      <span>
-        BUILT DIFFERENT. / WEAR THE CROWN.
-      </span>
-
+    <div
+        class="product-grid"
+        id="productGrid">
     </div>
 
-  </footer>
+</main>
 
 
-  <!-- =========================
-       CART
-  ========================== -->
+<!-- =====================================================
+     ABOUT PAGE
+===================================================== -->
 
-  <div
-    class="cart-overlay"
-    id="cartOverlay"
-    onclick="closeCartOutside(event)"
-  >
+<main id="aboutPage" class="page">
 
-    <div class="cart">
+    <section class="about-section">
 
-      <div class="cart-header">
-
-        <h2>YOUR CART</h2>
-
-        <button
-          class="close-cart"
-          onclick="closeCart()"
-        >
-          ×
-        </button>
-
-      </div>
-
-
-      <div
-        class="cart-items"
-        id="cartItems"
-      >
-      </div>
-
-
-      <div class="cart-bottom">
-
-        <div class="total">
-
-          <span>TOTAL</span>
-
-          <strong id="cartTotal">
-            ₦0
-          </strong>
-
+        <div class="eyebrow">
+            KNG
         </div>
 
-        <button
-          class="checkout"
-          onclick="checkout()"
-        >
-          PROCEED TO CHECKOUT
-        </button>
+        <h1 class="section-title">
+            BUILT DIFFERENT.
+        </h1>
 
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- =========================
-       JAVASCRIPT
-  ========================== -->
-
-  <script>
-
-    let cart = [];
-
-    /* =========================
-       FORMAT MONEY
-    ========================== */
-
-    function formatMoney(amount) {
-      return "₦" + amount.toLocaleString("en-NG");
-    }
-
-
-    /* =========================
-       ADD TO CART
-    ========================== */
-
-    function addToCart(name, price) {
-
-      const existing = cart.find(item => item.name === name);
-
-      if (existing) {
-
-        existing.quantity += 1;
-
-      } else {
-
-        cart.push({
-          name: name,
-          price: price,
-          quantity: 1
-        });
-
-      }
-
-      updateCart();
-
-      openCart();
-
-    }
-
-
-    /* =========================
-       UPDATE CART
-    ========================== */
-
-    function updateCart() {
-
-      const cartCount = document.getElementById("cartCount");
-      const cartItems = document.getElementById("cartItems");
-      const cartTotal = document.getElementById("cartTotal");
-
-      const totalQuantity = cart.reduce(
-        (sum, item) => sum + item.quantity,
-        0
-      );
-
-      const totalPrice = cart.reduce(
-        (sum, item) => sum + item.price * item.quantity,
-        0
-      );
-
-      cartCount.textContent = totalQuantity;
-
-      cartTotal.textContent = formatMoney(totalPrice);
-
-      if (cart.length === 0) {
-
-        cartItems.innerHTML = `
-          <div class="empty-cart">
-            YOUR CART IS EMPTY.
+        <p class="about-text">
+            KNG is a Nigerian fashion brand built around
+            confidence, individuality and the mindset of
+            becoming the standard.
             <br><br>
-            Start building your standard.
-          </div>
+            We don't just make clothes.
+            We build pieces for people who know who they are.
+            <br><br>
+            WEAR THE CROWN.
+            <br>
+            BE THE STANDARD.
+        </p>
+
+        <br><br>
+
+        <button
+            class="btn"
+            onclick="goToCollections()">
+            SHOP KNG
+        </button>
+
+    </section>
+
+</main>
+
+
+<!-- =====================================================
+     CHECKOUT PAGE
+===================================================== -->
+
+<main id="checkoutPage" class="page checkout-page">
+
+    <div class="checkout-layout">
+
+        <div class="checkout-form">
+
+            <button
+                class="back-link"
+                onclick="openCart()">
+                ← BACK TO CART
+            </button>
+
+            <div class="eyebrow">
+                KNG / CHECKOUT
+            </div>
+
+            <h2>
+                COMPLETE YOUR ORDER
+            </h2>
+
+            <form id="checkoutForm">
+
+                <div class="form-grid">
+
+                    <div class="form-field">
+
+                        <label>
+                            First Name
+                        </label>
+
+                        <input
+                            id="firstName"
+                            type="text"
+                            required>
+
+                    </div>
+
+
+                    <div class="form-field">
+
+                        <label>
+                            Last Name
+                        </label>
+
+                        <input
+                            id="lastName"
+                            type="text"
+                            required>
+
+                    </div>
+
+
+                    <div class="form-field">
+
+                        <label>
+                            Email
+                        </label>
+
+                        <input
+                            id="email"
+                            type="email"
+                            required>
+
+                    </div>
+
+
+                    <div class="form-field">
+
+                        <label>
+                            Phone Number
+                        </label>
+
+                        <input
+                            id="phone"
+                            type="tel"
+                            required>
+
+                    </div>
+
+
+                    <div class="form-field full">
+
+                        <label>
+                            Delivery Address
+                        </label>
+
+                        <textarea
+                            id="address"
+                            rows="4"
+                            required></textarea>
+
+                    </div>
+
+
+                    <div class="form-field">
+
+                        <label>
+                            State
+                        </label>
+
+                        <select id="state" required>
+
+                            <option value="">
+                                Select state
+                            </option>
+
+                            <option>
+                                Lagos
+                            </option>
+
+                            <option>
+                                Ogun
+                            </option>
+
+                            <option>
+                                Abuja
+                            </option>
+
+                            <option>
+                                Oyo
+                            </option>
+
+                            <option>
+                                Rivers
+                            </option>
+
+                            <option>
+                                Other
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-field">
+
+                        <label>
+                            Payment Method
+                        </label>
+
+                        <select id="paymentMethod" required>
+
+                            <option value="">
+                                Select payment
+                            </option>
+
+                            <option value="card">
+                                Card / Online Payment
+                            </option>
+
+                            <option value="transfer">
+                                Bank Transfer
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <div class="payment-note">
+
+                    🔒 Your payment gateway will be connected
+                    here. Once Paystack/Flutterwave is connected,
+                    customers will be able to securely complete
+                    payment online.
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="btn checkout-button">
+                    PROCEED TO PAYMENT
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- ORDER SUMMARY -->
+
+        <aside class="order-summary">
+
+            <div class="eyebrow">
+                YOUR ORDER
+            </div>
+
+            <h2>
+                ORDER SUMMARY
+            </h2>
+
+            <div id="checkoutSummary">
+            </div>
+
+            <div class="summary-total">
+
+                <span>
+                    TOTAL
+                </span>
+
+                <span id="checkoutTotal">
+                    ₦0
+                </span>
+
+            </div>
+
+        </aside>
+
+    </div>
+
+</main>
+
+
+<!-- =====================================================
+     PRODUCT MODAL
+===================================================== -->
+
+<div
+    class="modal-overlay"
+    id="productModal">
+
+    <div class="product-modal">
+
+        <button
+            class="close-modal"
+            onclick="closeProductModal()">
+            ×
+        </button>
+
+        <div class="product-modal-content">
+
+            <div class="modal-image">
+
+                <span>
+                    KNG
+                </span>
+
+            </div>
+
+            <div class="modal-details">
+
+                <div
+                    class="product-category"
+                    id="modalCategory">
+                </div>
+
+                <h2 id="modalName">
+                </h2>
+
+                <div
+                    class="modal-price"
+                    id="modalPrice">
+                </div>
+
+
+                <div
+                    class="option-group"
+                    id="sizeGroup">
+
+                    <label>
+                        Select Size
+                    </label>
+
+                    <div
+                        class="option-buttons"
+                        id="sizeOptions">
+                    </div>
+
+                </div>
+
+
+                <div class="option-group">
+
+                    <label>
+                        Select Colour
+                    </label>
+
+                    <div
+                        class="option-buttons"
+                        id="colorOptions">
+                    </div>
+
+                </div>
+
+
+                <div class="option-group">
+
+                    <label>
+                        Quantity
+                    </label>
+
+                    <div class="option-buttons">
+
+                        <button
+                            class="option-btn"
+                            onclick="changeModalQuantity(-1)">
+                            −
+                        </button>
+
+                        <button
+                            class="option-btn"
+                            id="modalQuantity">
+                            1
+                        </button>
+
+                        <button
+                            class="option-btn"
+                            onclick="changeModalQuantity(1)">
+                            +
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    class="btn modal-add"
+                    onclick="addCurrentProductToCart()">
+                    ADD TO CART
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     CART DRAWER
+===================================================== -->
+
+<div
+    class="drawer-overlay"
+    id="drawerOverlay"
+    onclick="closeCart()">
+</div>
+
+
+<aside
+    class="cart-drawer"
+    id="cartDrawer">
+
+    <div class="drawer-header">
+
+        <h2>
+            YOUR CART
+        </h2>
+
+        <button
+            class="drawer-close"
+            onclick="closeCart()">
+            ×
+        </button>
+
+    </div>
+
+
+    <div
+        class="cart-items"
+        id="cartItems">
+    </div>
+
+
+    <div class="cart-footer">
+
+        <div class="cart-total">
+
+            <span>
+                TOTAL
+            </span>
+
+            <span id="cartTotal">
+                ₦0
+            </span>
+
+        </div>
+
+        <button
+            class="btn"
+            onclick="goToCheckout()">
+            CHECKOUT
+        </button>
+
+    </div>
+
+</aside>
+
+
+<!-- =====================================================
+     SEARCH MODAL
+===================================================== -->
+
+<div
+    class="modal-overlay"
+    id="searchModal">
+
+    <div
+        class="product-modal"
+        style="max-width:650px;">
+
+        <button
+            class="close-modal"
+            onclick="closeSearch()">
+            ×
+        </button>
+
+        <div style="padding:70px 35px 45px;">
+
+            <div class="eyebrow">
+                KNG / SEARCH
+            </div>
+
+            <h2 style="font-size:40px;margin-bottom:25px;">
+                FIND YOUR PIECE.
+            </h2>
+
+            <input
+                id="globalSearch"
+                type="text"
+                placeholder="Search KNG..."
+                oninput="globalSearchProducts()"
+                style="
+                    width:100%;
+                    padding:18px;
+                    background:#080808;
+                    border:1px solid rgba(255,255,255,0.12);
+                    color:white;
+                    outline:none;
+                ">
+
+            <div
+                id="globalResults"
+                style="margin-top:25px;">
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     TOAST
+===================================================== -->
+
+<div
+    class="toast"
+    id="toast">
+</div>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+    <div class="footer-inner">
+
+        <div class="footer-grid">
+
+            <div>
+
+                <div class="footer-logo">
+                    KNG<span>.</span>
+                </div>
+
+                <p class="footer-description">
+                    A Nigerian fashion brand built different.
+                    Wear the crown. Be the standard.
+                </p>
+
+            </div>
+
+
+            <div>
+
+                <div class="footer-title">
+                    Shop
+                </div>
+
+                <div class="footer-links">
+
+                    <button onclick="openWardrobe('men')">
+                        Men
+                    </button>
+
+                    <button onclick="openWardrobe('women')">
+                        Women
+                    </button>
+
+                    <button onclick="openWardrobe('accessories')">
+                        Accessories
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div>
+
+                <div class="footer-title">
+                    KNG
+                </div>
+
+                <div class="footer-links">
+
+                    <button onclick="showPage('about')">
+                        About
+                    </button>
+
+                    <button onclick="goHome()">
+                        Home
+                    </button>
+
+                    <a
+                        href="https://everything4king.github.io/KNG/"
+                        target="_blank">
+                        KNG Profile
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <div>
+
+                <div class="footer-title">
+                    Contact
+                </div>
+
+                <div class="footer-links">
+
+                    <a href="mailto:contact@kngwears.com">
+                        Email
+                    </a>
+
+                    <a
+                        href="https://instagram.com/kngwears001"
+                        target="_blank">
+                        Instagram
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="footer-bottom">
+
+            <span>
+                © 2026 KNG. ALL RIGHTS RESERVED.
+            </span>
+
+            <span>
+                BUILT DIFFERENT. / WEAR THE CROWN.
+            </span>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<script>
+
+/* =========================================================
+   KNG PRODUCTS
+========================================================= */
+
+const products = [
+
+    /* ================= MEN ================= */
+
+    {
+        id: "men-hoodie",
+        name: "KNG Signature Hoodie",
+        price: 45000,
+        gender: "men",
+        category: "Upper Body",
+        colors: ["Black", "Off White", "Brown"],
+        sizes: ["S", "M", "L", "XL", "XXL"],
+        new: true
+    },
+
+    {
+        id: "men-baggy-sweatpants",
+        name: "KNG Baggy Sweatpants",
+        price: 38000,
+        gender: "men",
+        category: "Lower Body",
+        colors: ["Black", "Grey", "Olive"],
+        sizes: ["S", "M", "L", "XL", "XXL"],
+        new: false
+    },
+
+    {
+        id: "men-oversized-tee",
+        name: "KNG Oversized Tee",
+        price: 25000,
+        gender: "men",
+        category: "Upper Body",
+        colors: ["White", "Black", "Dusty Pink", "Light Blue"],
+        sizes: ["S", "M", "L", "XL", "XXL"],
+        new: true
+    },
+
+    {
+        id: "men-jorts",
+        name: "KNG Jorts",
+        price: 30000,
+        gender: "men",
+        category: "Lower Body",
+        colors: ["Washed Black", "Blue"],
+        sizes: ["S", "M", "L", "XL", "XXL"],
+        new: false
+    },
+
+    {
+        id: "men-polo",
+        name: "KNG Signature Polo",
+        price: 30000,
+        gender: "men",
+        category: "Upper Body",
+        colors: ["Black", "White", "Navy"],
+        sizes: ["S", "M", "L", "XL", "XXL"],
+        new: false
+    },
+
+    {
+        id: "men-tank",
+        name: "KNG Tank Top",
+        price: 22000,
+        gender: "men",
+        category: "Upper Body",
+        colors: ["Black", "White", "Olive"],
+        sizes: ["S", "M", "L", "XL"],
+        new: false
+    },
+
+    {
+        id: "men-shorts",
+        name: "KNG Statement Shorts",
+        price: 28000,
+        gender: "men",
+        category: "Lower Body",
+        colors: ["Black", "Sand", "Olive"],
+        sizes: ["S", "M", "L", "XL", "XXL"],
+        new: false
+    },
+
+
+    /* ================= WOMEN ================= */
+
+    {
+        id: "women-hoodie",
+        name: "KNG Women's Hoodie",
+        price: 45000,
+        gender: "women",
+        category: "Upper Body",
+        colors: ["Black", "Off White", "Dusty Pink"],
+        sizes: ["XS", "S", "M", "L", "XL"],
+        new: true
+    },
+
+    {
+        id: "women-banded",
+        name: "KNG Banded Sweat Pants",
+        price: 38000,
+        gender: "women",
+        category: "Lower Body",
+        colors: ["Black", "Grey", "Olive"],
+        sizes: ["XS", "S", "M", "L", "XL"],
+        new: false
+    },
+
+    {
+        id: "women-tee",
+        name: "KNG Women's Tee",
+        price: 25000,
+        gender: "women",
+        category: "Upper Body",
+        colors: ["White", "Black", "Dusty Pink", "Light Blue"],
+        sizes: ["XS", "S", "M", "L", "XL"],
+        new: true
+    },
+
+    {
+        id: "women-jorts",
+        name: "KNG Women's Jorts",
+        price: 30000,
+        gender: "women",
+        category: "Lower Body",
+        colors: ["Washed Black", "Blue"],
+        sizes: ["XS", "S", "M", "L", "XL"],
+        new: false
+    },
+
+    {
+        id: "women-tank",
+        name: "KNG Women's Tank",
+        price: 22000,
+        gender: "women",
+        category: "Upper Body",
+        colors: ["Black", "White", "Dusty Pink"],
+        sizes: ["XS", "S", "M", "L", "XL"],
+        new: false
+    },
+
+    {
+        id: "women-shorts",
+        name: "KNG Women's Shorts",
+        price: 28000,
+        gender: "women",
+        category: "Lower Body",
+        colors: ["Black", "Sand", "Olive"],
+        sizes: ["XS", "S", "M", "L", "XL"],
+        new: false
+    },
+
+
+    /* ================= ACCESSORIES ================= */
+
+    {
+        id: "kng-beanie",
+        name: "KNG Beanie",
+        price: 18000,
+        gender: "accessories",
+        category: "Beanies",
+        colors: ["Black", "Cream", "Brown"],
+        sizes: ["ONE SIZE"],
+        new: true
+    },
+
+    {
+        id: "kng-face-cap",
+        name: "KNG Face Cap",
+        price: 20000,
+        gender: "accessories",
+        category: "Face Caps",
+        colors: ["Black", "Cream", "Navy", "Olive"],
+        sizes: ["ONE SIZE"],
+        new: true
+    },
+
+    {
+        id: "kng-lapel-pin",
+        name: "KNG Branded Lapel Pin",
+        price: 10000,
+        gender: "accessories",
+        category: "Lapel Pins",
+        colors: ["Gold", "Silver"],
+        sizes: ["ONE SIZE"],
+        new: false
+    }
+
+];
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let currentCollection = "men";
+
+let currentFilter = "All";
+
+let currentProduct = null;
+
+let selectedSize = "";
+
+let selectedColor = "";
+
+let modalQuantity = 1;
+
+let cart = JSON.parse(
+    localStorage.getItem("kngCart") || "[]"
+);
+
+
+/* =========================================================
+   PAGE CONTROL
+========================================================= */
+
+function hideAllPages() {
+
+    document.querySelectorAll(".page").forEach(page => {
+        page.classList.remove("active");
+    });
+
+}
+
+
+function showPage(pageName) {
+
+    hideAllPages();
+
+    const page = document.getElementById(
+        pageName + "Page"
+    );
+
+    if (page) {
+        page.classList.add("active");
+    }
+
+    window.scrollTo({
+        top: 0,
+        behavior: "instant"
+    });
+
+}
+
+
+function goHome() {
+
+    showPage("home");
+
+}
+
+
+function goToCollections() {
+
+    showPage("home");
+
+    setTimeout(() => {
+
+        document
+            .getElementById("collections")
+            .scrollIntoView({
+                behavior: "smooth"
+            });
+
+    }, 50);
+
+}
+
+
+/* =========================================================
+   WARDROBE
+========================================================= */
+
+function openWardrobe(gender) {
+
+    currentCollection = gender;
+
+    currentFilter = "All";
+
+    showPage("wardrobe");
+
+    const titles = {
+
+        men: "MEN'S WARDROBE.",
+
+        women: "WOMEN'S WARDROBE.",
+
+        accessories: "ACCESSORIES WARDROBE."
+
+    };
+
+    const subtitles = {
+
+        men:
+            "Upper body, lower body and statement pieces.",
+
+        women:
+            "Upper body, lower body and statement pieces.",
+
+        accessories:
+            "Beanies, face caps and branded KNG lapel pins."
+
+    };
+
+    document.getElementById(
+        "wardrobeEyebrow"
+    ).textContent =
+        "KNG / " +
+        gender.toUpperCase();
+
+    document.getElementById(
+        "wardrobeTitle"
+    ).textContent =
+        titles[gender];
+
+    document.getElementById(
+        "wardrobeSubtitle"
+    ).textContent =
+        subtitles[gender];
+
+    document.getElementById(
+        "productSearch"
+    ).value = "";
+
+    createFilters();
+
+    renderProducts();
+
+}
+
+
+function createFilters() {
+
+    const filterContainer =
+        document.getElementById("filters");
+
+    filterContainer.innerHTML = "";
+
+    let categories = [
+
+        "All",
+
+        ...new Set(
+            products
+                .filter(
+                    product =>
+                        product.gender === currentCollection
+                )
+                .map(product => product.category)
+        )
+
+    ];
+
+    categories.forEach(category => {
+
+        const button =
+            document.createElement("button");
+
+        button.className =
+            "filter-btn " +
+            (
+                currentFilter === category
+                    ? "active"
+                    : ""
+            );
+
+        button.textContent = category;
+
+        button.onclick = () => {
+
+            currentFilter = category;
+
+            createFilters();
+
+            renderProducts();
+
+        };
+
+        filterContainer.appendChild(button);
+
+    });
+
+}
+
+
+/* =========================================================
+   PRODUCT RENDERING
+========================================================= */
+
+function renderProducts() {
+
+    const grid =
+        document.getElementById("productGrid");
+
+    const search =
+        document
+            .getElementById("productSearch")
+            .value
+            .toLowerCase()
+            .trim();
+
+    let filtered =
+        products.filter(
+            product =>
+                product.gender === currentCollection
+        );
+
+    if (currentFilter !== "All") {
+
+        filtered =
+            filtered.filter(
+                product =>
+                    product.category === currentFilter
+            );
+
+    }
+
+    if (search) {
+
+        filtered =
+            filtered.filter(
+                product =>
+                    product.name
+                        .toLowerCase()
+                        .includes(search)
+            );
+
+    }
+
+    if (!filtered.length) {
+
+        grid.innerHTML = `
+            <div style="
+                grid-column:1/-1;
+                text-align:center;
+                padding:80px 20px;
+                color:#777;
+            ">
+                NO KNG PIECES FOUND.
+            </div>
         `;
 
         return;
-      }
-
-
-      cartItems.innerHTML = cart.map((item, index) => `
-
-        <div class="cart-item">
-
-          <div>
-
-            <h4>
-              ${item.name}
-            </h4>
-
-            <p>
-              ${item.quantity} × ${formatMoney(item.price)}
-            </p>
-
-          </div>
-
-          <button
-            class="remove-item"
-            onclick="removeFromCart(${index})"
-          >
-            REMOVE
-          </button>
-
-        </div>
-
-      `).join("");
 
     }
 
 
-    /* =========================
-       REMOVE FROM CART
-    ========================== */
+    grid.innerHTML =
+        filtered.map(product => `
 
-    function removeFromCart(index) {
+            <article class="product-card">
 
-      cart.splice(index, 1);
+                <div class="product-image">
 
-      updateCart();
+                    ${
+                        product.new
+                        ? `<div class="new-badge">NEW</div>`
+                        : ""
+                    }
+
+                </div>
+
+                <div class="product-info">
+
+                    <div class="product-category">
+                        ${product.gender === "accessories"
+                            ? "KNG / ACCESSORIES"
+                            : "KNG / " + product.category}
+                    </div>
+
+                    <h3 class="product-name">
+                        ${product.name}
+                    </h3>
+
+                    <div class="product-price">
+                        ${formatMoney(product.price)}
+                    </div>
+
+                    <button
+                        class="btn btn-outline"
+                        onclick="openProductModal('${product.id}')">
+                        VIEW PIECE
+                    </button>
+
+                </div>
+
+            </article>
+
+        `).join("");
+
+}
+
+
+/* =========================================================
+   PRODUCT MODAL
+========================================================= */
+
+function openProductModal(id) {
+
+    const product =
+        products.find(
+            item => item.id === id
+        );
+
+    if (!product) return;
+
+    currentProduct = product;
+
+    selectedSize = "";
+
+    selectedColor = product.colors[0];
+
+    modalQuantity = 1;
+
+    document.getElementById(
+        "modalCategory"
+    ).textContent =
+        "KNG / " + product.category;
+
+    document.getElementById(
+        "modalName"
+    ).textContent =
+        product.name;
+
+    document.getElementById(
+        "modalPrice"
+    ).textContent =
+        formatMoney(product.price);
+
+
+    /* SIZE */
+
+    const sizeGroup =
+        document.getElementById("sizeGroup");
+
+    const sizeOptions =
+        document.getElementById("sizeOptions");
+
+    if (
+        product.sizes.length === 1 &&
+        product.sizes[0] === "ONE SIZE"
+    ) {
+
+        sizeGroup.style.display = "none";
+
+        selectedSize = "ONE SIZE";
+
+    } else {
+
+        sizeGroup.style.display = "block";
+
+        sizeOptions.innerHTML =
+            product.sizes.map(
+                size => `
+
+                    <button
+                        class="option-btn"
+                        onclick="selectSize('${size}')">
+                        ${size}
+                    </button>
+
+                `
+            ).join("");
 
     }
 
 
-    /* =========================
-       OPEN CART
-    ========================== */
+    /* COLORS */
 
-    function openCart() {
+    document.getElementById(
+        "colorOptions"
+    ).innerHTML =
+        product.colors.map(
+            color => `
 
-      document
-        .getElementById("cartOverlay")
+                <button
+                    class="option-btn ${
+                        color === selectedColor
+                        ? "selected"
+                        : ""
+                    }"
+                    onclick="selectColor('${color}')">
+                    ${color}
+                </button>
+
+            `
+        ).join("");
+
+
+    updateModalQuantity();
+
+    document
+        .getElementById("productModal")
         .classList.add("open");
 
-      document.body.style.overflow = "hidden";
-
-    }
+}
 
 
-    /* =========================
-       CLOSE CART
-    ========================== */
+function closeProductModal() {
 
-    function closeCart() {
-
-      document
-        .getElementById("cartOverlay")
+    document
+        .getElementById("productModal")
         .classList.remove("open");
 
-      document.body.style.overflow = "";
-
-    }
+}
 
 
-    function closeCartOutside(event) {
+function selectSize(size) {
 
-      if (event.target.id === "cartOverlay") {
-        closeCart();
-      }
+    selectedSize = size;
 
-    }
+    document
+        .querySelectorAll("#sizeOptions .option-btn")
+        .forEach(button => {
 
-
-    /* =========================
-       FILTER PRODUCTS
-    ========================== */
-
-    function filterProducts(category, clickedButton) {
-
-      const products =
-        document.querySelectorAll(".product");
-
-      products.forEach(product => {
-
-        if (
-          category === "all" ||
-          product.dataset.category === category
-        ) {
-
-          product.style.display = "";
-
-        } else {
-
-          product.style.display = "none";
-
-        }
-
-      });
-
-
-      document
-        .querySelectorAll(".filter-btn")
-        .forEach(btn => {
-          btn.classList.remove("active");
-        });
-
-
-      if (clickedButton) {
-
-        clickedButton.classList.add("active");
-
-      }
-
-
-      document
-        .getElementById("shop")
-        .scrollIntoView({
-          behavior: "smooth"
-        });
-
-    }
-
-
-    /* =========================
-       SEARCH PRODUCTS
-    ========================== */
-
-    function searchProducts() {
-
-      const query =
-        document
-          .getElementById("searchInput")
-          .value
-          .toLowerCase()
-          .trim();
-
-      document
-        .querySelectorAll(".product")
-        .forEach(product => {
-
-          const name =
-            product.dataset.name.toLowerCase();
-
-          product.style.display =
-            name.includes(query)
-              ? ""
-              : "none";
+            button.classList.toggle(
+                "selected",
+                button.textContent.trim() === size
+            );
 
         });
 
-    }
+}
 
 
-    /* =========================
-       SEARCH FOCUS
-    ========================== */
+function selectColor(color) {
 
-    function focusSearch() {
+    selectedColor = color;
 
-      document
-        .getElementById("shop")
-        .scrollIntoView({
-          behavior: "smooth"
+    document
+        .querySelectorAll("#colorOptions .option-btn")
+        .forEach(button => {
+
+            button.classList.toggle(
+                "selected",
+                button.textContent.trim() === color
+            );
+
         });
 
-      setTimeout(() => {
+}
 
-        document
-          .getElementById("searchInput")
-          .focus();
 
-      }, 500);
+function changeModalQuantity(amount) {
 
+    modalQuantity += amount;
+
+    if (modalQuantity < 1) {
+        modalQuantity = 1;
     }
 
-
-    /* =========================
-       MOBILE MENU
-    ========================== */
-
-    function toggleMenu() {
-
-      document
-        .getElementById("nav")
-        .classList.toggle("open");
-
+    if (modalQuantity > 20) {
+        modalQuantity = 20;
     }
 
+    updateModalQuantity();
 
-    /* =========================
-       CHECKOUT
-    ========================== */
+}
 
-    function checkout() {
 
-      if (cart.length === 0) {
+function updateModalQuantity() {
 
-        alert(
-          "Your cart is empty. Add a KNG piece first."
+    document.getElementById(
+        "modalQuantity"
+    ).textContent =
+        modalQuantity;
+
+}
+
+
+/* =========================================================
+   CART
+========================================================= */
+
+function addCurrentProductToCart() {
+
+    if (!currentProduct) return;
+
+    if (!selectedSize) {
+
+        showToast(
+            "PLEASE SELECT A SIZE."
         );
 
         return;
 
-      }
+    }
 
-      alert(
-        "KNG CHECKOUT\n\n" +
-        "The secure payment and order system will be connected here next."
-      );
+    if (!selectedColor) {
+
+        showToast(
+            "PLEASE SELECT A COLOUR."
+        );
+
+        return;
 
     }
 
 
-    /* =========================
-       INITIALIZE
-    ========================== */
+    const existing =
+        cart.find(
+            item =>
+                item.id === currentProduct.id &&
+                item.size === selectedSize &&
+                item.color === selectedColor
+        );
 
-    updateCart();
 
-  </script>
+    if (existing) {
+
+        existing.quantity += modalQuantity;
+
+    } else {
+
+        cart.push({
+
+            id: currentProduct.id,
+
+            name: currentProduct.name,
+
+            price: currentProduct.price,
+
+            size: selectedSize,
+
+            color: selectedColor,
+
+            quantity: modalQuantity
+
+        });
+
+    }
+
+
+    saveCart();
+
+    closeProductModal();
+
+    updateCartUI();
+
+    showToast(
+        currentProduct.name +
+        " ADDED TO CART."
+    );
+
+}
+
+
+function saveCart() {
+
+    localStorage.setItem(
+        "kngCart",
+        JSON.stringify(cart)
+    );
+
+}
+
+
+function openCart() {
+
+    updateCartUI();
+
+    document
+        .getElementById("drawerOverlay")
+        .classList.add("open");
+
+    document
+        .getElementById("cartDrawer")
+        .classList.add("open");
+
+}
+
+
+function closeCart() {
+
+    document
+        .getElementById("drawerOverlay")
+        .classList.remove("open");
+
+    document
+        .getElementById("cartDrawer")
+        .classList.remove("open");
+
+}
+
+
+function updateCartUI() {
+
+    const cartItems =
+        document.getElementById("cartItems");
+
+    const count =
+        cart.reduce(
+            (total, item) =>
+                total + item.quantity,
+            0
+        );
+
+    document.getElementById(
+        "cartCount"
+    ).textContent = count;
+
+
+    if (!cart.length) {
+
+        cartItems.innerHTML = `
+
+            <div class="empty-cart">
+
+                <h3>
+                    YOUR CART IS EMPTY.
+                </h3>
+
+                <p style="margin-top:15px;">
+                    Enter a KNG wardrobe and
+                    choose your pieces.
+                </p>
+
+                <button
+                    class="btn"
+                    style="margin-top:25px;"
+                    onclick="closeCart();goToCollections();">
+                    FIND YOUR STANDARD
+                </button>
+
+            </div>
+
+        `;
+
+    } else {
+
+        cartItems.innerHTML =
+            cart.map(
+                (item, index) => `
+
+                    <div class="cart-item">
+
+                        <div class="cart-item-image">
+                        </div>
+
+                        <div>
+
+                            <div class="cart-item-name">
+                                ${item.name}
+                            </div>
+
+                            <div class="cart-item-meta">
+                                Size: ${item.size}
+                                <br>
+                                Colour: ${item.color}
+                            </div>
+
+                            <div class="cart-item-price">
+                                ${formatMoney(
+                                    item.price * item.quantity
+                                )}
+                            </div>
+
+                            <div class="cart-controls">
+
+                                <button
+                                    class="qty-btn"
+                                    onclick="changeCartQuantity(${index},-1)">
+                                    −
+                                </button>
+
+                                <span>
+                                    ${item.quantity}
+                                </span>
+
+                                <button
+                                    class="qty-btn"
+                                    onclick="changeCartQuantity(${index},1)">
+                                    +
+                                </button>
+
+                                <button
+                                    class="remove-btn"
+                                    onclick="removeCartItem(${index})">
+                                    REMOVE
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                `
+            ).join("");
+
+    }
+
+
+    document.getElementById(
+        "cartTotal"
+    ).textContent =
+        formatMoney(getCartTotal());
+
+}
+
+
+function changeCartQuantity(index, amount) {
+
+    if (!cart[index]) return;
+
+    cart[index].quantity += amount;
+
+    if (cart[index].quantity <= 0) {
+
+        cart.splice(index, 1);
+
+    }
+
+    saveCart();
+
+    updateCartUI();
+
+}
+
+
+function removeCartItem(index) {
+
+    cart.splice(index, 1);
+
+    saveCart();
+
+    updateCartUI();
+
+    showToast(
+        "ITEM REMOVED."
+    );
+
+}
+
+
+function getCartTotal() {
+
+    return cart.reduce(
+        (total, item) =>
+            total +
+            item.price * item.quantity,
+        0
+    );
+
+}
+
+
+/* =========================================================
+   CHECKOUT
+========================================================= */
+
+function goToCheckout() {
+
+    if (!cart.length) {
+
+        showToast(
+            "YOUR CART IS EMPTY."
+        );
+
+        return;
+
+    }
+
+    closeCart();
+
+    showPage("checkout");
+
+    renderCheckoutSummary();
+
+}
+
+
+function renderCheckoutSummary() {
+
+    const summary =
+        document.getElementById(
+            "checkoutSummary"
+        );
+
+    summary.innerHTML =
+        cart.map(
+            item => `
+
+                <div class="summary-item">
+
+                    <span>
+                        ${item.name}
+                        × ${item.quantity}
+                        <br>
+                        <small>
+                            ${item.size} /
+                            ${item.color}
+                        </small>
+                    </span>
+
+                    <strong>
+                        ${formatMoney(
+                            item.price *
+                            item.quantity
+                        )}
+                    </strong>
+
+                </div>
+
+            `
+        ).join("");
+
+
+    document.getElementById(
+        "checkoutTotal"
+    ).textContent =
+        formatMoney(getCartTotal());
+
+}
+
+
+document
+    .getElementById("checkoutForm")
+    .addEventListener(
+        "submit",
+        function(event) {
+
+            event.preventDefault();
+
+            if (!cart.length) {
+
+                showToast(
+                    "YOUR CART IS EMPTY."
+                );
+
+                return;
+
+            }
+
+
+            const order = {
+
+                customer: {
+
+                    firstName:
+                        document.getElementById(
+                            "firstName"
+                        ).value,
+
+                    lastName:
+                        document.getElementById(
+                            "lastName"
+                        ).value,
+
+                    email:
+                        document.getElementById(
+                            "email"
+                        ).value,
+
+                    phone:
+                        document.getElementById(
+                            "phone"
+                        ).value,
+
+                    address:
+                        document.getElementById(
+                            "address"
+                        ).value,
+
+                    state:
+                        document.getElementById(
+                            "state"
+                        ).value
+
+                },
+
+                paymentMethod:
+                    document.getElementById(
+                        "paymentMethod"
+                    ).value,
+
+                items: cart,
+
+                total: getCartTotal()
+
+            };
+
+
+            /*
+                PAYMENT GATEWAY CONNECTION
+                WILL BE ADDED HERE.
+            */
+
+            console.log(
+                "KNG ORDER:",
+                order
+            );
+
+
+            alert(
+                "KNG CHECKOUT\n\n" +
+                "Your order information has been collected.\n\n" +
+                "The secure payment gateway will be connected next."
+            );
+
+        }
+    );
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+function openSearch() {
+
+    document
+        .getElementById("searchModal")
+        .classList.add("open");
+
+    setTimeout(
+        () => {
+            document
+                .getElementById("globalSearch")
+                .focus();
+        },
+        100
+    );
+
+}
+
+
+function closeSearch() {
+
+    document
+        .getElementById("searchModal")
+        .classList.remove("open");
+
+}
+
+
+function globalSearchProducts() {
+
+    const query =
+        document
+            .getElementById("globalSearch")
+            .value
+            .toLowerCase()
+            .trim();
+
+    const results =
+        document.getElementById(
+            "globalResults"
+        );
+
+    if (!query) {
+
+        results.innerHTML = "";
+
+        return;
+
+    }
+
+
+    const matches =
+        products.filter(
+            product =>
+                product.name
+                    .toLowerCase()
+                    .includes(query) ||
+                product.category
+                    .toLowerCase()
+                    .includes(query) ||
+                product.gender
+                    .toLowerCase()
+                    .includes(query)
+        );
+
+
+    if (!matches.length) {
+
+        results.innerHTML = `
+            <p style="color:#777;">
+                No KNG pieces found.
+            </p>
+        `;
+
+        return;
+
+    }
+
+
+    results.innerHTML =
+        matches.map(
+            product => `
+
+                <div style="
+                    padding:18px 0;
+                    border-bottom:1px solid rgba(255,255,255,0.1);
+                    display:flex;
+                    justify-content:space-between;
+                    align-items:center;
+                    gap:20px;
+                ">
+
+                    <div>
+
+                        <strong>
+                            ${product.name}
+                        </strong>
+
+                        <div style="
+                            color:#999;
+                            font-size:12px;
+                            margin-top:6px;
+                        ">
+                            ${formatMoney(product.price)}
+                        </div>
+
+                    </div>
+
+                    <button
+                        class="btn"
+                        style="min-height:42px;padding:0 16px;"
+                        onclick="
+                            closeSearch();
+                            openWardrobe('${product.gender}');
+                            setTimeout(
+                                () => openProductModal('${product.id}'),
+                                100
+                            );
+                        ">
+                        VIEW
+                    </button>
+
+                </div>
+
+            `
+        ).join("");
+
+}
+
+
+/* =========================================================
+   MOBILE MENU
+========================================================= */
+
+function toggleMobileMenu() {
+
+    const nav =
+        document.querySelector(".nav-links");
+
+    if (
+        nav.style.display === "flex"
+    ) {
+
+        nav.style.display = "";
+
+    } else {
+
+        nav.style.position = "absolute";
+        nav.style.top = "72px";
+        nav.style.left = "0";
+        nav.style.right = "0";
+        nav.style.background = "#050505";
+        nav.style.padding = "25px";
+        nav.style.display = "flex";
+        nav.style.flexDirection = "column";
+        nav.style.alignItems = "flex-start";
+        nav.style.gap = "25px";
+        nav.style.borderBottom =
+            "1px solid rgba(255,255,255,0.1)";
+
+    }
+
+}
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function formatMoney(amount) {
+
+    return "₦" +
+        Number(amount).toLocaleString(
+            "en-NG"
+        );
+
+}
+
+
+function showToast(message) {
+
+    const toast =
+        document.getElementById("toast");
+
+    toast.textContent = message;
+
+    toast.classList.add("show");
+
+    setTimeout(
+        () => {
+            toast.classList.remove("show");
+        },
+        2500
+    );
+
+}
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+updateCartUI();
+
+</script>
 
 </body>
 </html>
