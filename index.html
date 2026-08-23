@@ -3921,5 +3921,23 @@ document.head.appendChild(accountStyles);
 }
 </script>
 
+   <!-- KNG SUPABASE CONNECTION -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+  const KNG_SUPABASE_URL = "https://fnpmsbjcfyhxxmuducba.supabase.co";
+
+  const KNG_SUPABASE_PUBLISHABLE_KEY = "sb_publishable_m39Aa3I3rqmYildm1gE3KA_8s3LmlUB";
+
+  const kngSupabase = window.supabase.createClient(
+    KNG_SUPABASE_URL,
+    KNG_SUPABASE_PUBLISHABLE_KEY
+  );
+
+  window.kngSupabase = kngSupabase;
+
+  console.log("KNG Supabase connected.");
+</script>
+
 </body>
 </html>
