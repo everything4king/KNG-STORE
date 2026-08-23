@@ -3560,13 +3560,21 @@ function showSignIn() {
             >
 
             <label>Password</label>
-
-            <input
-                type="password"
-                id="signInPassword"
-                placeholder="Enter your password"
-                required
-            >
+<div class="password-wrap">
+    <input
+        type="password"
+        id="signInPassword"
+        placeholder="Enter your password"
+        required
+    >
+    <button
+        type="button"
+        class="password-toggle"
+        onclick="togglePassword('signInPassword', this)"
+        aria-label="Show password"
+    >👁</button>
+</div>
+           
 
             <button type="submit" class="account-primary">
                 SIGN IN
@@ -3895,7 +3903,22 @@ accountStyles.textContent = `
 
 `;
 
-document.head.appendChild(accountStyles); 
+document.head.appendChild(accountStyles);
+   function togglePassword(inputId, button) {
+    const input = document.getElementById(inputId);
+
+    if (!input) return;
+
+    if (input.type === "password") {
+        input.type = "text";
+        button.textContent = "🙈";
+        button.setAttribute("aria-label", "Hide password");
+    } else {
+        input.type = "password";
+        button.textContent = "👁";
+        button.setAttribute("aria-label", "Show password");
+    }
+}
 </script>
 
 </body>
