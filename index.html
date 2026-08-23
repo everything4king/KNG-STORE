@@ -1270,7 +1270,12 @@ footer {
                     0
                 </span>
             </button>
-
+<button
+    class="icon-btn"
+    onclick="openAccount()"
+    aria-label="Account">
+    ♙
+</button>
             <button
                 class="icon-btn mobile-menu"
                 onclick="toggleMobileMenu()">
@@ -3442,7 +3447,455 @@ function showToast(message) {
 ========================================================= */
 
 updateCartUI();
+/* =========================================================
+   KNG ACCOUNT SYSTEM
+   ========================================================= */
 
+const accountModal = document.createElement("div");
+
+accountModal.id = "accountModal";
+
+accountModal.innerHTML = `
+    <div class="account-overlay" onclick="closeAccount()"></div>
+
+    <div class="account-panel">
+
+        <button class="account-close" onclick="closeAccount()" aria-label="Close">
+            ×
+        </button>
+
+        <div class="account-logo">
+            KNG<span>.</span>
+        </div>
+
+        <p class="account-kicker">THE INNER CIRCLE</p>
+
+        <h2>YOUR KNG<br><span>ACCOUNT.</span></h2>
+
+        <p class="account-description">
+            Sign in to your KNG account or create one to track orders,
+            save your details and stay connected to every new standard.
+        </p>
+
+        <div class="account-buttons">
+
+            <button class="account-primary" onclick="showSignIn()">
+                SIGN IN
+            </button>
+
+            <button class="account-secondary" onclick="showCreateAccount()">
+                CREATE ACCOUNT
+            </button>
+
+        </div>
+
+        <p class="account-note">
+            Your KNG account is completely free.
+        </p>
+
+    </div>
+`;
+
+document.body.appendChild(accountModal);
+
+
+/* =========================================================
+   OPEN / CLOSE ACCOUNT
+   ========================================================= */
+
+function openAccount() {
+    const modal = document.getElementById("accountModal");
+
+    if (!modal) return;
+
+    modal.classList.add("active");
+
+    document.body.style.overflow = "hidden";
+}
+
+
+function closeAccount() {
+    const modal = document.getElementById("accountModal");
+
+    if (!modal) return;
+
+    modal.classList.remove("active");
+
+    document.body.style.overflow = "";
+}
+
+
+/* =========================================================
+   SIGN IN
+   ========================================================= */
+
+function showSignIn() {
+
+    const panel = document.querySelector(".account-panel");
+
+    if (!panel) return;
+
+    panel.innerHTML = `
+        <button class="account-close" onclick="closeAccount()" aria-label="Close">
+            ×
+        </button>
+
+        <div class="account-logo">
+            KNG<span>.</span>
+        </div>
+
+        <p class="account-kicker">WELCOME BACK</p>
+
+        <h2>SIGN<br><span>IN.</span></h2>
+
+        <form class="account-form" onsubmit="handleSignIn(event)">
+
+            <label>Email Address</label>
+
+            <input
+                type="email"
+                id="signInEmail"
+                placeholder="Enter your email"
+                required
+            >
+
+            <label>Password</label>
+
+            <input
+                type="password"
+                id="signInPassword"
+                placeholder="Enter your password"
+                required
+            >
+
+            <button type="submit" class="account-primary">
+                SIGN IN
+            </button>
+
+        </form>
+
+        <button class="account-link" onclick="showCreateAccount()">
+            Don't have an account? <span>CREATE ONE</span>
+        </button>
+
+    `;
+}
+
+
+/* =========================================================
+   CREATE ACCOUNT
+   ========================================================= */
+
+function showCreateAccount() {
+
+    const panel = document.querySelector(".account-panel");
+
+    if (!panel) return;
+
+    panel.innerHTML = `
+        <button class="account-close" onclick="closeAccount()" aria-label="Close">
+            ×
+        </button>
+
+        <div class="account-logo">
+            KNG<span>.</span>
+        </div>
+
+        <p class="account-kicker">JOIN THE INNER CIRCLE</p>
+
+        <h2>CREATE<br><span>ACCOUNT.</span></h2>
+
+        <form class="account-form" onsubmit="handleCreateAccount(event)">
+
+            <label>Full Name</label>
+
+            <input
+                type="text"
+                id="createName"
+                placeholder="Your full name"
+                required
+            >
+
+            <label>Email Address</label>
+
+            <input
+                type="email"
+                id="createEmail"
+                placeholder="Your email address"
+                required
+            >
+
+            <label>Password</label>
+
+            <input
+                type="password"
+                id="createPassword"
+                placeholder="Create a password"
+                minlength="6"
+                required
+            >
+
+            <button type="submit" class="account-primary">
+                CREATE ACCOUNT
+            </button>
+
+        </form>
+
+        <button class="account-link" onclick="showSignIn()">
+            Already have an account? <span>SIGN IN</span>
+        </button>
+
+    `;
+}
+
+
+/* =========================================================
+   TEMPORARY ACCOUNT HANDLERS
+   ========================================================= */
+
+function handleSignIn(event) {
+
+    event.preventDefault();
+
+    const email = document.getElementById("signInEmail").value;
+
+    alert("KNG account sign-in will be connected to the real account database next.");
+
+}
+
+
+function handleCreateAccount(event) {
+
+    event.preventDefault();
+
+    const name = document.getElementById("createName").value;
+    const email = document.getElementById("createEmail").value;
+
+    alert(
+        "Welcome to KNG, " +
+        name +
+        ". Your account system will be connected next."
+    );
+
+}
+  const accountStyles = document.createElement("style");
+
+accountStyles.textContent = `
+
+/* =========================================================
+   KNG ACCOUNT
+   ========================================================= */
+
+#accountModal {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity .35s ease, visibility .35s ease;
+}
+
+#accountModal.active {
+    visibility: visible;
+    opacity: 1;
+}
+
+.account-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,.78);
+    backdrop-filter: blur(12px);
+}
+
+.account-panel {
+    position: relative;
+    z-index: 2;
+    width: min(92%, 460px);
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 52px 42px;
+    background: #090909;
+    border: 1px solid rgba(201,162,75,.28);
+    box-shadow: 0 30px 100px rgba(0,0,0,.7);
+    transform: translateY(25px) scale(.97);
+    transition: transform .4s ease;
+}
+
+#accountModal.active .account-panel {
+    transform: translateY(0) scale(1);
+}
+
+.account-close {
+    position: absolute;
+    top: 18px;
+    right: 20px;
+    width: 38px;
+    height: 38px;
+    border: 1px solid rgba(255,255,255,.12);
+    background: transparent;
+    color: #fff;
+    font-size: 26px;
+    cursor: pointer;
+    transition: .25s ease;
+}
+
+.account-close:hover {
+    color: #c9a24b;
+    border-color: #c9a24b;
+}
+
+.account-logo {
+    font-size: 30px;
+    font-weight: 900;
+    letter-spacing: .08em;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.account-logo span {
+    color: #c9a24b;
+}
+
+.account-kicker {
+    margin: 0 0 18px;
+    color: #c9a24b;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .22em;
+}
+
+.account-panel h2 {
+    margin: 0 0 20px;
+    color: #fff;
+    font-size: clamp(2.5rem, 8vw, 4rem);
+    line-height: .9;
+    letter-spacing: -.04em;
+}
+
+.account-panel h2 span {
+    color: #c9a24b;
+}
+
+.account-description {
+    color: #999;
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 30px;
+}
+
+.account-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.account-primary,
+.account-secondary {
+    width: 100%;
+    padding: 16px 20px;
+    border: 1px solid #c9a24b;
+    font-weight: 800;
+    letter-spacing: .12em;
+    cursor: pointer;
+    transition: .25s ease;
+}
+
+.account-primary {
+    background: #c9a24b;
+    color: #050505;
+}
+
+.account-primary:hover {
+    background: #fff;
+    border-color: #fff;
+}
+
+.account-secondary {
+    background: transparent;
+    color: #fff;
+}
+
+.account-secondary:hover {
+    background: rgba(201,162,75,.1);
+    color: #c9a24b;
+}
+
+.account-note {
+    margin-top: 22px;
+    text-align: center;
+    color: #666;
+    font-size: 11px;
+}
+
+.account-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.account-form label {
+    color: #aaa;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    margin-top: 8px;
+}
+
+.account-form input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 15px;
+    background: #111;
+    border: 1px solid rgba(255,255,255,.12);
+    color: #fff;
+    outline: none;
+    font-size: 14px;
+}
+
+.account-form input:focus {
+    border-color: #c9a24b;
+}
+
+.account-form .account-primary {
+    margin-top: 18px;
+}
+
+.account-link {
+    display: block;
+    width: 100%;
+    margin-top: 22px;
+    border: 0;
+    background: transparent;
+    color: #777;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.account-link span {
+    color: #c9a24b;
+    font-weight: 800;
+}
+
+@media (max-width: 600px) {
+
+    .account-panel {
+        width: calc(100% - 28px);
+        padding: 42px 25px;
+    }
+
+    .account-panel h2 {
+        font-size: 2.8rem;
+    }
+
+}
+
+`;
+
+document.head.appendChild(accountStyles); 
 </script>
 
 </body>
