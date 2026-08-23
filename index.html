@@ -3672,19 +3672,51 @@ function handleSignIn(event) {
 }
 
 
-function handleCreateAccount(event) {
-
+async function handleCreateAccount(event) {
     event.preventDefault();
 
-    const name = document.getElementById("createName").value;
-    const email = document.getElementById("createEmail").value;
+    const name = document.getElementById("createName").value.trim();
+    const email = document.getElementById("createEmail").value.trim();
+    const password = document.getElementById("createPassword").value;
 
-    alert(
-        "Welcome to KNG, " +
-        name +
-        ". Your account system will be connected next."
-    );
+    if (!name || !email || !password) {
+        alert("Please fill in all fields.");
+        return;
+    }
 
+    if (password.length < 6) {
+        alert("Password must be at least 6 characters.");
+        return;
+    }
+
+    try {
+        const { data, error } = await window.kngSupabase.auth.signUp({
+            email: email,
+            password: password,
+            options: {
+                data: {
+                    full_name: name
+                }
+            }
+        });
+
+        if (error) {
+            alert(error.message);
+            return;
+        }
+
+        if (data.user) {
+            alert(
+                "Welcome to KNG, " +
+                name +
+                "! Your account has been created successfully."
+            );
+        }
+
+    } catch (error) {
+        console.error("KNG signup error:", error);
+        alert("Something went wrong. Please try again.");
+    }
 }
   const accountStyles = document.createElement("style");
 
