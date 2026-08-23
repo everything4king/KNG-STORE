@@ -3088,12 +3088,40 @@ function getCartTotal() {
    CHECKOUT
 ========================================================= */
 
-function goToCheckout() {
+async function goToCheckout() {
 
     if (!cart.length) {
 
         showToast(
             "YOUR CART IS EMPTY."
+        );
+
+        return;
+
+    }
+
+    // KNG ACCOUNT REQUIRED BEFORE CHECKOUT
+    try {
+
+        const { data: { user } } =
+            await window.kngSupabase.auth.getUser();
+
+        if (!user) {
+
+            showToast(
+                "PLEASE SIGN IN OR CREATE A KNG ACCOUNT BEFORE CHECKOUT."
+            );
+
+            return;
+
+        }
+
+    } catch (error) {
+
+        console.error("KNG account check error:", error);
+
+        showToast(
+            "PLEASE SIGN IN TO YOUR KNG ACCOUNT BEFORE CHECKOUT."
         );
 
         return;
