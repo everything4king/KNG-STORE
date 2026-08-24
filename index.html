@@ -3791,21 +3791,145 @@ async function handleCreateAccount(event) {
             return;
         }
 
-        if (data.user) {
-            alert(
-                "Welcome to KNG, " +
-                name +
-                "! Your account has been created successfully."
-            );
-        }
-
+     if (data.user) {
+    showKngOtp(email);
+}   
     } catch (error) {
         console.error("KNG signup error:", error);
         alert("Something went wrong. Please try again.");
     }
 }
-  const accountStyles = document.createElement("style");
+ /* =========================================================
+   KNG EMAIL OTP VERIFICATION
+   ========================================================= */
 
+let kngPendingOtpEmail = "";
+
+function showKngOtp(email) {
+    kngPendingOtpEmail = email;
+
+    const accountModal = document.getElementById("accountModal");
+    const signInScreen = document.getElementById("kngSignInScreen");
+    const createAccountScreen = document.getElementById("kngCreateAccountScreen");
+    const otpScreen = document.getElementById("kngOtpScreen");
+
+    if (signInScreen) signInScreen.style.display = "none";
+    if (createAccountScreen) createAccountScreen.style.display = "none";
+    if (otpScreen) otpScreen.style.display = "block";
+
+    if (accountModal) accountModal.style.display = "flex";
+
+    const otpInputs = document.querySelectorAll("#kngOtpScreen input");
+
+    otpInputs.forEach(input => {
+        input.value = "";
+    });
+
+    if (otpInputs.length > 0) {
+        otpInputs[0].focus();
+    }
+}
+
+async function verifyKngOtp() {
+    const email = kngPendingOtpEmail;
+
+    if (!email) {
+        alert("Your verification session has expired. Please create your account again.");
+        return;
+    }
+
+    const otpInputs = document.querySelectorAll("#kngOtpScreen input");
+
+    const token = Array.from(otpInputs)
+        .map(input => input.value.trim())
+        .join("")
+        .replace(/\D/g, "");
+
+    if (token.length !== 8) {
+        alert("Please enter the complete 8-digit verification code.");
+        return;
+    }
+
+    try {
+        const { data, error } = await window.kngSupabase.auth.verifyOtp({
+            email: email,
+            token: token,
+            type: "email"
+        });
+
+        if (error) {
+            console.error("KNG OTP verification error:", error);
+            alert(error.message || "Invalid or expired verification code.");
+            return;
+        }
+
+        if (data && data.session) {
+            alert("Email verified successfully. Welcome to KNG!");
+
+            const otpScreen = document.getElementById("kngOtpScreen");
+
+            if (otpScreen) {
+                otpScreen.style.display = "none";
+            }
+
+            kngPendingOtpEmail = "";
+
+            if (typeof closeAccountModal === "function") {
+                closeAccountModal();
+            }
+        }
+    } catch (error) {
+        console.error("KNG OTP error:", error);
+        alert("Something went wrong while verifying your code. Please try again.");
+    }
+}
+
+async function resendKngOtp() {
+    const email = kngPendingOtpEmail;
+
+    if (!email) {
+        alert("Your verification session has expired. Please create your account again.");
+        return;
+    }
+
+    try {
+        const { error } = await window.kngSupabase.auth.signInWithOtp({
+            email: email,
+            options: {
+                shouldCreateUser: false
+            }
+        });
+
+        if (error) {
+            console.error("KNG OTP resend error:", error);
+            alert(error.message || "Unable to resend the verification code.");
+            return;
+        }
+
+        alert("A new KNG verification code has been sent to your email.");
+    } catch (error) {
+        console.error("KNG OTP resend error:", error);
+        alert("Something went wrong. Please try again.");
+    }
+}
+
+function cancelKngOtp() {
+    kngPendingOtpEmail = "";
+
+    const otpScreen = document.getElementById("kngOtpScreen");
+
+    if (otpScreen) {
+        otpScreen.style.display = "none";
+    }
+
+    if (typeof showSignIn === "function") {
+        showSignIn();
+    }
+}
+   const accountStyles = document.createElement("style");
+
+
+   
 accountStyles.textContent = `
 
 /* =========================================================
