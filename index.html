@@ -3609,7 +3609,65 @@ function showSignIn() {
             </button>
 
         </form>
+<!-- KNG EMAIL OTP VERIFICATION -->
+<div id="kngOtpScreen" class="kng-otp-screen" style="display:none;">
 
+    <div class="kng-otp-box">
+
+        <div class="account-logo">
+            KNG<span>.</span>
+        </div>
+
+        <p class="account-kicker">SECURITY CHECK</p>
+
+        <h2>
+            VERIFY<br>
+            <span>YOUR EMAIL.</span>
+        </h2>
+
+        <p class="kng-otp-message">
+            We sent a 6-digit verification code to
+            <strong id="kngOtpEmail"></strong>
+        </p>
+
+        <label for="kngOtpCode">Verification Code</label>
+
+        <input
+            type="text"
+            id="kngOtpCode"
+            placeholder="Enter 6-digit code"
+            maxlength="6"
+            inputmode="numeric"
+            autocomplete="one-time-code"
+        >
+
+        <button
+            type="button"
+            class="account-primary"
+            onclick="verifyKngOtp()"
+        >
+            VERIFY CODE
+        </button>
+
+        <button
+            type="button"
+            class="account-link"
+            onclick="resendKngOtp()"
+        >
+            Didn't receive the code? <span>RESEND</span>
+        </button>
+
+        <button
+            type="button"
+            class="account-link"
+            onclick="cancelKngOtp()"
+        >
+            ← BACK TO SIGN IN
+        </button>
+
+    </div>
+
+</div>
         <button class="account-link" onclick="showCreateAccount()">
             Don't have an account? <span>CREATE ONE</span>
         </button>
@@ -3930,6 +3988,114 @@ accountStyles.textContent = `
 
 .account-form .account-primary {
     margin-top: 18px;
+}
+
+/* ================================
+   KNG EMAIL OTP VERIFICATION
+================================ */
+
+.kng-otp-screen {
+    width: 100%;
+    margin-top: 18px;
+}
+
+.kng-otp-box {
+    width: 100%;
+    padding: 28px 24px;
+    background: #0b0b0b;
+    border: 1px solid #252525;
+    border-radius: 14px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.kng-otp-box .account-logo {
+    margin-bottom: 18px;
+}
+
+.kng-otp-box h2 {
+    margin: 0 0 10px;
+    color: #fff;
+    font-size: 24px;
+    line-height: 1.15;
+    font-weight: 800;
+    letter-spacing: .04em;
+}
+
+.kng-otp-box h2 span {
+    color: #aaa;
+}
+
+.kng-otp-box p {
+    margin: 0 0 20px;
+    color: #888;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.kng-otp-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 15px;
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 10px;
+    color: #fff;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: .35em;
+    outline: none;
+}
+
+.kng-otp-input:focus {
+    border-color: #c9a24b;
+}
+
+.kng-otp-verify {
+    width: 100%;
+    margin-top: 14px;
+    padding: 14px;
+    border: 0;
+    border-radius: 10px;
+    background: #fff;
+    color: #000;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .12em;
+    cursor: pointer;
+}
+
+.kng-otp-verify:hover {
+    opacity: .88;
+}
+
+.kng-otp-resend {
+    margin-top: 14px;
+    background: transparent;
+    border: 0;
+    color: #aaa;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.kng-otp-resend:hover {
+    color: #fff;
+}
+
+.kng-otp-back {
+    display: block;
+    width: 100%;
+    margin-top: 12px;
+    background: transparent;
+    border: 0;
+    color: #777;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.kng-otp-back:hover {
+    color: #fff;
 }
 
 .account-link {
