@@ -1207,6 +1207,221 @@ footer {
         gap: 15px;
     }
 }
+ /* =========================================================
+   KNG PREMIUM SIZE GUIDE
+   ========================================================= */
+
+.size-guide-section {
+  margin-top: 18px;
+  width: 100%;
+}
+
+.size-guide-toggle {
+  width: 100%;
+  padding: 13px 16px;
+  border: 1px solid rgba(255,255,255,0.16);
+  border-radius: 10px;
+  background: transparent;
+  color: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.size-guide-toggle:hover {
+  border-color: rgba(255,255,255,0.35);
+}
+
+.size-guide-panel {
+  display: none;
+  margin-top: 12px;
+  padding: 18px;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px;
+  background: rgba(255,255,255,0.035);
+  overflow: hidden;
+}
+
+.size-guide-panel.active {
+  display: block;
+}
+
+.size-guide-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.size-guide-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.size-guide-close {
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  color: inherit;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.size-guide-content {
+  display: none;
+}
+
+.size-guide-content.active {
+  display: block;
+}
+
+.size-guide-content h4 {
+  margin: 0 0 8px;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
+.size-guide-note {
+  margin: 0 0 14px;
+  font-size: 11px;
+  line-height: 1.5;
+  opacity: 0.65;
+}
+
+.size-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.size-table {
+  width: 100%;
+  min-width: 480px;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+
+.size-table th {
+  padding: 10px 8px;
+  text-align: center;
+  font-size: 10px;
+  letter-spacing: 0.6px;
+  font-weight: 700;
+  border-bottom: 1px solid rgba(255,255,255,0.16);
+  white-space: nowrap;
+}
+
+.size-table td {
+  padding: 10px 8px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  white-space: nowrap;
+}
+
+.size-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.size-table tbody tr:hover {
+  background: rgba(255,255,255,0.035);
+}
+
+.size-guide-footer {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255,255,255,0.10);
+  text-align: center;
+}
+
+.size-guide-footer p {
+  margin: 0 0 10px;
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.size-guide-footer button {
+  padding: 10px 15px;
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* =========================================================
+   CUSTOM SIZE AREA
+   ========================================================= */
+
+.custom-size-box {
+  margin-top: 14px;
+  padding: 15px;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.025);
+}
+
+.custom-size-box h4 {
+  margin: 0 0 6px;
+  font-size: 13px;
+  letter-spacing: 0.7px;
+}
+
+.custom-size-box p {
+  margin: 0 0 12px;
+  font-size: 11px;
+  line-height: 1.5;
+  opacity: 0.65;
+}
+
+.custom-size-button {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid rgba(255,255,255,0.16);
+  border-radius: 9px;
+  background: transparent;
+  color: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.custom-size-button:hover {
+  border-color: rgba(255,255,255,0.35);
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  .size-guide-panel {
+    padding: 14px;
+  }
+
+  .size-guide-header h3 {
+    font-size: 14px;
+  }
+
+  .size-table {
+    font-size: 10px;
+  }
+
+  .size-table th,
+  .size-table td {
+    padding: 9px 7px;
+  }
+
+}  
 </style>
 </head>
 
@@ -1812,6 +2027,179 @@ footer {
                         class="option-buttons"
                         id="sizeOptions">
                     </div>
+                   <div class="size-guide-section">
+
+    <button
+        type="button"
+        class="size-guide-toggle"
+        onclick="openSizeGuide()">
+        📏 VIEW SIZE GUIDE
+    </button>
+
+    <div id="sizeGuidePanel" class="size-guide-panel">
+
+        <div class="size-guide-header">
+            <h3 id="sizeGuideTitle">KNG SIZE GUIDE</h3>
+            <button
+                type="button"
+                class="size-guide-close"
+                onclick="closeSizeGuide()">
+                ×
+            </button>
+        </div>
+
+        <!-- MEN'S SIZE GUIDE -->
+        <div id="mensSizeGuide" class="size-guide-content">
+
+            <h4>MEN'S SIZE GUIDE</h4>
+
+            <p class="size-guide-note">
+                Measurements are approximate. For the best fit, compare with a similar garment you already own.
+            </p>
+
+            <div class="size-table-wrapper">
+                <table class="size-table">
+
+                    <thead>
+                        <tr>
+                            <th>SIZE</th>
+                            <th>CHEST</th>
+                            <th>LENGTH</th>
+                            <th>SLEEVE</th>
+                            <th>SHOULDER</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td>S</td>
+                            <td>36"</td>
+                            <td>27"</td>
+                            <td>8"</td>
+                            <td>16"</td>
+                        </tr>
+
+                        <tr>
+                            <td>M</td>
+                            <td>38"</td>
+                            <td>28"</td>
+                            <td>8.5"</td>
+                            <td>17"</td>
+                        </tr>
+
+                        <tr>
+                            <td>L</td>
+                            <td>40"</td>
+                            <td>29"</td>
+                            <td>9"</td>
+                            <td>18"</td>
+                        </tr>
+
+                        <tr>
+                            <td>XL</td>
+                            <td>42"</td>
+                            <td>30"</td>
+                            <td>9.5"</td>
+                            <td>19"</td>
+                        </tr>
+
+                        <tr>
+                            <td>XXL</td>
+                            <td>44"</td>
+                            <td>31"</td>
+                            <td>10"</td>
+                            <td>20"</td>
+                        </tr>
+                    </tbody>
+
+                </table>
+            </div>
+
+        </div>
+
+        <!-- WOMEN'S SIZE GUIDE -->
+        <div id="womensSizeGuide" class="size-guide-content">
+
+            <h4>WOMEN'S SIZE GUIDE</h4>
+
+            <p class="size-guide-note">
+                Measurements are approximate. For the best fit, compare with a similar garment you already own.
+            </p>
+
+            <div class="size-table-wrapper">
+                <table class="size-table">
+
+                    <thead>
+                        <tr>
+                            <th>SIZE</th>
+                            <th>CHEST</th>
+                            <th>LENGTH</th>
+                            <th>SLEEVE</th>
+                            <th>SHOULDER</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td>S</td>
+                            <td>34"</td>
+                            <td>25"</td>
+                            <td>7.5"</td>
+                            <td>15.5"</td>
+                        </tr>
+
+                        <tr>
+                            <td>M</td>
+                            <td>36"</td>
+                            <td>26"</td>
+                            <td>8"</td>
+                            <td>16"</td>
+                        </tr>
+
+                        <tr>
+                            <td>L</td>
+                            <td>38"</td>
+                            <td>27"</td>
+                            <td>8.5"</td>
+                            <td>17"</td>
+                        </tr>
+
+                        <tr>
+                            <td>XL</td>
+                            <td>40"</td>
+                            <td>28"</td>
+                            <td>9"</td>
+                            <td>18"</td>
+                        </tr>
+
+                        <tr>
+                            <td>XXL</td>
+                            <td>42"</td>
+                            <td>29"</td>
+                            <td>9.5"</td>
+                            <td>19"</td>
+                        </tr>
+                    </tbody>
+
+                </table>
+            </div>
+
+        </div>
+
+        <div class="size-guide-footer">
+            <p>Need a different fit?</p>
+
+            <button
+                type="button"
+                class="custom-size-button"
+                onclick="openCustomSize()">
+                USE CUSTOM SIZE
+            </button>
+        </div>
+
+    </div>
+
+</div>
 
                 </div>
 
@@ -4259,6 +4647,218 @@ document.head.appendChild(accountStyles);
         button.setAttribute("aria-label", "Show password");
     }
 }
+ /* =========================================
+   KNG CUSTOM SIZE
+   ========================================= */
+
+function openCustomSize() {
+    let modal = document.getElementById("customSizeModal");
+
+    if (!modal) {
+        modal = document.createElement("div");
+        modal.id = "customSizeModal";
+
+        modal.innerHTML = `
+            <div style="
+                position:fixed;
+                inset:0;
+                background:rgba(0,0,0,0.78);
+                backdrop-filter:blur(8px);
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                z-index:99999;
+                padding:20px;
+            ">
+                <div style="
+                    width:min(430px,100%);
+                    background:#111;
+                    color:#fff;
+                    border:1px solid rgba(255,255,255,0.15);
+                    border-radius:18px;
+                    padding:25px;
+                    box-shadow:0 20px 60px rgba(0,0,0,0.5);
+                ">
+
+                    <div style="
+                        display:flex;
+                        justify-content:space-between;
+                        align-items:center;
+                        margin-bottom:20px;
+                    ">
+                        <h2 style="
+                            margin:0;
+                            font-size:20px;
+                            letter-spacing:1px;
+                        ">
+                            KNG CUSTOM SIZE
+                        </h2>
+
+                        <button
+                            type="button"
+                            onclick="closeCustomSize()"
+                            style="
+                                background:none;
+                                border:none;
+                                color:#fff;
+                                font-size:24px;
+                                cursor:pointer;
+                            "
+                        >×</button>
+                    </div>
+
+                    <p style="
+                        font-size:13px;
+                        opacity:.7;
+                        line-height:1.5;
+                        margin-bottom:20px;
+                    ">
+                        Enter your measurements below for a more personalized fit.
+                    </p>
+
+                    <div style="display:grid;gap:12px;">
+
+                        <input
+                            id="customChest"
+                            type="number"
+                            placeholder="Chest (inches)"
+                            style="
+                                width:100%;
+                                box-sizing:border-box;
+                                padding:13px;
+                                background:#1b1b1b;
+                                color:#fff;
+                                border:1px solid #333;
+                                border-radius:9px;
+                                outline:none;
+                            "
+                        >
+
+                        <input
+                            id="customWaist"
+                            type="number"
+                            placeholder="Waist (inches)"
+                            style="
+                                width:100%;
+                                box-sizing:border-box;
+                                padding:13px;
+                                background:#1b1b1b;
+                                color:#fff;
+                                border:1px solid #333;
+                                border-radius:9px;
+                                outline:none;
+                            "
+                        >
+
+                        <input
+                            id="customHip"
+                            type="number"
+                            placeholder="Hip (inches)"
+                            style="
+                                width:100%;
+                                box-sizing:border-box;
+                                padding:13px;
+                                background:#1b1b1b;
+                                color:#fff;
+                                border:1px solid #333;
+                                border-radius:9px;
+                                outline:none;
+                            "
+                        >
+
+                        <input
+                            id="customLength"
+                            type="number"
+                            placeholder="Length (inches)"
+                            style="
+                                width:100%;
+                                box-sizing:border-box;
+                                padding:13px;
+                                background:#1b1b1b;
+                                color:#fff;
+                                border:1px solid #333;
+                                border-radius:9px;
+                                outline:none;
+                            "
+                        >
+
+                    </div>
+
+                    <button
+                        type="button"
+                        onclick="saveCustomSize()"
+                        style="
+                            width:100%;
+                            margin-top:18px;
+                            padding:14px;
+                            border:none;
+                            border-radius:10px;
+                            background:#fff;
+                            color:#000;
+                            font-weight:700;
+                            letter-spacing:.5px;
+                            cursor:pointer;
+                        "
+                    >
+                        SAVE CUSTOM SIZE
+                    </button>
+
+                    <p id="customSizeMessage" style="
+                        text-align:center;
+                        font-size:12px;
+                        margin:12px 0 0;
+                        opacity:.7;
+                    "></p>
+
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(modal);
+    }
+
+    modal.style.display = "block";
+}
+
+function closeCustomSize() {
+    const modal = document.getElementById("customSizeModal");
+
+    if (modal) {
+        modal.style.display = "none";
+    }
+}
+
+function saveCustomSize() {
+    const chest = document.getElementById("customChest").value;
+    const waist = document.getElementById("customWaist").value;
+    const hip = document.getElementById("customHip").value;
+    const length = document.getElementById("customLength").value;
+
+    if (!chest || !waist || !hip || !length) {
+        document.getElementById("customSizeMessage").textContent =
+            "Please complete all measurements.";
+        return;
+    }
+
+    const customSize = {
+        chest: chest,
+        waist: waist,
+        hip: hip,
+        length: length
+    };
+
+    localStorage.setItem(
+        "KNG_Custom_Size",
+        JSON.stringify(customSize)
+    );
+
+    document.getElementById("customSizeMessage").textContent =
+        "✓ Custom size saved successfully.";
+
+    setTimeout(() => {
+        closeCustomSize();
+    }, 1000);
+}  
 </script>
 
    <!-- KNG SUPABASE CONNECTION -->
