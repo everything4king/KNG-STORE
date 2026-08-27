@@ -1666,24 +1666,10 @@ footer {
                             </option>
 
                             <option>
-                                Ogun
+                                Ogun(covenant university)
                             </option>
 
-                            <option>
-                                Abuja
-                            </option>
-
-                            <option>
-                                Oyo
-                            </option>
-
-                            <option>
-                                Rivers
-                            </option>
-
-                            <option>
-                                Other
-                            </option>
+                 
 
                         </select>
 
@@ -2688,18 +2674,22 @@ function openProductModal(id) {
 
         sizeGroup.style.display = "block";
 
-        sizeOptions.innerHTML =
-            product.sizes.map(
-                size => `
-
-                    <button
-                        class="option-btn"
-                        onclick="selectSize('${size}')">
-                        ${size}
-                    </button>
-
-                `
-            ).join("");
+sizeOptions.innerHTML = ["S", "M", "L", "XL", "XXL"].map(
+    size =>
+`
+<button
+    class="option-btn"
+    onclick="selectSize('${size}')">
+    ${size}
+</button>
+`
+).join("") + `
+<button
+    class="option-btn custom-fit-btn"
+    onclick="openCustomFit()">
+    CUSTOM FIT
+</button>
+`;
 
     }
 
