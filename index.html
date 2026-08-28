@@ -4099,13 +4099,22 @@ function showCreateAccount() {
 
             <label>Password</label>
 
-            <input
-                type="password"
-                id="createPassword"
-                placeholder="Create a password"
-                minlength="6"
-                required
-            >
+           <div style="position:relative;">
+    <input
+        type="password"
+        id="createPassword"
+        placeholder="Create a password"
+        minlength="8"
+        required
+        style="padding-right:50px;"
+    >
+    <button
+        type="button"
+        onclick="togglePassword('createPassword', this)"
+        aria-label="Show password"
+        style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:#999;font-size:20px;cursor:pointer;padding:5px;"
+    >👁</button>
+</div>
 
             <button type="submit" class="account-primary">
                 CREATE ACCOUNT
@@ -4148,8 +4157,8 @@ async function handleCreateAccount(event) {
         return;
     }
 
-    if (password.length < 6) {
-        alert("Password must be at least 6 characters.");
+    if (password.length < 8) {
+        alert("Password must be at least 8 characters.");
         return;
     }
 
@@ -4858,7 +4867,20 @@ function saveCustomSize() {
     setTimeout(() => {
         closeCustomSize();
     }, 1000);
-}  
+} 
+   function togglePassword(inputId, button) {
+    const input = document.getElementById(inputId);
+
+    if (input.type === "password") {
+        input.type = "text";
+        button.textContent = "🙈";
+        button.setAttribute("aria-label", "Hide password");
+    } else {
+        input.type = "password";
+        button.textContent = "👁";
+        button.setAttribute("aria-label", "Show password");
+    }
+}
 </script>
 
    <!-- KNG SUPABASE CONNECTION -->
