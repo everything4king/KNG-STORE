@@ -4134,13 +4134,444 @@ function showCreateAccount() {
    TEMPORARY ACCOUNT HANDLERS
    ========================================================= */
 
-function handleSignIn(event) {
+/* =========================================================
+   KNG ACCOUNT AUTHENTICATION
+   ========================================================= */
+
+
+/* =========================================================
+   SIGN IN
+   ========================================================= */
+
+async function handleSignIn(event) {
 
     event.preventDefault();
 
-    const email = document.getElementById("signInEmail").value;
+    const email =
+        document
+            .getElementById("signInEmail")
+            .value
+            .trim();
 
-    alert("KNG account sign-in will be connected to the real account database next.");
+    const password =
+        document
+            .getElementById("signInPassword")
+            .value;
+
+
+    if (!email || !password) {
+
+        alert(
+            "Please enter your email and password."
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        const submitButton =
+            event.target.querySelector(
+                'button[type="submit"]'
+            );
+
+
+        if (submitButton) {
+
+            submitButton.disabled = true;
+
+            submitButton.textContent =
+                "SIGNING IN...";
+
+        }
+
+
+        const {
+            data,
+            error
+        } =
+            await window
+                .kngSupabase
+                .auth
+                .signInWithPassword({
+
+                    email: email,
+
+                    password: password
+
+                });
+
+
+        if (error) {
+
+            console.error(
+                "KNG sign in error:",
+                error
+            );
+
+
+            alert(
+                error.message ||
+                "Unable to sign in. Please check your email and password."
+            );
+
+
+            return;
+
+        }
+
+
+        if (data.user) {
+
+            alert(
+                "Welcome back to KNG!"
+            );
+
+
+            closeAccount();
+
+
+            updateKngAccountState();
+
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "KNG sign in error:",
+            error
+        );
+
+
+        alert(
+            "Something went wrong while signing in. Please try again."
+        );
+
+
+    } finally {
+
+        const submitButton =
+            event.target.querySelector(
+                'button[type="submit"]'
+            );
+
+
+        if (submitButton) {
+
+            submitButton.disabled = false;
+
+            submitButton.textContent =
+                "SIGN IN";
+
+        }
+
+    }
+
+}
+
+
+
+/* =========================================================
+   CREATE ACCOUNT
+   ========================================================= */
+
+async function handleCreateAccount(event) {
+
+    event.preventDefault();
+
+
+    const name =
+        document
+            .getElementById("createName")
+            .value
+            .trim();
+
+
+    const email =
+        document
+            .getElementById("createEmail")
+            .value
+            .trim();
+
+
+    const password =
+        document
+            .getElementById("createPassword")
+            .value;
+
+
+    if (
+        !name ||
+        !email ||
+        !password
+    ) {
+
+        alert(
+            "Please fill in all fields."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        password.length < 8
+    ) {
+
+        alert(
+            "Password must be at least 8 characters."
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        const submitButton =
+            event.target.querySelector(
+                'button[type="submit"]'
+            );
+
+
+        if (submitButton) {
+
+            submitButton.disabled = true;
+
+            submitButton.textContent =
+                "CREATING ACCOUNT...";
+
+        }
+
+
+        const {
+            data,
+            error
+        } =
+            await window
+                .kngSupabase
+                .auth
+                .signUp({
+
+                    email: email,
+
+                    password: password,
+
+                    options: {
+
+                        data: {
+
+                            full_name:
+                                name
+
+                        }
+
+                    }
+
+                });
+
+
+        if (error) {
+
+            console.error(
+                "KNG signup error:",
+                error
+            );
+
+
+            alert(
+                error.message ||
+                "Unable to create your KNG account."
+            );
+
+
+            return;
+
+        }
+
+
+        if (
+            data.user
+        ) {
+
+            /*
+                CONFIRM EMAIL IS CURRENTLY OFF
+                IN SUPABASE.
+
+                THE USER SHOULD THEREFORE BE
+                ABLE TO USE THE ACCOUNT WITHOUT
+                AN EMAIL OTP.
+            */
+
+
+            if (
+                data.session
+            ) {
+
+                alert(
+                    "Your KNG account has been created successfully. Welcome to KNG!"
+                );
+
+
+                closeAccount();
+
+
+                updateKngAccountState();
+
+            }
+
+            else {
+
+                alert(
+                    "Your account was created successfully. Please sign in to continue."
+                );
+
+
+                showSignIn();
+
+            }
+
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "KNG signup error:",
+            error
+        );
+
+
+        alert(
+            "Something went wrong while creating your account. Please try again."
+        );
+
+
+    } finally {
+
+        const submitButton =
+            event.target.querySelector(
+                'button[type="submit"]'
+            );
+
+
+        if (submitButton) {
+
+            submitButton.disabled = false;
+
+            submitButton.textContent =
+                "CREATE ACCOUNT";
+
+        }
+
+    }
+
+}
+
+
+
+/* =========================================================
+   KNG ACCOUNT STATE
+   ========================================================= */
+
+async function updateKngAccountState() {
+
+    try {
+
+        const {
+            data:
+            {
+                user
+            }
+        } =
+            await window
+                .kngSupabase
+                .auth
+                .getUser();
+
+
+        if (
+            user
+        ) {
+
+            console.log(
+                "KNG customer signed in:",
+                user.email
+            );
+
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "KNG account state error:",
+            error
+        );
+
+    }
+
+}
+
+
+
+/* =========================================================
+   CHECK EXISTING SESSION
+   ========================================================= */
+
+async function checkKngSession() {
+
+    try {
+
+        const {
+            data:
+            {
+                session
+            }
+        } =
+            await window
+                .kngSupabase
+                .auth
+                .getSession();
+
+
+        if (
+            session &&
+            session.user
+        ) {
+
+            console.log(
+                "KNG customer session active:",
+                session.user.email
+            );
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "KNG session check error:",
+            error
+        );
+
+    }
+
+}
+
+
+window.addEventListener(
+    "load",
+    function() {
+
+        checkKngSession();
+
+    }
+);
 
 }
 
