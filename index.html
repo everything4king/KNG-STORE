@@ -4571,50 +4571,10 @@ window.addEventListener(
     }
 );
 
-}
 
 
-async function handleCreateAccount(event) {
-    event.preventDefault();
 
-    const name = document.getElementById("createName").value.trim();
-    const email = document.getElementById("createEmail").value.trim();
-    const password = document.getElementById("createPassword").value;
 
-    if (!name || !email || !password) {
-        alert("Please fill in all fields.");
-        return;
-    }
-
-    if (password.length < 8) {
-        alert("Password must be at least 8 characters.");
-        return;
-    }
-
-    try {
-        const { data, error } = await window.kngSupabase.auth.signUp({
-            email: email,
-            password: password,
-            options: {
-                data: {
-                    full_name: name
-                }
-            }
-        });
-
-        if (error) {
-            alert(error.message);
-            return;
-        }
-
-     if (data.user) {
-    showKngOtp(email);
-}   
-    } catch (error) {
-        console.error("KNG signup error:", error);
-        alert("Something went wrong. Please try again.");
-    }
-}
  /* =========================================================
    KNG EMAIL OTP VERIFICATION
    ========================================================= */
