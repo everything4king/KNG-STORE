@@ -4280,99 +4280,58 @@ async function handleCreateAccount(event) {
 
     event.preventDefault();
 
+    const name = document
+        .getElementById("createName")
+        .value
+        .trim();
 
-    const name =
-        document
-            .getElementById("createName")
-            .value
-            .trim();
+    const email = document
+        .getElementById("createEmail")
+        .value
+        .trim()
+        .toLowerCase();
 
+    const password = document
+        .getElementById("createPassword")
+        .value;
 
-    const email =
-        document
-            .getElementById("createEmail")
-            .value
-            .trim();
-
-
-    const password =
-        document
-            .getElementById("createPassword")
-            .value;
-
-
-    if (
-        !name ||
-        !email ||
-        !password
-    ) {
-
-        alert(
-            "Please fill in all fields."
-        );
-
+    if (!name || !email || !password) {
+        alert("Please fill in all fields.");
         return;
-
     }
 
-
-    if (
-        password.length < 8
-    ) {
-
-        alert(
-            "Password must be at least 8 characters."
-        );
-
+    if (password.length < 8) {
+        alert("Password must be at least 8 characters.");
         return;
-
     }
 
+    const submitButton = event.target.querySelector(
+        'button[type="submit"]'
+    );
+
+    if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = "CREATING ACCOUNT...";
+    }
 
     try {
 
-        const submitButton =
-            event.target.querySelector(
-                'button[type="submit"]'
-            );
+        const { data, error } =
+            await window.kngSupabase.auth.signUp({
 
+                email: email,
 
-        if (submitButton) {
+                password: password,
 
-            submitButton.disabled = true;
+                options: {
+                    data: {
+                        full_name: name
+                    },
 
-            submitButton.textContent =
-                "CREATING ACCOUNT...";
-
-        }
-
-
-        const {
-            data,
-            error
-        } =
-            await window
-                .kngSupabase
-                .auth
-                .signUp({
-
-                    email: email,
-
-                    password: password,
-
-                    options: {
-
-                        data: {
-
-                            full_name:
-                                name
-
-                        }
-
-                    }
-
-                });
-
+                    emailRedirectTo:
+                        "https://kngwears.com"
+                }
+            });
 
         if (error) {
 
@@ -4381,61 +4340,57 @@ async function handleCreateAccount(event) {
                 error
             );
 
-
             alert(
                 error.message ||
                 "Unable to create your KNG account."
             );
 
+            return;
+        }
+
+        /*
+         * LIVE KNG EMAIL VERIFICATION
+         *
+         * When Supabase Confirm Email is ON,
+         * the account is created but the user
+         * does not receive a session yet.
+         *
+         * The real verification OTP is sent
+         * to the customer's email.
+         */
+
+        if (data && data.user && !data.session) {
+
+            showKngOtp(email);
 
             return;
-
         }
 
+        /*
+         * Fallback if email confirmation is OFF.
+         * We do not want this in production,
+         * but this prevents the site from breaking
+         * during configuration.
+         */
 
-        if (
-            data.user
-        ) {
+        if (data && data.session) {
 
-            /*
-                CONFIRM EMAIL IS CURRENTLY OFF
-                IN SUPABASE.
+            alert(
+                "Your KNG account has been created successfully. Welcome to KNG!"
+            );
 
-                THE USER SHOULD THEREFORE BE
-                ABLE TO USE THE ACCOUNT WITHOUT
-                AN EMAIL OTP.
-            */
+            closeAccount();
 
+            updateKngAccountState();
 
-            if (
-                data.session
-            ) {
-
-                alert(
-                    "Your KNG account has been created successfully. Welcome to KNG!"
-                );
-
-
-                closeAccount();
-
-
-                updateKngAccountState();
-
-            }
-
-            else {
-
-                alert(
-                    "Your account was created successfully. Please sign in to continue."
-                );
-
-
-                showSignIn();
-
-            }
-
+            return;
         }
 
+        alert(
+            "Your account was created. Please check your email for your verification code."
+        );
+
+        showKngOtp(email);
 
     } catch (error) {
 
@@ -4444,19 +4399,12 @@ async function handleCreateAccount(event) {
             error
         );
 
-
         alert(
+            error.message ||
             "Something went wrong while creating your account. Please try again."
         );
 
-
     } finally {
-
-        const submitButton =
-            event.target.querySelector(
-                'button[type="submit"]'
-            );
-
 
         if (submitButton) {
 
@@ -4464,13 +4412,9 @@ async function handleCreateAccount(event) {
 
             submitButton.textContent =
                 "CREATE ACCOUNT";
-
         }
-
     }
-
 }
-
 
 
 /* =========================================================
@@ -4585,15 +4529,34 @@ function showKngOtp(email) {
     kngPendingOtpEmail = email;
 
     const accountModal = document.getElementById("accountModal");
-    const signInScreen = document.getElementById("kngSignInScreen");
-    const createAccountScreen = document.getElementById("kngCreateAccountScreen");
     const otpScreen = document.getElementById("kngOtpScreen");
+    const otpEmail = document.getElementById("kngOtpEmail");
 
-    if (signInScreen) signInScreen.style.display = "none";
-    if (createAccountScreen) createAccountScreen.style.display = "none";
-    if (otpScreen) otpScreen.style.display = "block";
+    if (!otpScreen) {
+        alert("KNG verification screen could not be loaded. Please try again.");
+        return;
+    }
 
-    if (accountModal) accountModal.style.display = "flex";
+    if (otpEmail) {
+        otpEmail.textContent = email;
+    }
+
+    const signInForm = document.getElementById("kngSignInScreen");
+    const createAccountForm = document.getElementById("kngCreateAccountScreen");
+
+    if (signInForm) {
+        signInForm.style.display = "none";
+    }
+
+    if (createAccountForm) {
+        createAccountForm.style.display = "none";
+    }
+
+    otpScreen.style.display = "block";
+
+    if (accountModal) {
+        accountModal.style.display = "flex";
+    }
 
     const otpInputs = document.querySelectorAll("#kngOtpScreen input");
 
@@ -4606,6 +4569,31 @@ function showKngOtp(email) {
     }
 }
 
+async function resendKngOtp() {
+    const email = kngPendingOtpEmail;
+
+    if (!email) {
+        alert("Your verification session has expired. Please create your account again.");
+        return;
+    }
+
+    try {
+  const { error } = await window.kngSupabase.auth.resend({
+    type: "signup",
+    email: email
+});
+        if (error) {
+            console.error("KNG OTP resend error:", error);
+            alert(error.message || "Unable to resend the verification code.");
+            return;
+        }
+
+        alert("A new KNG verification code has been sent to your email.");
+    } catch (error) {
+        console.error("KNG OTP resend error:", error);
+        alert("Something went wrong. Please try again.");
+    }
+}
 async function verifyKngOtp() {
     const email = kngPendingOtpEmail;
 
@@ -4621,8 +4609,10 @@ async function verifyKngOtp() {
         .join("")
         .replace(/\D/g, "");
 
-    if (token.length !== 8) {
-        alert("Please enter the complete 8-digit verification code.");
+    const expectedLength = otpInputs.length;
+
+    if (!token || token.length !== expectedLength) {
+        alert("Please enter the complete verification code.");
         return;
     }
 
@@ -4639,56 +4629,29 @@ async function verifyKngOtp() {
             return;
         }
 
-        if (data && data.session) {
-            alert("Email verified successfully. Welcome to KNG!");
+        alert("Email verified successfully. Welcome to KNG!");
 
-            const otpScreen = document.getElementById("kngOtpScreen");
+        const otpScreen = document.getElementById("kngOtpScreen");
 
-            if (otpScreen) {
-                otpScreen.style.display = "none";
-            }
-
-            kngPendingOtpEmail = "";
-
-            if (typeof closeAccountModal === "function") {
-                closeAccountModal();
-            }
-        }
-    } catch (error) {
-        console.error("KNG OTP error:", error);
-        alert("Something went wrong while verifying your code. Please try again.");
-    }
-}
-
-async function resendKngOtp() {
-    const email = kngPendingOtpEmail;
-
-    if (!email) {
-        alert("Your verification session has expired. Please create your account again.");
-        return;
-    }
-
-    try {
-        const { error } = await window.kngSupabase.auth.signInWithOtp({
-            email: email,
-            options: {
-                shouldCreateUser: false
-            }
-        });
-
-        if (error) {
-            console.error("KNG OTP resend error:", error);
-            alert(error.message || "Unable to resend the verification code.");
-            return;
+        if (otpScreen) {
+            otpScreen.style.display = "none";
         }
 
-        alert("A new KNG verification code has been sent to your email.");
+        kngPendingOtpEmail = "";
+
+        if (typeof closeAccount === "function") {
+            closeAccount();
+        }
+
+        if (typeof updateKngAccountState === "function") {
+            updateKngAccountState();
+        }
+
     } catch (error) {
-        console.error("KNG OTP resend error:", error);
-        alert("Something went wrong. Please try again.");
+        console.error("KNG OTP verification error:", error);
+        alert("Something went wrong while verifying your email. Please try again.");
     }
 }
-
 function cancelKngOtp() {
     kngPendingOtpEmail = "";
 
