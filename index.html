@@ -4529,140 +4529,113 @@ function showKngOtp(email) {
     kngPendingOtpEmail = email;
 
     const accountModal = document.getElementById("accountModal");
-    const otpScreen = document.getElementById("kngOtpScreen");
-    const otpEmail = document.getElementById("kngOtpEmail");
+    const panel = document.querySelector(".account-panel");
 
-    if (!otpScreen) {
+    if (!panel) {
         alert("KNG verification screen could not be loaded. Please try again.");
         return;
     }
+
+    panel.innerHTML = `
+        <button
+            class="account-close"
+            onclick="cancelKngOtp()"
+            aria-label="Close"
+        >
+            ×
+        </button>
+
+        <div class="kng-otp-box">
+
+            <div class="account-logo">
+                KNG<span>.</span>
+            </div>
+
+            <p class="account-kicker">
+                SECURITY CHECK
+            </p>
+
+            <h2>
+                VERIFY<br>
+                <span>YOUR EMAIL.</span>
+            </h2>
+
+            <p class="kng-otp-message">
+                We sent a 6-digit verification code to
+                <strong id="kngOtpEmail"></strong>
+            </p>
+
+            <label for="kngOtpCode">
+                VERIFICATION CODE
+            </label>
+
+            <input
+                type="text"
+                id="kngOtpCode"
+                class="kng-otp-input"
+                placeholder="Enter 6-digit code"
+                maxlength="6"
+                inputmode="numeric"
+                autocomplete="one-time-code"
+                pattern="[0-9]*"
+            >
+
+            <button
+                type="button"
+                class="kng-otp-verify"
+                onclick="verifyKngOtp()"
+            >
+                VERIFY CODE
+            </button>
+
+            <button
+                type="button"
+                class="kng-otp-resend"
+                onclick="resendKngOtp()"
+            >
+                Didn't receive the code?
+                <span>RESEND</span>
+            </button>
+
+            <button
+                type="button"
+                class="kng-otp-back"
+                onclick="cancelKngOtp()"
+            >
+                ← BACK TO SIGN IN
+            </button>
+
+        </div>
+    `;
+
+    const otpEmail = document.getElementById("kngOtpEmail");
 
     if (otpEmail) {
         otpEmail.textContent = email;
     }
 
-    const signInForm = document.getElementById("kngSignInScreen");
-    const createAccountForm = document.getElementById("kngCreateAccountScreen");
-
-    if (signInForm) {
-        signInForm.style.display = "none";
-    }
-
-    if (createAccountForm) {
-        createAccountForm.style.display = "none";
-    }
-
-    otpScreen.style.display = "block";
-
     if (accountModal) {
-        accountModal.style.display = "flex";
+        accountModal.classList.add("active");
     }
 
-    const otpInputs = document.querySelectorAll("#kngOtpScreen input");
+    document.body.style.overflow = "hidden";
 
-    otpInputs.forEach(input => {
-        input.value = "";
-    });
+    const otpInput = document.getElementById("kngOtpCode");
 
-    if (otpInputs.length > 0) {
-        otpInputs[0].focus();
-    }
-}
+    if (otpInput) {
+        otpInput.value = "";
+        otpInput.focus();
 
-async function resendKngOtp() {
-    const email = kngPendingOtpEmail;
-
-    if (!email) {
-        alert("Your verification session has expired. Please create your account again.");
-        return;
-    }
-
-    try {
-  const { error } = await window.kngSupabase.auth.resend({
-    type: "signup",
-    email: email
-});
-        if (error) {
-            console.error("KNG OTP resend error:", error);
-            alert(error.message || "Unable to resend the verification code.");
-            return;
-        }
-
-        alert("A new KNG verification code has been sent to your email.");
-    } catch (error) {
-        console.error("KNG OTP resend error:", error);
-        alert("Something went wrong. Please try again.");
-    }
-}
-async function verifyKngOtp() {
-    const email = kngPendingOtpEmail;
-
-    if (!email) {
-        alert("Your verification session has expired. Please create your account again.");
-        return;
-    }
-
-    const otpInputs = document.querySelectorAll("#kngOtpScreen input");
-
-    const token = Array.from(otpInputs)
-        .map(input => input.value.trim())
-        .join("")
-        .replace(/\D/g, "");
-
-    const expectedLength = otpInputs.length;
-
-    if (!token || token.length !== expectedLength) {
-        alert("Please enter the complete verification code.");
-        return;
-    }
-
-    try {
-        const { data, error } = await window.kngSupabase.auth.verifyOtp({
-            email: email,
-            token: token,
-            type: "email"
+        otpInput.addEventListener("input", function () {
+            this.value = this.value.replace(/\D/g, "").slice(0, 6);
         });
 
-        if (error) {
-            console.error("KNG OTP verification error:", error);
-            alert(error.message || "Invalid or expired verification code.");
-            return;
-        }
-
-        alert("Email verified successfully. Welcome to KNG!");
-
-        const otpScreen = document.getElementById("kngOtpScreen");
-
-        if (otpScreen) {
-            otpScreen.style.display = "none";
-        }
-
-        kngPendingOtpEmail = "";
-
-        if (typeof closeAccount === "function") {
-            closeAccount();
-        }
-
-        if (typeof updateKngAccountState === "function") {
-            updateKngAccountState();
-        }
-
-    } catch (error) {
-        console.error("KNG OTP verification error:", error);
-        alert("Something went wrong while verifying your email. Please try again.");
-    }
-}
-function cancelKngOtp() {
-    kngPendingOtpEmail = "";
-
-    const otpScreen = document.getElementById("kngOtpScreen");
-
-    if (otpScreen) {
-        otpScreen.style.display = "none";
-    }
-
-    if (typeof showSignIn === "function") {
-        showSignIn();
+        otpInput.addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                verifyKngOtp();
+            }
+        });
     }
 }
    const accountStyles = document.createElement("style");
