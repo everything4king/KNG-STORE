@@ -4096,7 +4096,27 @@ function showCreateAccount() {
                 placeholder="Your email address"
                 required
             >
+            <label>Phone Number</label>
 
+<input
+    type="tel"
+    id="createPhone"
+    placeholder="Your phone number"
+    inputmode="tel"
+    autocomplete="tel"
+    required
+>
+
+<label>WhatsApp Number</label>
+
+<input
+    type="tel"
+    id="createWhatsapp"
+    placeholder="Your WhatsApp number"
+    inputmode="tel"
+    autocomplete="tel"
+    required
+>
             <label>Password</label>
 
            <div style="position:relative;">
@@ -4636,6 +4656,119 @@ function showKngOtp(email) {
                 verifyKngOtp();
             }
         });
+    }
+}
+
+   async function verifyKngOtp() {
+    const otpInput = document.getElementById("kngOtpCode");
+
+    if (!otpInput) {
+        alert("OTP input not found.");
+        return;
+    }
+
+    const token = otpInput.value.trim();
+
+    if (!/^\d{6}$/.test(token)) {
+        alert("Please enter the 6-digit verification code.");
+        otpInput.focus();
+        return;
+    }
+
+    if (!window.kngPendingSignupEmail) {
+        alert("Your signup session has expired. Please create your account again.");
+        return;
+    }
+
+    const verifyButton = document.querySelector(".kng-otp-verify");
+
+    if (verifyButton) {
+        verifyButton.disabled = true;
+        verifyButton.textContent = "VERIFYING...";
+    }
+
+    try {
+        const { data, error } = await window.kngSupabase.auth.verifyOtp({
+            email: window.kngPendingSignupEmail,
+            token: token,
+            type: "signup"
+        });
+
+        if (error) {
+            console.error("KNG OTP verification error:", error);
+
+            if (verifyButton) {
+                verifyButton.disabled = false;
+                verifyButton.textContent = "VERIFY CODE";
+            }
+
+            alert(error.message || "Invalid or expired verification code.");
+            return;
+        }
+
+        console.log("KNG OTP verified successfully:", data);
+
+        /*
+         * Save the customer's profile after successful verification.
+         */
+        if (window.kngPendingSignupProfile) {
+            const profile = window.kngPendingSignupProfile;
+
+            const { error: profileError } =
+                await window.kngSupabase
+                    .from("profiles")
+                    .upsert({
+                        id: data.user.id,
+                        full_name: profile.full_name,
+                        email: profile.email,
+                        phone_number: profile.phone_number,
+                        whatsapp_number: profile.whatsapp_number
+                    });
+
+            if (profileError) {
+                console.error("Profile save error:", profileError);
+
+                alert(
+                    "Your email was verified, but we could not save your customer details. Please contact KNG."
+                );
+
+                if (verifyButton) {
+                    verifyButton.disabled = false;
+                    verifyButton.textContent = "VERIFY CODE";
+                }
+
+                return;
+            }
+        }
+
+        alert("ACCOUNT CREATED SUCCESSFULLY!");
+
+        window.kngPendingSignupEmail = null;
+        window.kngPendingSignupProfile = null;
+
+        const otpPanel = document.querySelector(".kng-otp-panel");
+
+        if (otpPanel) {
+            otpPanel.remove();
+        }
+
+        if (typeof closeAccount === "function") {
+            closeAccount();
+        }
+
+        if (typeof showSignIn === "function") {
+            showSignIn();
+        }
+
+    } catch (error) {
+        console.error("Unexpected OTP verification error:", error);
+
+        if (verifyButton) {
+            verifyButton.disabled = false;
+            verifyButton.textContent = "VERIFY CODE";
+        }
+
+        alert("Something went wrong while verifying your code. Please try again.");
     }
 }
    const accountStyles = document.createElement("style");
