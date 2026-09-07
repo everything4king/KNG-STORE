@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="KNG â€” Official online store. Premium Nigerian streetwear built different. Wear the crown. Be the standard.">
+<meta name="description" content="KNG - Official online store. Premium Nigerian streetwear built different. Wear the crown. Be the standard.">
 <meta name="keywords" content="KNG, KNGwears, KNG clothing, Nigerian fashion, Nigerian streetwear, hoodies, sweatpants, t-shirts, jorts, beanies, face caps, lapel pins">
 <meta name="author" content="KNG">
-<title>KNG â€” Official Store</title>
+<title>KNG - Official Store</title>
 
 <style>
 :root{--black:#050505;--black2:#0a0a0a;--gold:#e5b92f;--cream:#f5f1e8;--muted:#99948a;--border:rgba(255,255,255,.10);--goldborder:rgba(229,185,47,.45)}
@@ -21,7 +21,7 @@ header{position:sticky;top:0;z-index:1000;height:88px;background:rgba(5,5,5,.96)
 .navbar{max-width:1350px;height:100%;margin:auto;padding:0 35px;display:flex;align-items:center;justify-content:space-between;gap:20px}
 .logo{font-size:34px;font-weight:1000;letter-spacing:-3px;cursor:pointer}.logo span,.footer-logo span,.account-logo span{color:var(--gold)}
 .nav-links{display:flex;align-items:center;gap:38px}.nav-links button{border:0;background:none;color:#bcb8af;text-transform:uppercase;letter-spacing:3px;font-size:13px;font-weight:700}.nav-links button:hover{color:var(--gold)}
-.nav-actions{display:flex;gap:10px}.icon-btn{width:54px;height:54px;border-radius:50%;background:transparent;border:1px solid var(--border);color:var(--cream);position:relative}.icon-btn:hover{border-color:var(--gold);color:var(--gold)}
+.nav-actions{display:flex;gap:10px}.icon-btn svg{width:22px;height:22px;display:block;margin:auto}.icon-btn{width:54px;height:54px;border-radius:50%;background:transparent;border:1px solid var(--border);color:var(--cream);position:relative}.icon-btn:hover{border-color:var(--gold);color:var(--gold)}
 .cart-count{position:absolute;top:-5px;right:-2px;min-width:23px;height:23px;border-radius:50%;background:var(--gold);color:#000;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center}.mobile-menu{display:none}
 .page{display:none}.page.active{display:block}
 .hero{min-height:calc(100vh - 88px);display:flex;align-items:center;justify-content:center;text-align:center;padding:80px 30px;background:radial-gradient(circle,rgba(229,185,47,.05),transparent 42%),#050505}
@@ -59,53 +59,53 @@ footer{border-top:1px solid var(--border);background:#050505}.footer-inner{max-w
 <button onclick="goHome()">Home</button><button onclick="goToCollections()">Categories</button><button onclick="openWardrobe('men')">Men</button><button onclick="openWardrobe('women')">Women</button><button onclick="openWardrobe('accessories')">Accessories</button><button onclick="showPage('about')">About</button>
 </nav>
 <div class="nav-actions">
-<button class="icon-btn" onclick="openSearch()" aria-label="Search">âŒ•</button>
-<button class="icon-btn" onclick="openCart()" aria-label="Cart">ðŸ›’<span class="cart-count" id="cartCount">0</span></button>
-<button class="icon-btn" onclick="openAccount()" aria-label="Account">â™™</button>
-<button class="icon-btn mobile-menu" onclick="toggleMobileMenu()" aria-label="Menu">â˜°</button>
+<button class="icon-btn" onclick="openSearch()" aria-label="Search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8"></circle><path d="M16 16L21 21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg></button>
+<button class="icon-btn" onclick="openCart()" aria-label="Cart"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h2l1.5 10.5h9.8L20 8H7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="9" cy="19" r="1.2" fill="currentColor"></circle><circle cx="17" cy="19" r="1.2" fill="currentColor"></circle></svg><span class="cart-count" id="cartCount">0</span></button>
+<button class="icon-btn" onclick="openAccount()" aria-label="Account"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.2" fill="none" stroke="currentColor" stroke-width="1.8"></circle><path d="M5.5 20c.8-3.4 3.1-5.2 6.5-5.2s5.7 1.8 6.5 5.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg></button>
+<button class="icon-btn mobile-menu" onclick="toggleMobileMenu()" aria-label="Menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg></button>
 </div></div></header>
 
 <main id="homePage" class="page active">
 <section class="hero"><div class="hero-content"><div class="hero-kicker">KNG / OFFICIAL STORE</div><h1 class="hero-title">WEAR THE<span class="gold">CROWN.</span></h1><p class="hero-description">BUILT DIFFERENT. / WEAR THE CROWN. / BE THE STANDARD.</p><div class="hero-buttons"><button class="btn" onclick="goToCollections()">SHOP THE COLLECTION</button><button class="btn btn-outline" onclick="showPage('about')">ABOUT KNG</button></div></div></section>
 <section class="section collections" id="collections"><div class="collections-heading"><div class="eyebrow">THE COLLECTIONS</div><h2 class="section-title">FIND YOUR STANDARD.</h2><p class="section-subtitle">Choose your collection and enter your KNG wardrobe.</p></div><div class="collection-grid">
-<article class="collection-card"><span class="collection-number">01</span><div class="collection-visual"></div><h3 class="collection-title">Men</h3><p class="collection-description">Upper body, lower body and statement pieces built for the KNG standard.</p><button class="btn btn-outline" onclick="openWardrobe('men')">ENTER MEN'S WARDROBE â†’</button></article>
-<article class="collection-card"><span class="collection-number">02</span><div class="collection-visual"></div><h3 class="collection-title">Women</h3><p class="collection-description">Designed differently. Built for confidence. Enter the women's KNG wardrobe.</p><button class="btn btn-outline" onclick="openWardrobe('women')">ENTER WOMEN'S WARDROBE â†’</button></article>
-<article class="collection-card"><span class="collection-number">03</span><div class="collection-visual"></div><h3 class="collection-title">Accessories</h3><p class="collection-description">Finish the fit with KNG beanies, face caps and branded lapel pins.</p><button class="btn btn-outline" onclick="openWardrobe('accessories')">ENTER ACCESSORIES â†’</button></article>
+<article class="collection-card"><span class="collection-number">01</span><div class="collection-visual"></div><h3 class="collection-title">Men</h3><p class="collection-description">Upper body, lower body and statement pieces built for the KNG standard.</p><button class="btn btn-outline" onclick="openWardrobe('men')">ENTER MEN'S WARDROBE</button></article>
+<article class="collection-card"><span class="collection-number">02</span><div class="collection-visual"></div><h3 class="collection-title">Women</h3><p class="collection-description">Designed differently. Built for confidence. Enter the women's KNG wardrobe.</p><button class="btn btn-outline" onclick="openWardrobe('women')">ENTER WOMEN'S WARDROBE</button></article>
+<article class="collection-card"><span class="collection-number">03</span><div class="collection-visual"></div><h3 class="collection-title">Accessories</h3><p class="collection-description">Finish the fit with KNG beanies, face caps and branded lapel pins.</p><button class="btn btn-outline" onclick="openWardrobe('accessories')">ENTER ACCESSORIES</button></article>
 </div></section>
 </main>
 
-<main id="wardrobePage" class="page"><section class="wardrobe-header"><button class="back-link" onclick="goHome()">â† BACK TO COLLECTIONS</button><div class="eyebrow" id="wardrobeEyebrow">KNG / COLLECTION</div><h1 class="section-title" id="wardrobeTitle">MEN'S WARDROBE.</h1><p class="section-subtitle" id="wardrobeSubtitle">Select your pieces. Build your standard.</p></section><div class="wardrobe-tools"><div class="filters" id="filters"></div><div class="search-box"><input id="productSearch" type="text" placeholder="Search this wardrobe..." oninput="renderProducts()"></div></div><div class="product-grid" id="productGrid"></div></main>
+<main id="wardrobePage" class="page"><section class="wardrobe-header"><button class="back-link" onclick="goHome()"> BACK TO COLLECTIONS</button><div class="eyebrow" id="wardrobeEyebrow">KNG / COLLECTION</div><h1 class="section-title" id="wardrobeTitle">MEN'S WARDROBE.</h1><p class="section-subtitle" id="wardrobeSubtitle">Select your pieces. Build your standard.</p></section><div class="wardrobe-tools"><div class="filters" id="filters"></div><div class="search-box"><input id="productSearch" type="text" placeholder="Search this wardrobe..." oninput="renderProducts()"></div></div><div class="product-grid" id="productGrid"></div></main>
 
 <main id="aboutPage" class="page"><section class="about-section"><div class="eyebrow">KNG</div><h1 class="section-title">BUILT DIFFERENT.</h1><p class="about-text">KNG is a Nigerian fashion brand built around confidence, individuality and the mindset of becoming the standard.<br><br>We don't just make clothes. We build pieces for people who know who they are.<br><br>WEAR THE CROWN.<br>BE THE STANDARD.</p><br><br><button class="btn" onclick="goToCollections()">SHOP KNG</button></section></main>
 
-<main id="checkoutPage" class="page"><div class="checkout-layout"><div class="checkout-form"><button class="back-link" onclick="openCart()">â† BACK TO CART</button><div class="eyebrow">KNG / CHECKOUT</div><h2>COMPLETE YOUR ORDER</h2><form id="checkoutForm"><div class="form-grid">
+<main id="checkoutPage" class="page"><div class="checkout-layout"><div class="checkout-form"><button class="back-link" onclick="openCart()"> BACK TO CART</button><div class="eyebrow">KNG / CHECKOUT</div><h2>COMPLETE YOUR ORDER</h2><form id="checkoutForm"><div class="form-grid">
 <div class="form-field"><label>First Name</label><input id="firstName" required></div><div class="form-field"><label>Last Name</label><input id="lastName" required></div>
 <div class="form-field"><label>Email</label><input id="email" type="email" required></div><div class="form-field"><label>Phone Number</label><input id="phone" type="tel" required></div>
 <div class="form-field full"><label>Delivery Address</label><textarea id="address" rows="4" required></textarea></div>
 <div class="form-field"><label>State</label><select id="state" required><option value="">Select state</option><option>Lagos</option><option>Ogun (Covenant University)</option></select></div>
 <div class="form-field"><label>Payment Method</label><select id="paymentMethod" required><option value="">Select payment</option><option value="card">Card / Online Payment</option><option value="transfer">Bank Transfer</option></select></div>
-</div><div class="payment-note">ðŸ”’ Your secure payment gateway will be connected here. Payment is not processed by this prototype yet.</div><button type="submit" class="btn checkout-button">PROCEED TO PAYMENT</button></form></div>
-<aside class="order-summary"><div class="eyebrow">YOUR ORDER</div><h2>ORDER SUMMARY</h2><div id="checkoutSummary"></div><div class="summary-total"><span>TOTAL</span><span id="checkoutTotal">â‚¦0</span></div></aside></div></main>
+</div><div class="payment-note"> Your secure payment gateway will be connected here. Payment is not processed by this prototype yet.</div><button type="submit" class="btn checkout-button">PROCEED TO PAYMENT</button></form></div>
+<aside class="order-summary"><div class="eyebrow">YOUR ORDER</div><h2>ORDER SUMMARY</h2><div id="checkoutSummary"></div><div class="summary-total"><span>TOTAL</span><span id="checkoutTotal">\u20A60</span></div></aside></div></main>
 
-<div class="modal-overlay" id="productModal" onclick="closeProductModalOnBackdrop(event)"><div class="product-modal"><button class="close-modal" onclick="closeProductModal()">Ã—</button><div class="product-modal-content"><div class="modal-image"><span>KNG</span></div><div class="modal-details">
+<div class="modal-overlay" id="productModal" onclick="closeProductModalOnBackdrop(event)"><div class="product-modal"><button class="close-modal" onclick="closeProductModal()">X</button><div class="product-modal-content"><div class="modal-image"><span>KNG</span></div><div class="modal-details">
 <div class="product-category" id="modalCategory"></div><h2 id="modalName"></h2><div class="modal-price" id="modalPrice"></div>
-<div class="option-group" id="sizeGroup"><label>Select Size</label><div class="option-buttons" id="sizeOptions"></div><div class="size-guide-section"><button type="button" class="size-guide-toggle" onclick="openSizeGuide()">ðŸ“ VIEW SIZE GUIDE</button><div id="sizeGuidePanel" class="size-guide-panel"><div class="size-guide-header"><h3>KNG SIZE GUIDE</h3><button type="button" class="size-guide-close" onclick="closeSizeGuide()">Ã—</button></div>
+<div class="option-group" id="sizeGroup"><label>Select Size</label><div class="option-buttons" id="sizeOptions"></div><div class="size-guide-section"><button type="button" class="size-guide-toggle" onclick="openSizeGuide()"> VIEW SIZE GUIDE</button><div id="sizeGuidePanel" class="size-guide-panel"><div class="size-guide-header"><h3>KNG SIZE GUIDE</h3><button type="button" class="size-guide-close" onclick="closeSizeGuide()">X</button></div>
 <div id="mensSizeGuide" class="size-guide-content"><h4>MEN'S SIZE GUIDE</h4><p class="size-guide-note">Measurements are approximate. For the best fit, compare with a similar garment you already own.</p><div class="size-table-wrapper"><table class="size-table"><thead><tr><th>SIZE</th><th>CHEST</th><th>LENGTH</th><th>SLEEVE</th><th>SHOULDER</th></tr></thead><tbody><tr><td>S</td><td>36"</td><td>27"</td><td>8"</td><td>16"</td></tr><tr><td>M</td><td>38"</td><td>28"</td><td>8.5"</td><td>17"</td></tr><tr><td>L</td><td>40"</td><td>29"</td><td>9"</td><td>18"</td></tr><tr><td>XL</td><td>42"</td><td>30"</td><td>9.5"</td><td>19"</td></tr><tr><td>XXL</td><td>44"</td><td>31"</td><td>10"</td><td>20"</td></tr></tbody></table></div></div>
 <div id="womensSizeGuide" class="size-guide-content"><h4>WOMEN'S SIZE GUIDE</h4><p class="size-guide-note">Measurements are approximate. For the best fit, compare with a similar garment you already own.</p><div class="size-table-wrapper"><table class="size-table"><thead><tr><th>SIZE</th><th>CHEST</th><th>LENGTH</th><th>SLEEVE</th><th>SHOULDER</th></tr></thead><tbody><tr><td>XS</td><td>32"</td><td>24"</td><td>7"</td><td>15"</td></tr><tr><td>S</td><td>34"</td><td>25"</td><td>7.5"</td><td>15.5"</td></tr><tr><td>M</td><td>36"</td><td>26"</td><td>8"</td><td>16"</td></tr><tr><td>L</td><td>38"</td><td>27"</td><td>8.5"</td><td>17"</td></tr><tr><td>XL</td><td>40"</td><td>28"</td><td>9"</td><td>18"</td></tr></tbody></table></div></div>
 <div style="margin-top:18px;text-align:center"><p style="font-size:12px;opacity:.7;margin-bottom:10px">Need a different fit?</p><button type="button" class="custom-size-button" onclick="openCustomSize()">USE CUSTOM SIZE</button></div>
 </div></div></div>
 <div class="option-group"><label>Select Colour</label><div class="option-buttons" id="colorOptions"></div></div>
-<div class="option-group"><label>Quantity</label><div class="option-buttons"><button type="button" class="option-btn" onclick="changeModalQuantity(-1)">âˆ’</button><button type="button" class="option-btn" id="modalQuantity">1</button><button type="button" class="option-btn" onclick="changeModalQuantity(1)">+</button></div></div>
+<div class="option-group"><label>Quantity</label><div class="option-buttons"><button type="button" class="option-btn" onclick="changeModalQuantity(-1)">-</button><button type="button" class="option-btn" id="modalQuantity">1</button><button type="button" class="option-btn" onclick="changeModalQuantity(1)">+</button></div></div>
 <button type="button" class="btn modal-add" onclick="addCurrentProductToCart()">ADD TO CART</button>
 </div></div></div></div>
 
-<div class="drawer-overlay" id="drawerOverlay" onclick="closeCart()"></div><aside class="cart-drawer" id="cartDrawer"><div class="drawer-header"><h2>YOUR CART</h2><button class="drawer-close" onclick="closeCart()">Ã—</button></div><div class="cart-items" id="cartItems"></div><div class="cart-footer"><div class="cart-total"><span>TOTAL</span><span id="cartTotal">â‚¦0</span></div><button class="btn" onclick="goToCheckout()">CHECKOUT</button></div></aside>
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeCart()"></div><aside class="cart-drawer" id="cartDrawer"><div class="drawer-header"><h2>YOUR CART</h2><button class="drawer-close" onclick="closeCart()">X</button></div><div class="cart-items" id="cartItems"></div><div class="cart-footer"><div class="cart-total"><span>TOTAL</span><span id="cartTotal">\u20A60</span></div><button class="btn" onclick="goToCheckout()">CHECKOUT</button></div></aside>
 
-<div class="modal-overlay" id="searchModal" onclick="closeSearchOnBackdrop(event)"><div class="product-modal" style="max-width:650px"><button class="close-modal" onclick="closeSearch()">Ã—</button><div style="padding:70px 35px 45px"><div class="eyebrow">KNG / SEARCH</div><h2 style="font-size:40px;margin:20px 0 25px">FIND YOUR PIECE.</h2><input id="globalSearch" type="text" placeholder="Search KNG..." oninput="globalSearchProducts()" style="width:100%;padding:18px;background:#080808;border:1px solid rgba(255,255,255,.12);color:#fff;outline:0"><div id="globalResults" style="margin-top:25px"></div></div></div></div>
+<div class="modal-overlay" id="searchModal" onclick="closeSearchOnBackdrop(event)"><div class="product-modal" style="max-width:650px"><button class="close-modal" onclick="closeSearch()">X</button><div style="padding:70px 35px 45px"><div class="eyebrow">KNG / SEARCH</div><h2 style="font-size:40px;margin:20px 0 25px">FIND YOUR PIECE.</h2><input id="globalSearch" type="text" placeholder="Search KNG..." oninput="globalSearchProducts()" style="width:100%;padding:18px;background:#080808;border:1px solid rgba(255,255,255,.12);color:#fff;outline:0"><div id="globalResults" style="margin-top:25px"></div></div></div></div>
 
 <div class="toast" id="toast"></div>
 
-<footer><div class="footer-inner"><div class="footer-grid"><div><div class="footer-logo">KNG<span>.</span></div><p class="footer-description">A Nigerian fashion brand built different. Wear the crown. Be the standard.</p></div><div><div class="footer-title">Shop</div><div class="footer-links"><button onclick="openWardrobe('men')">Men</button><button onclick="openWardrobe('women')">Women</button><button onclick="openWardrobe('accessories')">Accessories</button></div></div><div><div class="footer-title">KNG</div><div class="footer-links"><button onclick="showPage('about')">About</button><button onclick="goHome()">Home</button><a href="https://everything4king.github.io/KNG/" target="_blank" rel="noopener">KNG Profile</a></div></div><div><div class="footer-title">Contact</div><div class="footer-links"><a href="mailto:contact@kngwears.com">Email</a><a href="https://instagram.com/kngwears001" target="_blank" rel="noopener">Instagram</a></div></div></div><div class="footer-bottom"><span>Â© 2026 KNG. ALL RIGHTS RESERVED.</span><span>BUILT DIFFERENT. / WEAR THE CROWN.</span></div></div></footer>
+<footer><div class="footer-inner"><div class="footer-grid"><div><div class="footer-logo">KNG<span>.</span></div><p class="footer-description">A Nigerian fashion brand built different. Wear the crown. Be the standard.</p></div><div><div class="footer-title">Shop</div><div class="footer-links"><button onclick="openWardrobe('men')">Men</button><button onclick="openWardrobe('women')">Women</button><button onclick="openWardrobe('accessories')">Accessories</button></div></div><div><div class="footer-title">KNG</div><div class="footer-links"><button onclick="showPage('about')">About</button><button onclick="goHome()">Home</button><a href="https://everything4king.github.io/KNG/" target="_blank" rel="noopener">KNG Profile</a></div></div><div><div class="footer-title">Contact</div><div class="footer-links"><a href="mailto:contact@kngwears.com">Email</a><a href="https://instagram.com/kngwears001" target="_blank" rel="noopener">Instagram</a></div></div></div><div class="footer-bottom"><span>(c) 2026 KNG. ALL RIGHTS RESERVED.</span><span>BUILT DIFFERENT. / WEAR THE CROWN.</span></div></div></footer>
 
 <!-- ONE ACCOUNT MODAL ONLY -->
 <div class="account-modal" id="accountModal" aria-hidden="true"><div class="account-overlay" onclick="closeAccount()"></div><div class="account-panel" id="accountPanel"></div></div>
@@ -114,7 +114,7 @@ footer{border-top:1px solid var(--border);background:#050505}.footer-inner{max-w
 <script>
 const products=[
 /* =========================================================
-   KINGS COLLECTION â€” UPPER BODY
+   KINGS COLLECTION - UPPER BODY
 ========================================================= */
 {id:"men-basic-short-sleeve",name:"Basic / Short Sleeve Tops",price:100,gender:"men",section:"Upper Body",category:"Basic / Short Sleeve Tops",colors:["Obsidian Black","White","Rich Brown","Royal Burgundy","Dark Blue"],sizes:["S","M","L","XL","XXL"],new:false},
 {id:"men-polos",name:"Polos",price:100,gender:"men",section:"Upper Body",category:"Polos",colors:["Obsidian Black","White","Rich Brown","Royal Burgundy","Dark Blue"],sizes:["S","M","L","XL","XXL"],new:false},
@@ -124,7 +124,7 @@ const products=[
 {id:"men-cropped-shirts",name:"Cropped Shirts",price:100,gender:"men",section:"Upper Body",category:"Cropped Shirts",colors:["Obsidian Black","White","Rich Brown","Royal Burgundy","Dark Blue"],sizes:["S","M","L","XL","XXL"],new:false},
 
 /* =========================================================
-   KINGS COLLECTION â€” LOWER BODY
+   KINGS COLLECTION - LOWER BODY
 ========================================================= */
 {id:"men-jorts",name:"Jorts",price:100,gender:"men",section:"Lower Body",category:"Jorts",colors:["Obsidian Black","Ash Grey","Stone","Rich Brown","Dark Indigo"],sizes:["S","M","L","XL","XXL"],new:false},
 {id:"men-baggy-sweatpants",name:"Baggy Sweatpants",price:100,gender:"men",section:"Lower Body",category:"Baggy Sweatpants",colors:["Obsidian Black","Ash Grey","Stone","Rich Brown","Dark Indigo"],sizes:["S","M","L","XL","XXL"],new:false},
@@ -132,7 +132,7 @@ const products=[
 {id:"men-tracksuit-pants",name:"Tracksuit Pants",price:100,gender:"men",section:"Lower Body",category:"Tracksuit Pants",colors:["Obsidian Black","Ash Grey","Stone","Rich Brown","Dark Indigo"],sizes:["S","M","L","XL","XXL"],new:false},
 
 /* =========================================================
-   QUEENS COLLECTION â€” UPPER BODY
+   QUEENS COLLECTION - UPPER BODY
 ========================================================= */
 {id:"women-basic-short-sleeve",name:"Basic / Short Sleeve Tops",price:100,gender:"women",section:"Upper Body",category:"Basic / Short Sleeve Tops",colors:["Obsidian Black","Bone","Deep Olive","Royal Burgundy","Dusty Rose","Chocolate Brown"],sizes:["XS","S","M","L","XL"],new:false},
 {id:"women-long-sleeve",name:"Long Sleeve Tops",price:100,gender:"women",section:"Upper Body",category:"Long Sleeve Tops",colors:["Obsidian Black","Bone","Deep Olive","Royal Burgundy","Dusty Rose","Chocolate Brown"],sizes:["XS","S","M","L","XL"],new:false},
@@ -143,7 +143,7 @@ const products=[
 {id:"women-loose-crop",name:"Loose Crop Tops",price:100,gender:"women",section:"Upper Body",category:"Loose Crop Tops",colors:["Obsidian Black","Bone","Deep Olive","Royal Burgundy","Dusty Rose","Chocolate Brown"],sizes:["XS","S","M","L","XL"],new:false},
 
 /* =========================================================
-   QUEENS COLLECTION â€” LOWER BODY
+   QUEENS COLLECTION - LOWER BODY
 ========================================================= */
 {id:"women-jorts",name:"Jorts",price:100,gender:"women",section:"Lower Body",category:"Jorts",colors:["Obsidian Black","Ash Grey","Stone Beige","Deep Olive","Dark Indigo"],sizes:["XS","S","M","L","XL"],new:false},
 {id:"women-baggy-sweatpants",name:"Baggy Sweatpants",price:100,gender:"women",section:"Lower Body",category:"Baggy Sweatpants",colors:["Obsidian Black","Ash Grey","Stone Beige","Deep Olive","Dark Indigo"],sizes:["XS","S","M","L","XL"],new:false},
@@ -151,14 +151,14 @@ const products=[
 {id:"women-tracksuit-pants",name:"Tracksuit Pants",price:100,gender:"women",section:"Lower Body",category:"Tracksuit Pants",colors:["Obsidian Black","Ash Grey","Stone Beige","Deep Olive","Dark Indigo"],sizes:["XS","S","M","L","XL"],new:false},
 
 /* =========================================================
-   ACCESSORIES â€” HEADWEAR
+   ACCESSORIES - HEADWEAR
 ========================================================= */
 {id:"kng-straight-cap",name:"Straight Cap",price:100,gender:"accessories",section:"Headwear",category:"Straight Cap",colors:["Obsidian Black","Bone","Deep Olive","Royal Burgundy","Slate Grey"],sizes:["ONE SIZE"],new:false},
 {id:"kng-bent-cap",name:"Bent Cap",price:100,gender:"accessories",section:"Headwear",category:"Bent Cap",colors:["Obsidian Black","Bone","Deep Olive","Royal Burgundy","Slate Grey"],sizes:["ONE SIZE"],new:false},
 {id:"kng-beanie",name:"Beanie",price:100,gender:"accessories",section:"Headwear",category:"Beanie",colors:["Obsidian Black","Bone","Deep Olive","Royal Burgundy","Slate Grey"],sizes:["ONE SIZE"],new:false},
 
 /* =========================================================
-   ACCESSORIES â€” LAPEL PINS
+   ACCESSORIES - LAPEL PINS
 ========================================================= */
 {id:"kng-customised-lapel-pins",name:"Customised Lapel Pins",price:100,gender:"accessories",section:"Lapel Pins",category:"Customised Lapel Pins",colors:["Black & Gold","White & Silver"],styles:["Circle","Square"],sizes:["ONE SIZE"],new:false},
 {id:"kng-plain-lapel-pin",name:"Plain Lapel Pin",price:100,gender:"accessories",section:"Lapel Pins",category:"Plain Lapel Pin",colors:["Black & Gold"],styles:["Plain"],sizes:["ONE SIZE"],new:false}
@@ -328,7 +328,7 @@ document.getElementById("cartCount").textContent=n;
 if(!cart.length){
 e.innerHTML='<div class="empty-cart"><h3>YOUR CART IS EMPTY.</h3><p style="margin-top:15px">Enter a KNG wardrobe and choose your pieces.</p><button type="button" class="btn" style="margin-top:25px" onclick="closeCart();goToCollections()">FIND YOUR STANDARD</button></div>';
 }else{
-e.innerHTML=cart.map((i,k)=>`<div class="cart-item"><div class="cart-item-image"></div><div><div class="cart-item-name">${esc(i.name)}</div><div class="cart-item-meta">${i.style?`Option: ${esc(i.style)}<br>`:""}Size: ${esc(i.size)}<br>Colour: ${esc(i.color)}</div><div class="cart-item-price">${money(i.price*i.quantity)}</div><div class="cart-controls"><button type="button" class="qty-btn" onclick="changeCartQuantity(${k},-1)">âˆ’</button><span>${i.quantity}</span><button type="button" class="qty-btn" onclick="changeCartQuantity(${k},1)">+</button><button type="button" class="remove-btn" onclick="removeCartItem(${k})">REMOVE</button></div></div></div>`).join("");
+e.innerHTML=cart.map((i,k)=>`<div class="cart-item"><div class="cart-item-image"></div><div><div class="cart-item-name">${esc(i.name)}</div><div class="cart-item-meta">${i.style?`Option: ${esc(i.style)}<br>`:""}Size: ${esc(i.size)}<br>Colour: ${esc(i.color)}</div><div class="cart-item-price">${money(i.price*i.quantity)}</div><div class="cart-controls"><button type="button" class="qty-btn" onclick="changeCartQuantity(${k},-1)">-</button><span>${i.quantity}</span><button type="button" class="qty-btn" onclick="changeCartQuantity(${k},1)">+</button><button type="button" class="remove-btn" onclick="removeCartItem(${k})">REMOVE</button></div></div></div>`).join("");
 }
 document.getElementById("cartTotal").textContent=money(getCartTotal())
 }
@@ -338,7 +338,7 @@ function getCartTotal(){return cart.reduce((a,i)=>a+Number(i.price)*Number(i.qua
 
 /* CHECKOUT */
 async function goToCheckout(){if(!cart.length){showToast("YOUR CART IS EMPTY.");return}const {data:{user},error}=await kngSupabase.auth.getUser();if(error||!user){showToast("PLEASE SIGN IN OR CREATE A KNG ACCOUNT BEFORE CHECKOUT.");closeCart();openAccount("signin");return}closeCart();showPage("checkout");renderCheckoutSummary();fillCheckoutFromAccount()}
-function renderCheckoutSummary(){document.getElementById("checkoutSummary").innerHTML=cart.map(i=>`<div class="summary-item"><span>${esc(i.name)} Ã— ${i.quantity}<br><small>${esc(i.size)} / ${esc(i.color)}</small></span><strong>${money(i.price*i.quantity)}</strong></div>`).join("");document.getElementById("checkoutTotal").textContent=money(getCartTotal())}
+function renderCheckoutSummary(){document.getElementById("checkoutSummary").innerHTML=cart.map(i=>`<div class="summary-item"><span>${esc(i.name)} X ${i.quantity}<br><small>${esc(i.size)} / ${esc(i.color)}</small></span><strong>${money(i.price*i.quantity)}</strong></div>`).join("");document.getElementById("checkoutTotal").textContent=money(getCartTotal())}
 async function fillCheckoutFromAccount(){try{const {data:{user}}=await kngSupabase.auth.getUser();if(!user)return;const m=user.user_metadata||{},parts=(m.full_name||"").trim().split(/\s+/);document.getElementById("firstName").value=parts.shift()||"";document.getElementById("lastName").value=parts.join(" ");document.getElementById("email").value=user.email||"";document.getElementById("phone").value=m.phone_number||""}catch(e){console.error(e)}}
 document.getElementById("checkoutForm").addEventListener("submit",e=>{e.preventDefault();alert("KNG CHECKOUT\n\nYour order information has been collected.\n\nThe secure payment gateway will be connected next.")})
 
@@ -348,23 +348,23 @@ function closeSearch(){document.getElementById("searchModal").classList.remove("
 function closeSearchOnBackdrop(e){if(e.target.id==="searchModal")closeSearch()}
 function globalSearchProducts(){const q=document.getElementById("globalSearch").value.toLowerCase().trim(),r=document.getElementById("globalResults");if(!q){r.innerHTML="";return}const m=products.filter(p=>(p.name+" "+p.category+" "+p.gender).toLowerCase().includes(q));r.innerHTML=m.length?m.map(p=>`<div style="padding:18px 0;border-bottom:1px solid rgba(255,255,255,.1);display:flex;justify-content:space-between;gap:20px;align-items:center"><div><strong>${esc(p.name)}</strong><div style="color:#999;font-size:12px;margin-top:6px">${money(p.price)}</div></div><button type="button" class="btn" style="min-height:42px;padding:0 16px" onclick="closeSearch();openWardrobe('${p.gender}');setTimeout(()=>openProductModal('${p.id}'),100)">VIEW</button></div>`).join(""):'<p style="color:#777">No KNG pieces found.</p>'}
 function toggleMobileMenu(){const n=document.querySelector(".nav-links");if(window.innerWidth>1000)return;n.style.display=n.style.display==="flex"?"":"flex";if(n.style.display==="flex"){n.style.position="absolute";n.style.top="72px";n.style.left="0";n.style.right="0";n.style.background="#050505";n.style.padding="25px";n.style.flexDirection="column";n.style.alignItems="flex-start";n.style.gap="25px"}}
-function money(a){return "â‚¦"+Number(a||0).toLocaleString("en-NG")}
+function money(a){return "\u20A6"+Number(a||0).toLocaleString("en-NG")}
 function showToast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("show");clearTimeout(window.kngToastTimer);window.kngToastTimer=setTimeout(()=>t.classList.remove("show"),2500)}
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
 function escAttr(s){return String(s??"").replace(/'/g,"\\'")}
 
 /* =========================================================
-   KNG ACCOUNT SYSTEM â€” FIXED
+   KNG ACCOUNT SYSTEM - FIXED
    NO profiles table is used.
    Phone + WhatsApp are saved in Supabase Auth user metadata.
 ========================================================= */
 function openAccount(view="home"){const m=document.getElementById("accountModal");m.classList.add("active");m.setAttribute("aria-hidden","false");document.body.classList.add("locked");if(view==="signin")showSignIn();else if(view==="create")showCreateAccount();else showAccountHome()}
 function closeAccount(){const m=document.getElementById("accountModal");m.classList.remove("active");m.setAttribute("aria-hidden","true");kngPendingOtpEmail="";kngPendingSignupProfile=null;if(!document.querySelector(".modal-overlay.open")&&!document.getElementById("cartDrawer").classList.contains("open"))document.body.classList.remove("locked")}
 function panel(){return document.getElementById("accountPanel")}
-function showAccountHome(){panel().innerHTML=`<button class="account-close" type="button" onclick="closeAccount()">Ã—</button><div class="account-logo">KNG<span>.</span></div><p class="account-kicker">THE INNER CIRCLE</p><h2>YOUR KNG<br><span>ACCOUNT.</span></h2><p class="account-description">Sign in to your KNG account or create one to track orders, save your details and stay connected to every new standard.</p><div class="account-buttons"><button type="button" class="account-primary" onclick="showSignIn()">SIGN IN</button><button type="button" class="account-secondary" onclick="showCreateAccount()">CREATE ACCOUNT</button></div><p class="account-note">Your KNG account is completely free.</p>`}
-function showSignIn(){panel().innerHTML=`<button class="account-close" type="button" onclick="closeAccount()">Ã—</button><div class="account-logo">KNG<span>.</span></div><p class="account-kicker">WELCOME BACK</p><h2>SIGN<br><span>IN.</span></h2><form class="account-form" onsubmit="handleSignIn(event)"><label>Email Address</label><input id="signInEmail" type="email" placeholder="Enter your email" autocomplete="email" required><label>Password</label><div class="password-wrap"><input id="signInPassword" type="password" placeholder="Enter your password" autocomplete="current-password" required><button type="button" class="password-toggle" onclick="togglePassword('signInPassword',this)">ðŸ‘</button></div><button type="submit" class="account-primary">SIGN IN</button></form><button type="button" class="account-link" onclick="showCreateAccount()">Don't have an account? <span>CREATE ONE</span></button>`}
-function showCreateAccount(){panel().innerHTML=`<button class="account-close" type="button" onclick="closeAccount()">Ã—</button><div class="account-logo">KNG<span>.</span></div><p class="account-kicker">JOIN THE INNER CIRCLE</p><h2>CREATE<br><span>ACCOUNT.</span></h2><form class="account-form" onsubmit="handleCreateAccount(event)"><label>Full Name</label><input id="createName" type="text" placeholder="Your full name" autocomplete="name" required><label>Email Address</label><input id="createEmail" type="email" placeholder="Your email address" autocomplete="email" required><label>Phone Number</label><input id="createPhone" type="tel" placeholder="Your phone number" inputmode="tel" autocomplete="tel" required><label>WhatsApp Number</label><input id="createWhatsapp" type="tel" placeholder="Your WhatsApp number" inputmode="tel" autocomplete="tel" required><label>Password</label><div class="password-wrap"><input id="createPassword" type="password" placeholder="Create a password (8+ characters)" minlength="8" autocomplete="new-password" required><button type="button" class="password-toggle" onclick="togglePassword('createPassword',this)">ðŸ‘</button></div><button type="submit" class="account-primary">CREATE ACCOUNT</button></form><button type="button" class="account-link" onclick="showSignIn()">Already have an account? <span>SIGN IN</span></button>`}
-function togglePassword(id,b){const i=document.getElementById(id);if(!i)return;i.type=i.type==="password"?"text":"password";b.textContent=i.type==="password"?"ðŸ‘":"ðŸ™ˆ"}
+function showAccountHome(){panel().innerHTML=`<button class="account-close" type="button" onclick="closeAccount()">X</button><div class="account-logo">KNG<span>.</span></div><p class="account-kicker">THE INNER CIRCLE</p><h2>YOUR KNG<br><span>ACCOUNT.</span></h2><p class="account-description">Sign in to your KNG account or create one to track orders, save your details and stay connected to every new standard.</p><div class="account-buttons"><button type="button" class="account-primary" onclick="showSignIn()">SIGN IN</button><button type="button" class="account-secondary" onclick="showCreateAccount()">CREATE ACCOUNT</button></div><p class="account-note">Your KNG account is completely free.</p>`}
+function showSignIn(){panel().innerHTML=`<button class="account-close" type="button" onclick="closeAccount()">X</button><div class="account-logo">KNG<span>.</span></div><p class="account-kicker">WELCOME BACK</p><h2>SIGN<br><span>IN.</span></h2><form class="account-form" onsubmit="handleSignIn(event)"><label>Email Address</label><input id="signInEmail" type="email" placeholder="Enter your email" autocomplete="email" required><label>Password</label><div class="password-wrap"><input id="signInPassword" type="password" placeholder="Enter your password" autocomplete="current-password" required><button type="button" class="password-toggle" onclick="togglePassword('signInPassword',this)">SHOW</button></div><button type="submit" class="account-primary">SIGN IN</button></form><button type="button" class="account-link" onclick="showCreateAccount()">Don't have an account? <span>CREATE ONE</span></button>`}
+function showCreateAccount(){panel().innerHTML=`<button class="account-close" type="button" onclick="closeAccount()">X</button><div class="account-logo">KNG<span>.</span></div><p class="account-kicker">JOIN THE INNER CIRCLE</p><h2>CREATE<br><span>ACCOUNT.</span></h2><form class="account-form" onsubmit="handleCreateAccount(event)"><label>Full Name</label><input id="createName" type="text" placeholder="Your full name" autocomplete="name" required><label>Email Address</label><input id="createEmail" type="email" placeholder="Your email address" autocomplete="email" required><label>Phone Number</label><input id="createPhone" type="tel" placeholder="Your phone number" inputmode="tel" autocomplete="tel" required><label>WhatsApp Number</label><input id="createWhatsapp" type="tel" placeholder="Your WhatsApp number" inputmode="tel" autocomplete="tel" required><label>Password</label><div class="password-wrap"><input id="createPassword" type="password" placeholder="Create a password (8+ characters)" minlength="8" autocomplete="new-password" required><button type="button" class="password-toggle" onclick="togglePassword('createPassword',this)">SHOW</button></div><button type="submit" class="account-primary">CREATE ACCOUNT</button></form><button type="button" class="account-link" onclick="showSignIn()">Already have an account? <span>SIGN IN</span></button>`}
+function togglePassword(id,b){const i=document.getElementById(id);if(!i)return;i.type=i.type==="password"?"text":"password";b.textContent=i.type==="password"?"SHOW":"HIDE"}
 
 async function handleSignIn(e){e.preventDefault();const email=document.getElementById("signInEmail").value.trim().toLowerCase(),password=document.getElementById("signInPassword").value,btn=e.target.querySelector("button[type=submit]");btn.disabled=true;btn.textContent="SIGNING IN...";try{const {data,error}=await kngSupabase.auth.signInWithPassword({email,password});if(error)throw error;alert("Welcome back to KNG!");closeAccount();updateKngAccountState()}catch(err){console.error("KNG sign in error:",err);alert(err.message||"Unable to sign in. Please check your email and password.")}finally{btn.disabled=false;btn.textContent="SIGN IN"}}
 
@@ -384,7 +384,7 @@ showKngOtp(email)
 }catch(err){console.error("KNG signup error:",err);alert(err.message||"Unable to create your KNG account.")}finally{btn.disabled=false;btn.textContent="CREATE ACCOUNT"}
 }
 
-function showKngOtp(email){kngPendingOtpEmail=email;panel().innerHTML=`<button class="account-close" type="button" onclick="cancelKngOtp()">Ã—</button><div class="account-logo">KNG<span>.</span></div><p class="account-kicker">SECURITY CHECK</p><h2>VERIFY<br><span>YOUR EMAIL.</span></h2><p class="otp-message">We sent a 6-digit verification code to <strong>${esc(email)}</strong></p><label>VERIFICATION CODE</label><input class="otp-input" id="kngOtpCode" type="text" maxlength="6" inputmode="numeric" autocomplete="one-time-code" placeholder="000000"><div id="otpError" class="otp-error"></div><button type="button" class="account-primary" onclick="verifyKngOtp()">VERIFY CODE</button><button type="button" class="account-link" onclick="resendKngOtp()">Didn't receive the code? <span>RESEND</span></button><button type="button" class="account-link" onclick="cancelKngOtp()">â† BACK TO SIGN IN</button>`;
+function showKngOtp(email){kngPendingOtpEmail=email;panel().innerHTML=`<button class="account-close" type="button" onclick="cancelKngOtp()">X</button><div class="account-logo">KNG<span>.</span></div><p class="account-kicker">SECURITY CHECK</p><h2>VERIFY<br><span>YOUR EMAIL.</span></h2><p class="otp-message">We sent a 6-digit verification code to <strong>${esc(email)}</strong></p><label>VERIFICATION CODE</label><input class="otp-input" id="kngOtpCode" type="text" maxlength="6" inputmode="numeric" autocomplete="one-time-code" placeholder="000000"><div id="otpError" class="otp-error"></div><button type="button" class="account-primary" onclick="verifyKngOtp()">VERIFY CODE</button><button type="button" class="account-link" onclick="resendKngOtp()">Didn't receive the code? <span>RESEND</span></button><button type="button" class="account-link" onclick="cancelKngOtp()"> BACK TO SIGN IN</button>`;
 const i=document.getElementById("kngOtpCode");i.focus();i.addEventListener("input",()=>i.value=i.value.replace(/\D/g,"").slice(0,6));i.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();verifyKngOtp()}})}
 
 async function saveCustomerMetadata(user){if(!user||!kngPendingSignupProfile)return;const p=kngPendingSignupProfile;const {error}=await kngSupabase.auth.updateUser({data:{full_name:p.full_name,phone_number:p.phone_number,whatsapp_number:p.whatsapp_number}});if(error)throw error;console.log("KNG customer details saved to Auth metadata.",user.id)}
@@ -1274,7 +1274,7 @@ updateCartUI();createFilters();renderProducts();checkKngSession();
                     type="button"
                     onclick="closeAccount()"
                     aria-label="Close account"
-                >Ã—</button>
+                >X</button>
 
 
                 <div class="kng-customer-dashboard">
@@ -1584,7 +1584,7 @@ updateCartUI();createFilters();renderProducts();checkKngSession();
                     class="account-close"
                     type="button"
                     onclick="kngRenderCustomerDashboard()"
-                >Ã—</button>
+                >X</button>
 
                 <div class="kng-simple-page">
 
@@ -1627,7 +1627,7 @@ updateCartUI();createFilters();renderProducts();checkKngSession();
                                         <strong>
                                             ${typeof money === "function"
                                                 ? money(order.total_amount)
-                                                : "â‚¦" + Number(order.total_amount || 0).toLocaleString("en-NG")}
+                                                : "\u20A6" + Number(order.total_amount || 0).toLocaleString("en-NG")}
                                         </strong>
 
                                         <small>
@@ -1698,7 +1698,7 @@ updateCartUI();createFilters();renderProducts();checkKngSession();
                     class="account-close"
                     type="button"
                     onclick="kngRenderCustomerDashboard()"
-                >Ã—</button>
+                >X</button>
 
                 <div class="kng-simple-page">
 
@@ -1809,7 +1809,7 @@ updateCartUI();createFilters();renderProducts();checkKngSession();
                     class="account-close"
                     type="button"
                     onclick="kngRenderCustomerDashboard()"
-                >Ã—</button>
+                >X</button>
 
                 <div class="kng-simple-page">
 
@@ -1858,7 +1858,7 @@ updateCartUI();createFilters();renderProducts();checkKngSession();
                                                 <small>
                                                     ${typeof money === "function"
                                                         ? money(product.price)
-                                                        : "â‚¦" + Number(product.price || 0).toLocaleString("en-NG")}
+                                                        : "\u20A6" + Number(product.price || 0).toLocaleString("en-NG")}
                                                 </small>
                                             </div>
 
