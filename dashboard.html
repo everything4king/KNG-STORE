@@ -1026,170 +1026,146 @@ const backToEmailBtn =
 
 
 /* ============================================================
-   LOGIN / OTP
+   LOGIN / OTP â€” FAST STAFF AUTHENTICATION
 ============================================================ */
 
-loginForm.addEventListener("submit", async function(event) {
+let verificationBusy = false;
+let dashboardOpening = false;
 
+loginForm.addEventListener("submit", async function(event) {
   event.preventDefault();
 
-  const email =
-    document.getElementById("email").value.trim().toLowerCase();
-
-  if (!email) {
-    return;
-  }
+  const email = document.getElementById("email").value.trim().toLowerCase();
+  if (!email) return;
 
   loginMessage.className = "message";
   loginMessage.textContent = "Sending login code...";
 
-  try {
-
-    const { error } =
-      await kngSupabase.auth.signInWithOtp({
-        email: email,
-        options: {
-          shouldCreateUser: false
-        }
-      });
-
-    if (error) {
-      throw error;
-    }
-
-    pendingLoginEmail = email;
-
-    showOtpScreen();
-
-    otpMessage.className = "message success";
-    otpMessage.textContent =
-      "Your 6-digit login code has been sent. It expires soon.";
-
-  } catch (error) {
-
-    console.error("KNG login code error:", error);
-
-    loginMessage.className = "message error";
-
-    loginMessage.textContent =
-      error.message || "Unable to send login code.";
-
+  const sendButton = loginForm.querySelector("button[type='submit']");
+  if (sendButton) {
+    sendButton.disabled = true;
+    sendButton.textContent = "SENDING...";
   }
 
+  try {
+    const { error } = await kngSupabase.auth.signInWithOtp({
+      email,
+      options: { shouldCreateUser: false }
+    });
+
+    if (error) throw error;
+
+    pendingLoginEmail = email;
+    showOtpScreen();
+    otpMessage.className = "message success";
+    otpMessage.textContent = "Code sent. Enter it below.";
+
+  } catch (error) {
+    console.error("KNG login code error:", error);
+    loginMessage.className = "message error";
+    loginMessage.textContent = error.message || "Unable to send login code.";
+  } finally {
+    if (sendButton) {
+      sendButton.disabled = false;
+      sendButton.textContent = "Send Login Code";
+    }
+  }
 });
 
-
-/* Show OTP screen */
 function showOtpScreen() {
-
   loginForm.style.display = "none";
   loginMessage.textContent = "";
   loginMessage.className = "message";
-
   otpScreen.classList.add("active");
   otpEmail.textContent = pendingLoginEmail;
   otpCode.value = "";
   otpMessage.textContent = "";
   otpMessage.className = "message";
-
-  setTimeout(function() {
-    otpCode.focus();
-  }, 50);
-
+  setTimeout(() => otpCode.focus(), 40);
 }
 
-
-/* Return to email screen */
 function showEmailScreen() {
-
   otpScreen.classList.remove("active");
   loginForm.style.display = "block";
   otpCode.value = "";
   otpMessage.textContent = "";
   otpMessage.className = "message";
   pendingLoginEmail = "";
-
+  verificationBusy = false;
 }
 
-
-/* Verify the 6-digit email OTP */
-otpForm.addEventListener("submit", async function(event) {
-
-  event.preventDefault();
+async function verifyLoginOtp() {
+  if (verificationBusy || dashboardOpening) return;
 
   const token = otpCode.value.trim();
 
   if (!pendingLoginEmail) {
     otpMessage.className = "message error";
-    otpMessage.textContent =
-      "Your verification session expired. Please request a new code.";
+    otpMessage.textContent = "Your verification session expired. Request a new code.";
     return;
   }
 
   if (!/^\d{6}$/.test(token)) {
     otpMessage.className = "message error";
-    otpMessage.textContent =
-      "Please enter the 6-digit verification code.";
+    otpMessage.textContent = "Please enter the 6-digit verification code.";
     otpCode.focus();
     return;
   }
 
+  verificationBusy = true;
   verifyOtpBtn.disabled = true;
   resendOtpBtn.disabled = true;
   verifyOtpBtn.textContent = "VERIFYING...";
   otpMessage.className = "message";
-  otpMessage.textContent = "Verifying your login code...";
+  otpMessage.textContent = "Verifying...";
 
   try {
+    /* One OTP request only. */
+    const { data, error } = await kngSupabase.auth.verifyOtp({
+      email: pendingLoginEmail,
+      token,
+      type: "email"
+    });
 
-    const { data, error } =
-      await kngSupabase.auth.verifyOtp({
-        email: pendingLoginEmail,
-        token: token,
-        type: "email"
-      });
-
-    if (error) {
-      throw error;
-    }
-
-    if (!data || !data.user) {
-      throw new Error("Verification succeeded but no user session was returned.");
-    }
+    if (error) throw error;
+    if (!data?.user) throw new Error("Verification succeeded but no user session was returned.");
 
     currentUser = data.user;
 
-    /* The auth state listener will also run, but checking here makes
-       the staff gate happen immediately and keeps the flow explicit. */
+    /*
+       IMPORTANT: the auth listener does NOT run the staff check anymore.
+       This prevents the old double-request that made the screen appear stuck.
+    */
     await checkStaffAccess();
 
   } catch (error) {
-
     console.error("KNG OTP verification error:", error);
-
+    verificationBusy = false;
+    dashboardOpening = false;
     verifyOtpBtn.disabled = false;
     resendOtpBtn.disabled = false;
     verifyOtpBtn.textContent = "VERIFY & ENTER DASHBOARD";
-
     otpMessage.className = "message error";
-    otpMessage.textContent =
-      error.message || "Invalid or expired verification code.";
-
+    otpMessage.textContent = error.message || "Invalid or expired verification code.";
   }
+}
 
+otpForm.addEventListener("submit", function(event) {
+  event.preventDefault();
+  verifyLoginOtp();
 });
 
-
-/* Allow only numbers and exactly 6 digits */
+/* Auto-verify as soon as all 6 digits are entered. */
 otpCode.addEventListener("input", function() {
   otpCode.value = otpCode.value.replace(/\D/g, "").slice(0, 6);
+  if (otpCode.value.length === 6 && !verificationBusy) {
+    verifyLoginOtp();
+  }
 });
 
-
-/* Resend a fresh OTP */
+/* Resend a fresh OTP. */
 resendOtpBtn.addEventListener("click", async function() {
-
-  if (!pendingLoginEmail) {
+  if (!pendingLoginEmail || verificationBusy) {
     showEmailScreen();
     return;
   }
@@ -1198,178 +1174,126 @@ resendOtpBtn.addEventListener("click", async function() {
   verifyOtpBtn.disabled = true;
   resendOtpBtn.textContent = "SENDING...";
   otpMessage.className = "message";
-  otpMessage.textContent = "Sending a new login code...";
+  otpMessage.textContent = "Sending a new code...";
 
   try {
+    const { error } = await kngSupabase.auth.signInWithOtp({
+      email: pendingLoginEmail,
+      options: { shouldCreateUser: false }
+    });
 
-    const { error } =
-      await kngSupabase.auth.signInWithOtp({
-        email: pendingLoginEmail,
-        options: {
-          shouldCreateUser: false
-        }
-      });
-
-    if (error) {
-      throw error;
-    }
+    if (error) throw error;
 
     otpCode.value = "";
     otpMessage.className = "message success";
-    otpMessage.textContent =
-      "A new 6-digit login code has been sent.";
+    otpMessage.textContent = "New code sent.";
     otpCode.focus();
 
   } catch (error) {
-
     console.error("KNG resend OTP error:", error);
-
     otpMessage.className = "message error";
-    otpMessage.textContent =
-      error.message || "Unable to resend the login code.";
-
+    otpMessage.textContent = error.message || "Unable to resend the login code.";
   } finally {
-
     resendOtpBtn.disabled = false;
     verifyOtpBtn.disabled = false;
     resendOtpBtn.textContent = "RESEND CODE";
     verifyOtpBtn.textContent = "VERIFY & ENTER DASHBOARD";
-
   }
-
 });
 
-
-backToEmailBtn.addEventListener("click", function() {
-  showEmailScreen();
-});
+backToEmailBtn.addEventListener("click", showEmailScreen);
 
 
 /* ============================================================
    AUTH STATE
 ============================================================ */
 
-kngSupabase.auth.onAuthStateChange(
-  async function(event, session) {
-
-    if (session && session.user) {
-
-      currentUser = session.user;
-
-      await checkStaffAccess();
-
-    } else {
-
-      currentUser = null;
-      currentStaff = null;
-
-      showLogin();
-
-    }
-
-  }
-);
-
-
-/* ============================================================
-   CHECK STAFF ACCESS
-============================================================ */
-
-async function checkStaffAccess() {
-
-  if (!currentUser) {
-    showLogin();
+kngSupabase.auth.onAuthStateChange(function(event, session) {
+  if (session?.user) {
+    /* Keep this listener lightweight. Staff authorization is checked once. */
+    currentUser = session.user;
     return;
   }
 
-  try {
-
-    const { data, error } =
-      await kngSupabase
-        .from("staff")
-        .select("*")
-        .eq("user_id", currentUser.id)
-        .maybeSingle();
-
-    if (error) {
-      throw error;
-    }
-
-    if (!data) {
-
-      showLogin();
-
-      loginMessage.className = "message error";
-
-      loginMessage.textContent =
-        "This account is not registered as KNG staff.";
-
-      await kngSupabase.auth.signOut();
-
-      return;
-    }
-
-
-    /* Only active staff can enter */
-
-    if (data.active !== true) {
-
-      showLogin();
-
-      loginMessage.className = "message error";
-
-      loginMessage.textContent =
-        "Your KNG staff account is currently inactive.";
-
-      await kngSupabase.auth.signOut();
-
-      return;
-    }
-
-
-    /* Only admin and manager can use this dashboard */
-
-    const allowedRoles = [
-      "admin",
-      "manager"
-    ];
-
-    if (!allowedRoles.includes(
-      String(data.role).toLowerCase()
-    )) {
-
-      showLogin();
-
-      loginMessage.className = "message error";
-
-      loginMessage.textContent =
-        "You do not have permission to access this dashboard.";
-
-      await kngSupabase.auth.signOut();
-
-      return;
-    }
-
-
-    currentStaff = data;
-
-    showDashboard();
-
-    loadDashboard();
-
-  } catch (error) {
-
-    console.error(error);
-
+  if (event === "SIGNED_OUT") {
+    currentUser = null;
+    currentStaff = null;
     showLogin();
+  }
+});
 
-    loginMessage.className = "message error";
 
-    loginMessage.textContent =
-      "Unable to verify staff access. Check the staff table and permissions.";
+/* ============================================================
+   CHECK STAFF ACCESS â€” SINGLE FAST QUERY
+============================================================ */
 
+async function checkStaffAccess() {
+  if (!currentUser) {
+    showLogin();
+    return false;
   }
 
+  try {
+    const { data, error } = await kngSupabase
+      .from("staff")
+      .select("user_id,full_name,role,active")
+      .eq("user_id", currentUser.id)
+      .maybeSingle();
+
+    if (error) throw error;
+
+    if (!data) {
+      showLogin();
+      loginMessage.className = "message error";
+      loginMessage.textContent = "This account is not registered as KNG staff.";
+      await kngSupabase.auth.signOut();
+      return false;
+    }
+
+    if (data.active !== true) {
+      showLogin();
+      loginMessage.className = "message error";
+      loginMessage.textContent = "Your KNG staff account is currently inactive.";
+      await kngSupabase.auth.signOut();
+      return false;
+    }
+
+    const role = String(data.role || "").toLowerCase();
+    if (role !== "admin" && role !== "manager") {
+      showLogin();
+      loginMessage.className = "message error";
+      loginMessage.textContent = "You do not have permission to access this dashboard.";
+      await kngSupabase.auth.signOut();
+      return false;
+    }
+
+    currentStaff = data;
+    dashboardOpening = true;
+
+    /* Open the dashboard immediately after the single authorization check. */
+    showDashboard();
+
+    /* Do not block login on dashboard data. Load everything in parallel. */
+    Promise.allSettled([
+      loadStaff(),
+      loadOrders(),
+      loadCustomers(),
+      loadProducts()
+    ]).catch(() => {});
+
+    pendingLoginEmail = "";
+    verificationBusy = false;
+    return true;
+
+  } catch (error) {
+    console.error("KNG staff access error:", error);
+    showLogin();
+    loginMessage.className = "message error";
+    loginMessage.textContent = "Unable to verify staff access. Please try again.";
+    verificationBusy = false;
+    dashboardOpening = false;
+    return false;
+  }
 }
 
 
@@ -1378,20 +1302,18 @@ async function checkStaffAccess() {
 ============================================================ */
 
 function showLogin() {
-
   loginScreen.style.display = "flex";
-
   dashboard.style.display = "none";
-
   otpScreen.classList.remove("active");
   loginForm.style.display = "block";
   otpCode.value = "";
   pendingLoginEmail = "";
+  verificationBusy = false;
+  dashboardOpening = false;
   verifyOtpBtn.disabled = false;
   resendOtpBtn.disabled = false;
   verifyOtpBtn.textContent = "VERIFY & ENTER DASHBOARD";
   resendOtpBtn.textContent = "RESEND CODE";
-
 }
 
 
@@ -1400,13 +1322,9 @@ function showLogin() {
 ============================================================ */
 
 function showDashboard() {
-
   loginScreen.style.display = "none";
-
   dashboard.style.display = "block";
-
   updateUserInterface();
-
 }
 
 
@@ -1415,40 +1333,16 @@ function showDashboard() {
 ============================================================ */
 
 function updateUserInterface() {
+  if (!currentUser || !currentStaff) return;
 
-  if (!currentUser || !currentStaff) {
-    return;
-  }
+  const name = currentStaff.full_name || currentUser.email || "KNG Staff";
+  const role = String(currentStaff.role || "").toUpperCase();
 
-  const name =
-    currentStaff.full_name ||
-    currentUser.email ||
-    "KNG Staff";
-
-  const role =
-    String(currentStaff.role || "")
-      .toUpperCase();
-
-  userBadge.textContent =
-    name + " â€¢ " + role;
-
-
-  document.getElementById("settingsEmail")
-    .textContent =
-      currentUser.email || "â€”";
-
-  document.getElementById("settingsName")
-    .textContent =
-      currentStaff.full_name || "â€”";
-
-  document.getElementById("settingsRole")
-    .textContent =
-      role || "â€”";
-
-  document.getElementById("settingsStatus")
-    .textContent =
-      currentStaff.active ? "Active" : "Inactive";
-
+  userBadge.textContent = name + " â€¢ " + role;
+  document.getElementById("settingsEmail").textContent = currentUser.email || "â€”";
+  document.getElementById("settingsName").textContent = currentStaff.full_name || "â€”";
+  document.getElementById("settingsRole").textContent = role || "â€”";
+  document.getElementById("settingsStatus").textContent = currentStaff.active ? "Active" : "Inactive";
 }
 
 
