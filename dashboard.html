@@ -1373,10 +1373,10 @@ function updateUserInterface() {
   const name = currentStaff.full_name || currentUser.email || "KNG Staff";
   const role = String(currentStaff.role || "").toUpperCase();
 
-  userBadge.textContent = name + " &#8226; " + role;
-  document.getElementById("settingsEmail").textContent = currentUser.email || "&#8212;";
-  document.getElementById("settingsName").textContent = currentStaff.full_name || "&#8212;";
-  document.getElementById("settingsRole").textContent = role || "&#8212;";
+  userBadge.textContent = name + "\u2022" + role;
+  document.getElementById("settingsEmail").textContent = currentUser.email || "\u2014";
+  document.getElementById("settingsName").textContent = currentStaff.full_name || "\u2014";
+  document.getElementById("settingsRole").textContent = role || "\u2014";
   document.getElementById("settingsStatus").textContent = currentStaff.active ? "Active" : "Inactive";
 }
 
@@ -1603,7 +1603,7 @@ async function loadStaff() {
     console.error("Staff error:", error);
 
     document.getElementById("totalStaff")
-      .textContent = "&#8212;";
+      .textContent = "\u2014";
 
     overview.innerHTML =
       '<div class="empty">Unable to load staff.</div>';
@@ -1737,7 +1737,7 @@ async function loadOrders() {
     console.error("Orders error:", error);
 
     document.getElementById("totalOrders")
-      .textContent = "&#8212;";
+      .textContent = "\u2014";
 
     recent.innerHTML = `
       <div class="empty">
@@ -1881,7 +1881,7 @@ async function loadCustomers() {
     console.error("Customer error:", error);
 
     document.getElementById("totalCustomers")
-      .textContent = "&#8212;";
+      .textContent = "\u2014";
 
     container.innerHTML = `
       <div class="empty">
@@ -2005,7 +2005,7 @@ async function loadProducts() {
     console.error("Product error:", error);
 
     document.getElementById("totalProducts")
-      .textContent = "&#8212;";
+      .textContent = "\u2014";
 
     container.innerHTML = `
       <div class="empty">
