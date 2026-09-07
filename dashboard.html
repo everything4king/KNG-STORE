@@ -620,7 +620,7 @@
       </button>
 
       <button class="text-btn" id="backToEmailBtn" type="button">
-        â† BACK TO EMAIL
+        &#8592; BACK TO EMAIL
       </button>
 
       <div id="otpMessage" class="message"></div>
@@ -650,37 +650,37 @@
       </div>
 
       <button class="nav-btn active" data-page="overview">
-        <span class="nav-icon">âŒ‚</span>
+        <span class="nav-icon">&#8962;</span>
         <span>Overview</span>
       </button>
 
       <button class="nav-btn" data-page="orders">
-        <span class="nav-icon">â–£</span>
+        <span class="nav-icon">&#9635;</span>
         <span>Orders</span>
       </button>
 
       <button class="nav-btn" data-page="staff">
-        <span class="nav-icon">â™™</span>
+        <span class="nav-icon">&#9817;</span>
         <span>Staff</span>
       </button>
 
       <button class="nav-btn" data-page="customers">
-        <span class="nav-icon">â™§</span>
+        <span class="nav-icon">&#9831;</span>
         <span>Customers</span>
       </button>
 
       <button class="nav-btn" data-page="products">
-        <span class="nav-icon">â—‡</span>
+        <span class="nav-icon">&#9671;</span>
         <span>Products</span>
       </button>
 
       <button class="nav-btn" data-page="settings">
-        <span class="nav-icon">âš™</span>
+        <span class="nav-icon">&#9881;</span>
         <span>Settings</span>
       </button>
 
       <button class="nav-btn logout-btn" id="logoutBtn">
-        <span class="nav-icon">â†ª</span>
+        <span class="nav-icon">&#8618;</span>
         <span>Log Out</span>
       </button>
 
@@ -717,22 +717,22 @@
 
           <div class="stat-card">
             <div class="stat-title">Total Orders</div>
-            <div class="stat-value" id="totalOrders">â€”</div>
+            <div class="stat-value" id="totalOrders">&#8212;</div>
           </div>
 
           <div class="stat-card">
             <div class="stat-title">Customers</div>
-            <div class="stat-value" id="totalCustomers">â€”</div>
+            <div class="stat-value" id="totalCustomers">&#8212;</div>
           </div>
 
           <div class="stat-card">
             <div class="stat-title">Products</div>
-            <div class="stat-value" id="totalProducts">â€”</div>
+            <div class="stat-value" id="totalProducts">&#8212;</div>
           </div>
 
           <div class="stat-card">
             <div class="stat-title">Staff</div>
-            <div class="stat-value" id="totalStaff">â€”</div>
+            <div class="stat-value" id="totalStaff">&#8212;</div>
           </div>
 
         </div>
@@ -901,22 +901,22 @@
 
           <div class="settings-row">
             <div class="settings-label">Signed in as</div>
-            <div class="settings-value" id="settingsEmail">â€”</div>
+            <div class="settings-value" id="settingsEmail">&#8212;</div>
           </div>
 
           <div class="settings-row">
             <div class="settings-label">Full name</div>
-            <div class="settings-value" id="settingsName">â€”</div>
+            <div class="settings-value" id="settingsName">&#8212;</div>
           </div>
 
           <div class="settings-row">
             <div class="settings-label">Role</div>
-            <div class="settings-value" id="settingsRole">â€”</div>
+            <div class="settings-value" id="settingsRole">&#8212;</div>
           </div>
 
           <div class="settings-row">
             <div class="settings-label">Account status</div>
-            <div class="settings-value" id="settingsStatus">â€”</div>
+            <div class="settings-value" id="settingsStatus">&#8212;</div>
           </div>
 
         </div>
@@ -1026,7 +1026,7 @@ const backToEmailBtn =
 
 
 /* ============================================================
-   LOGIN / OTP â€” FAST STAFF AUTHENTICATION
+   LOGIN / OTP &#8212; FAST STAFF AUTHENTICATION
 ============================================================ */
 
 let verificationBusy = false;
@@ -1235,7 +1235,7 @@ kngSupabase.auth.onAuthStateChange(function(event, session) {
 
 
 /* ============================================================
-   CHECK STAFF ACCESS â€” SINGLE FAST QUERY
+   CHECK STAFF ACCESS &#8212; SINGLE FAST QUERY
 ============================================================ */
 
 async function checkStaffAccess(options = {}) {
@@ -1373,10 +1373,10 @@ function updateUserInterface() {
   const name = currentStaff.full_name || currentUser.email || "KNG Staff";
   const role = String(currentStaff.role || "").toUpperCase();
 
-  userBadge.textContent = name + " â€¢ " + role;
-  document.getElementById("settingsEmail").textContent = currentUser.email || "â€”";
-  document.getElementById("settingsName").textContent = currentStaff.full_name || "â€”";
-  document.getElementById("settingsRole").textContent = role || "â€”";
+  userBadge.textContent = name + " &#8226; " + role;
+  document.getElementById("settingsEmail").textContent = currentUser.email || "&#8212;";
+  document.getElementById("settingsName").textContent = currentStaff.full_name || "&#8212;";
+  document.getElementById("settingsRole").textContent = role || "&#8212;";
   document.getElementById("settingsStatus").textContent = currentStaff.active ? "Active" : "Inactive";
 }
 
@@ -1603,7 +1603,7 @@ async function loadStaff() {
     console.error("Staff error:", error);
 
     document.getElementById("totalStaff")
-      .textContent = "â€”";
+      .textContent = "&#8212;";
 
     overview.innerHTML =
       '<div class="empty">Unable to load staff.</div>';
@@ -1737,7 +1737,7 @@ async function loadOrders() {
     console.error("Orders error:", error);
 
     document.getElementById("totalOrders")
-      .textContent = "â€”";
+      .textContent = "&#8212;";
 
     recent.innerHTML = `
       <div class="empty">
@@ -1881,7 +1881,7 @@ async function loadCustomers() {
     console.error("Customer error:", error);
 
     document.getElementById("totalCustomers")
-      .textContent = "â€”";
+      .textContent = "&#8212;";
 
     container.innerHTML = `
       <div class="empty">
@@ -2005,7 +2005,7 @@ async function loadProducts() {
     console.error("Product error:", error);
 
     document.getElementById("totalProducts")
-      .textContent = "â€”";
+      .textContent = "&#8212;";
 
     container.innerHTML = `
       <div class="empty">
