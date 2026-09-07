@@ -1133,10 +1133,21 @@ async function verifyLoginOtp() {
     currentUser = data.user;
 
     /*
-       IMPORTANT: the auth listener does NOT run the staff check anymore.
-       This prevents the old double-request that made the screen appear stuck.
+       FAST ENTRY:
+       Supabase has already verified the OTP at this point.
+       Show the dashboard immediately instead of waiting for the
+       separate staff-table authorization request.
+
+       Staff authorization still happens immediately in the background.
+       If the account is not an active admin/manager, the dashboard is
+       closed and the user is signed out.
     */
-    await checkStaffAccess();
+    dashboardOpening = true;
+    showDashboard();
+
+    checkStaffAccess({ dashboardAlreadyShown: true }).catch(function(error) {
+      console.error("KNG background staff access error:", error);
+    });
 
   } catch (error) {
     console.error("KNG OTP verification error:", error);
@@ -1227,7 +1238,9 @@ kngSupabase.auth.onAuthStateChange(function(event, session) {
    CHECK STAFF ACCESS â€” SINGLE FAST QUERY
 ============================================================ */
 
-async function checkStaffAccess() {
+async function checkStaffAccess(options = {}) {
+  const dashboardAlreadyShown = options.dashboardAlreadyShown === true;
+
   if (!currentUser) {
     showLogin();
     return false;
@@ -1246,7 +1259,10 @@ async function checkStaffAccess() {
       showLogin();
       loginMessage.className = "message error";
       loginMessage.textContent = "This account is not registered as KNG staff.";
-      await kngSupabase.auth.signOut();
+      dashboardOpening = false;
+      kngSupabase.auth.signOut().catch(function(error) {
+        console.error("KNG sign-out error:", error);
+      });
       return false;
     }
 
@@ -1254,7 +1270,10 @@ async function checkStaffAccess() {
       showLogin();
       loginMessage.className = "message error";
       loginMessage.textContent = "Your KNG staff account is currently inactive.";
-      await kngSupabase.auth.signOut();
+      dashboardOpening = false;
+      kngSupabase.auth.signOut().catch(function(error) {
+        console.error("KNG sign-out error:", error);
+      });
       return false;
     }
 
@@ -1263,26 +1282,39 @@ async function checkStaffAccess() {
       showLogin();
       loginMessage.className = "message error";
       loginMessage.textContent = "You do not have permission to access this dashboard.";
-      await kngSupabase.auth.signOut();
+      dashboardOpening = false;
+      kngSupabase.auth.signOut().catch(function(error) {
+        console.error("KNG sign-out error:", error);
+      });
       return false;
     }
 
     currentStaff = data;
-    dashboardOpening = true;
 
-    /* Open the dashboard immediately after the single authorization check. */
-    showDashboard();
+    /*
+       If the dashboard was already opened for speed, keep it open.
+       Otherwise (for an existing session / page refresh), open it now.
+    */
+    if (!dashboardAlreadyShown) {
+      dashboardOpening = true;
+      showDashboard();
+    }
 
-    /* Do not block login on dashboard data. Load everything in parallel. */
+    /* Populate the dashboard only after staff authorization succeeds. */
     Promise.allSettled([
       loadStaff(),
       loadOrders(),
       loadCustomers(),
       loadProducts()
-    ]).catch(() => {});
+    ]).catch(function(error) {
+      console.error("KNG dashboard data load error:", error);
+    });
+
+    updateUserInterface();
 
     pendingLoginEmail = "";
     verificationBusy = false;
+    dashboardOpening = false;
     return true;
 
   } catch (error) {
@@ -1292,6 +1324,9 @@ async function checkStaffAccess() {
     loginMessage.textContent = "Unable to verify staff access. Please try again.";
     verificationBusy = false;
     dashboardOpening = false;
+    kngSupabase.auth.signOut().catch(function(signOutError) {
+      console.error("KNG sign-out error:", signOutError);
+    });
     return false;
   }
 }
@@ -2032,10 +2067,15 @@ async function initializeDashboard() {
 
   if (session && session.user) {
 
-    currentUser =
-      session.user;
+    currentUser = session.user;
 
-    await checkStaffAccess();
+    /* Existing valid sessions should also open immediately. */
+    dashboardOpening = true;
+    showDashboard();
+
+    checkStaffAccess({ dashboardAlreadyShown: true }).catch(function(error) {
+      console.error("KNG initial staff access error:", error);
+    });
 
   } else {
 
