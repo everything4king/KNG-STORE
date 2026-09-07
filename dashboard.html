@@ -540,7 +540,55 @@
         flex-direction: column;
       }
     }
-  </style>
+  
+
+    /* =========================
+       INACTIVITY TIMEOUT
+    ========================= */
+
+    #inactivityWarning {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(0,0,0,.72);
+      backdrop-filter: blur(8px);
+    }
+
+    .inactivity-card {
+      width: 100%;
+      max-width: 420px;
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 18px;
+      padding: 28px;
+      text-align: center;
+      box-shadow: 0 24px 70px rgba(0,0,0,.6);
+    }
+
+    .inactivity-card h2 {
+      margin-bottom: 10px;
+    }
+
+    .inactivity-card p {
+      color: #aaa;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .inactivity-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .inactivity-actions button {
+      flex: 1;
+    }
+
+</style>
 </head>
 
 <body>
@@ -560,7 +608,7 @@
     <p class="subtitle">
       Management portal for KNG staff.
       <br>
-      Admins and managers only.
+      OWNER / ADMIN and MANAGER only.
     </p>
 
     <form id="loginForm">
@@ -1311,6 +1359,7 @@ async function checkStaffAccess(options = {}) {
     });
 
     updateUserInterface();
+    startInactivityTimer();
 
     pendingLoginEmail = "";
     verificationBusy = false;
@@ -1337,6 +1386,8 @@ async function checkStaffAccess(options = {}) {
 ============================================================ */
 
 function showLogin() {
+  clearInactivityTimers();
+  hideInactivityWarning();
   loginScreen.style.display = "flex";
   dashboard.style.display = "none";
   otpScreen.classList.remove("active");
@@ -1371,12 +1422,13 @@ function updateUserInterface() {
   if (!currentUser || !currentStaff) return;
 
   const name = currentStaff.full_name || currentUser.email || "KNG Staff";
-  const role = String(currentStaff.role || "").toUpperCase();
+  const role = String(currentStaff.role || "").toLowerCase();
+  const roleLabel = role === "admin" ? "OWNER / ADMIN" : role === "manager" ? "MANAGER" : role.toUpperCase();
 
-  userBadge.textContent = name + "\u2022" + role;
-  document.getElementById("settingsEmail").textContent = currentUser.email || "\u2014";
-  document.getElementById("settingsName").textContent = currentStaff.full_name || "\u2014";
-  document.getElementById("settingsRole").textContent = role || "\u2014";
+  userBadge.textContent = name + " â€¢ " + roleLabel;
+  document.getElementById("settingsEmail").textContent = currentUser.email || "â€”";
+  document.getElementById("settingsName").textContent = currentStaff.full_name || "â€”";
+  document.getElementById("settingsRole").textContent = roleLabel || "â€”";
   document.getElementById("settingsStatus").textContent = currentStaff.active ? "Active" : "Inactive";
 }
 
@@ -1554,7 +1606,7 @@ async function loadStaff() {
             <p>${escapeHTML(member.user_id || "")}</p>
 
             <span class="role">
-              ${escapeHTML(member.role || "staff")}
+              ${escapeHTML(String(member.role || "staff").toLowerCase() === "admin" ? "OWNER / ADMIN" : String(member.role || "staff").toUpperCase())}
             </span>
 
             <span class="pill ${member.active ? "active" : ""}">
@@ -1584,7 +1636,7 @@ async function loadStaff() {
               </p>
 
               <span class="role">
-                ${escapeHTML(member.role || "staff")}
+                ${escapeHTML(String(member.role || "staff").toLowerCase() === "admin" ? "OWNER / ADMIN" : String(member.role || "staff").toUpperCase())}
               </span>
 
               <span class="pill ${member.active ? "active" : ""}">
@@ -2019,12 +2071,133 @@ async function loadProducts() {
 
 
 /* ============================================================
+   INACTIVITY AUTO-LOGOUT
+   10 minutes idle + 60 second warning
+============================================================ */
+
+const INACTIVITY_LIMIT_MS = 10 * 60 * 1000;
+const INACTIVITY_WARNING_MS = 60 * 1000;
+
+const inactivityWarning = document.getElementById("inactivityWarning");
+const inactivityCountdown = document.getElementById("inactivityCountdown");
+const stayLoggedInBtn = document.getElementById("stayLoggedInBtn");
+const logoutNowBtn = document.getElementById("logoutNowBtn");
+
+let inactivityTimer = null;
+let inactivityLogoutTimer = null;
+let inactivityCountdownTimer = null;
+let inactivityWarningOpen = false;
+let lastActivityAt = Date.now();
+
+function isManagementSession() {
+  return !!(currentUser && currentStaff && currentStaff.active === true);
+}
+
+function clearInactivityTimers() {
+  if (inactivityTimer) clearTimeout(inactivityTimer);
+  if (inactivityLogoutTimer) clearTimeout(inactivityLogoutTimer);
+  if (inactivityCountdownTimer) clearInterval(inactivityCountdownTimer);
+  inactivityTimer = null;
+  inactivityLogoutTimer = null;
+  inactivityCountdownTimer = null;
+}
+
+function hideInactivityWarning() {
+  inactivityWarningOpen = false;
+  inactivityWarning.style.display = "none";
+  inactivityWarning.setAttribute("aria-hidden", "true");
+  if (inactivityCountdownTimer) {
+    clearInterval(inactivityCountdownTimer);
+    inactivityCountdownTimer = null;
+  }
+}
+
+function startInactivityTimer() {
+  clearInactivityTimers();
+  if (!isManagementSession()) return;
+
+  lastActivityAt = Date.now();
+  inactivityTimer = setTimeout(showInactivityWarning, INACTIVITY_LIMIT_MS);
+}
+
+function recordActivity() {
+  if (!isManagementSession() || inactivityWarningOpen) return;
+  lastActivityAt = Date.now();
+  startInactivityTimer();
+}
+
+function showInactivityWarning() {
+  if (!isManagementSession()) return;
+
+  inactivityWarningOpen = true;
+  inactivityWarning.style.display = "flex";
+  inactivityWarning.setAttribute("aria-hidden", "false");
+
+  let remaining = Math.ceil(INACTIVITY_WARNING_MS / 1000);
+  inactivityCountdown.textContent = String(remaining);
+
+  inactivityCountdownTimer = setInterval(function() {
+    remaining -= 1;
+    inactivityCountdown.textContent = String(Math.max(remaining, 0));
+  }, 1000);
+
+  inactivityLogoutTimer = setTimeout(autoLogoutForInactivity, INACTIVITY_WARNING_MS);
+}
+
+async function autoLogoutForInactivity() {
+  clearInactivityTimers();
+  hideInactivityWarning();
+
+  currentUser = null;
+  currentStaff = null;
+  pendingLoginEmail = "";
+  verificationBusy = false;
+  dashboardOpening = false;
+
+  try {
+    await kngSupabase.auth.signOut();
+  } catch (error) {
+    console.error("KNG inactivity sign-out error:", error);
+  } finally {
+    showLogin();
+    loginMessage.className = "message";
+    loginMessage.textContent = "You were logged out after 10 minutes of inactivity.";
+  }
+}
+
+stayLoggedInBtn.addEventListener("click", function() {
+  hideInactivityWarning();
+  startInactivityTimer();
+});
+
+logoutNowBtn.addEventListener("click", autoLogoutForInactivity);
+
+["pointerdown", "keydown", "scroll", "touchstart"].forEach(function(eventName) {
+  window.addEventListener(eventName, recordActivity, { passive: true });
+});
+
+document.addEventListener("visibilitychange", function() {
+  if (document.visibilityState === "visible" && isManagementSession()) {
+    const idleFor = Date.now() - lastActivityAt;
+    if (idleFor >= INACTIVITY_LIMIT_MS) {
+      showInactivityWarning();
+    } else {
+      startInactivityTimer();
+    }
+  }
+});
+
+
+/* ============================================================
    LOGOUT
 ============================================================ */
 
 document
   .getElementById("logoutBtn")
   .addEventListener("click", async function() {
+
+    clearInactivityTimers();
+    hideInactivityWarning();
 
     await kngSupabase.auth.signOut();
 
@@ -2089,6 +2262,19 @@ async function initializeDashboard() {
 initializeDashboard();
 
 </script>
+
+
+
+<div id="inactivityWarning" aria-hidden="true">
+  <div class="inactivity-card">
+    <h2>Still there?</h2>
+    <p>You have been inactive. You will be logged out in <strong id="inactivityCountdown">60</strong> seconds.</p>
+    <div class="inactivity-actions">
+      <button type="button" class="primary-btn" id="stayLoggedInBtn">STAY LOGGED IN</button>
+      <button type="button" class="secondary-btn" id="logoutNowBtn">LOG OUT</button>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
