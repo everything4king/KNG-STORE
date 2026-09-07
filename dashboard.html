@@ -138,6 +138,63 @@
       color: #7ee787;
     }
 
+    .otp-screen {
+      display: none;
+    }
+
+    .otp-screen.active {
+      display: block;
+    }
+
+    .otp-email {
+      color: #ddd;
+      font-weight: 700;
+      word-break: break-word;
+    }
+
+    .otp-input {
+      width: 100%;
+      padding: 16px 14px;
+      border-radius: 10px;
+      border: 1px solid #333;
+      background: #080808;
+      color: white;
+      outline: none;
+      text-align: center;
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: 10px;
+    }
+
+    .otp-input:focus {
+      border-color: #777;
+    }
+
+    .secondary-btn {
+      width: 100%;
+      border: 1px solid #333;
+      border-radius: 10px;
+      padding: 13px;
+      background: #181818;
+      color: white;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .text-btn {
+      display: block;
+      width: 100%;
+      border: none;
+      background: transparent;
+      color: #888;
+      padding: 12px 0 0;
+      font-size: 13px;
+    }
+
+    .text-btn:hover {
+      color: white;
+    }
+
     /* =========================
        DASHBOARD
     ========================= */
@@ -526,6 +583,50 @@
 
     <div id="loginMessage" class="message"></div>
 
+    <div id="otpScreen" class="otp-screen">
+
+      <h1>Verify Login</h1>
+
+      <p class="subtitle">
+        Enter the 6-digit code we sent to
+        <br>
+        <span id="otpEmail" class="otp-email">your email</span>
+      </p>
+
+      <form id="otpForm">
+
+        <div class="field">
+          <label for="otpCode">Verification Code</label>
+          <input
+            id="otpCode"
+            class="otp-input"
+            type="text"
+            inputmode="numeric"
+            autocomplete="one-time-code"
+            maxlength="6"
+            placeholder="000000"
+            required
+          >
+        </div>
+
+        <button class="primary-btn" id="verifyOtpBtn" type="submit">
+          VERIFY &amp; ENTER DASHBOARD
+        </button>
+
+      </form>
+
+      <button class="secondary-btn" id="resendOtpBtn" type="button">
+        RESEND CODE
+      </button>
+
+      <button class="text-btn" id="backToEmailBtn" type="button">
+        â† BACK TO EMAIL
+      </button>
+
+      <div id="otpMessage" class="message"></div>
+
+    </div>
+
   </div>
 
 </div>
@@ -549,37 +650,37 @@
       </div>
 
       <button class="nav-btn active" data-page="overview">
-        <span class="nav-icon">⌂</span>
+        <span class="nav-icon">âŒ‚</span>
         <span>Overview</span>
       </button>
 
       <button class="nav-btn" data-page="orders">
-        <span class="nav-icon">▣</span>
+        <span class="nav-icon">â–£</span>
         <span>Orders</span>
       </button>
 
       <button class="nav-btn" data-page="staff">
-        <span class="nav-icon">♙</span>
+        <span class="nav-icon">â™™</span>
         <span>Staff</span>
       </button>
 
       <button class="nav-btn" data-page="customers">
-        <span class="nav-icon">♧</span>
+        <span class="nav-icon">â™§</span>
         <span>Customers</span>
       </button>
 
       <button class="nav-btn" data-page="products">
-        <span class="nav-icon">◇</span>
+        <span class="nav-icon">â—‡</span>
         <span>Products</span>
       </button>
 
       <button class="nav-btn" data-page="settings">
-        <span class="nav-icon">⚙</span>
+        <span class="nav-icon">âš™</span>
         <span>Settings</span>
       </button>
 
       <button class="nav-btn logout-btn" id="logoutBtn">
-        <span class="nav-icon">↪</span>
+        <span class="nav-icon">â†ª</span>
         <span>Log Out</span>
       </button>
 
@@ -616,22 +717,22 @@
 
           <div class="stat-card">
             <div class="stat-title">Total Orders</div>
-            <div class="stat-value" id="totalOrders">—</div>
+            <div class="stat-value" id="totalOrders">â€”</div>
           </div>
 
           <div class="stat-card">
             <div class="stat-title">Customers</div>
-            <div class="stat-value" id="totalCustomers">—</div>
+            <div class="stat-value" id="totalCustomers">â€”</div>
           </div>
 
           <div class="stat-card">
             <div class="stat-title">Products</div>
-            <div class="stat-value" id="totalProducts">—</div>
+            <div class="stat-value" id="totalProducts">â€”</div>
           </div>
 
           <div class="stat-card">
             <div class="stat-title">Staff</div>
-            <div class="stat-value" id="totalStaff">—</div>
+            <div class="stat-value" id="totalStaff">â€”</div>
           </div>
 
         </div>
@@ -800,22 +901,22 @@
 
           <div class="settings-row">
             <div class="settings-label">Signed in as</div>
-            <div class="settings-value" id="settingsEmail">—</div>
+            <div class="settings-value" id="settingsEmail">â€”</div>
           </div>
 
           <div class="settings-row">
             <div class="settings-label">Full name</div>
-            <div class="settings-value" id="settingsName">—</div>
+            <div class="settings-value" id="settingsName">â€”</div>
           </div>
 
           <div class="settings-row">
             <div class="settings-label">Role</div>
-            <div class="settings-value" id="settingsRole">—</div>
+            <div class="settings-value" id="settingsRole">â€”</div>
           </div>
 
           <div class="settings-row">
             <div class="settings-label">Account status</div>
-            <div class="settings-value" id="settingsStatus">—</div>
+            <div class="settings-value" id="settingsStatus">â€”</div>
           </div>
 
         </div>
@@ -877,6 +978,7 @@ const kngSupabase =
 
 let currentUser = null;
 let currentStaff = null;
+let pendingLoginEmail = "";
 
 
 /* ============================================================
@@ -898,9 +1000,33 @@ const loginMessage =
 const userBadge =
   document.getElementById("userBadge");
 
+const otpScreen =
+  document.getElementById("otpScreen");
+
+const otpForm =
+  document.getElementById("otpForm");
+
+const otpCode =
+  document.getElementById("otpCode");
+
+const otpEmail =
+  document.getElementById("otpEmail");
+
+const otpMessage =
+  document.getElementById("otpMessage");
+
+const verifyOtpBtn =
+  document.getElementById("verifyOtpBtn");
+
+const resendOtpBtn =
+  document.getElementById("resendOtpBtn");
+
+const backToEmailBtn =
+  document.getElementById("backToEmailBtn");
+
 
 /* ============================================================
-   LOGIN
+   LOGIN / OTP
 ============================================================ */
 
 loginForm.addEventListener("submit", async function(event) {
@@ -909,6 +1035,10 @@ loginForm.addEventListener("submit", async function(event) {
 
   const email =
     document.getElementById("email").value.trim().toLowerCase();
+
+  if (!email) {
+    return;
+  }
 
   loginMessage.className = "message";
   loginMessage.textContent = "Sending login code...";
@@ -919,7 +1049,7 @@ loginForm.addEventListener("submit", async function(event) {
       await kngSupabase.auth.signInWithOtp({
         email: email,
         options: {
-          emailRedirectTo: window.location.href
+          shouldCreateUser: false
         }
       });
 
@@ -927,14 +1057,17 @@ loginForm.addEventListener("submit", async function(event) {
       throw error;
     }
 
-    loginMessage.className = "message success";
+    pendingLoginEmail = email;
 
-    loginMessage.textContent =
-      "Login code sent. Check your email and complete the verification.";
+    showOtpScreen();
+
+    otpMessage.className = "message success";
+    otpMessage.textContent =
+      "Your 6-digit login code has been sent. It expires soon.";
 
   } catch (error) {
 
-    console.error(error);
+    console.error("KNG login code error:", error);
 
     loginMessage.className = "message error";
 
@@ -943,6 +1076,172 @@ loginForm.addEventListener("submit", async function(event) {
 
   }
 
+});
+
+
+/* Show OTP screen */
+function showOtpScreen() {
+
+  loginForm.style.display = "none";
+  loginMessage.textContent = "";
+  loginMessage.className = "message";
+
+  otpScreen.classList.add("active");
+  otpEmail.textContent = pendingLoginEmail;
+  otpCode.value = "";
+  otpMessage.textContent = "";
+  otpMessage.className = "message";
+
+  setTimeout(function() {
+    otpCode.focus();
+  }, 50);
+
+}
+
+
+/* Return to email screen */
+function showEmailScreen() {
+
+  otpScreen.classList.remove("active");
+  loginForm.style.display = "block";
+  otpCode.value = "";
+  otpMessage.textContent = "";
+  otpMessage.className = "message";
+  pendingLoginEmail = "";
+
+}
+
+
+/* Verify the 6-digit email OTP */
+otpForm.addEventListener("submit", async function(event) {
+
+  event.preventDefault();
+
+  const token = otpCode.value.trim();
+
+  if (!pendingLoginEmail) {
+    otpMessage.className = "message error";
+    otpMessage.textContent =
+      "Your verification session expired. Please request a new code.";
+    return;
+  }
+
+  if (!/^\d{6}$/.test(token)) {
+    otpMessage.className = "message error";
+    otpMessage.textContent =
+      "Please enter the 6-digit verification code.";
+    otpCode.focus();
+    return;
+  }
+
+  verifyOtpBtn.disabled = true;
+  resendOtpBtn.disabled = true;
+  verifyOtpBtn.textContent = "VERIFYING...";
+  otpMessage.className = "message";
+  otpMessage.textContent = "Verifying your login code...";
+
+  try {
+
+    const { data, error } =
+      await kngSupabase.auth.verifyOtp({
+        email: pendingLoginEmail,
+        token: token,
+        type: "email"
+      });
+
+    if (error) {
+      throw error;
+    }
+
+    if (!data || !data.user) {
+      throw new Error("Verification succeeded but no user session was returned.");
+    }
+
+    currentUser = data.user;
+
+    /* The auth state listener will also run, but checking here makes
+       the staff gate happen immediately and keeps the flow explicit. */
+    await checkStaffAccess();
+
+  } catch (error) {
+
+    console.error("KNG OTP verification error:", error);
+
+    verifyOtpBtn.disabled = false;
+    resendOtpBtn.disabled = false;
+    verifyOtpBtn.textContent = "VERIFY & ENTER DASHBOARD";
+
+    otpMessage.className = "message error";
+    otpMessage.textContent =
+      error.message || "Invalid or expired verification code.";
+
+  }
+
+});
+
+
+/* Allow only numbers and exactly 6 digits */
+otpCode.addEventListener("input", function() {
+  otpCode.value = otpCode.value.replace(/\D/g, "").slice(0, 6);
+});
+
+
+/* Resend a fresh OTP */
+resendOtpBtn.addEventListener("click", async function() {
+
+  if (!pendingLoginEmail) {
+    showEmailScreen();
+    return;
+  }
+
+  resendOtpBtn.disabled = true;
+  verifyOtpBtn.disabled = true;
+  resendOtpBtn.textContent = "SENDING...";
+  otpMessage.className = "message";
+  otpMessage.textContent = "Sending a new login code...";
+
+  try {
+
+    const { error } =
+      await kngSupabase.auth.signInWithOtp({
+        email: pendingLoginEmail,
+        options: {
+          shouldCreateUser: false
+        }
+      });
+
+    if (error) {
+      throw error;
+    }
+
+    otpCode.value = "";
+    otpMessage.className = "message success";
+    otpMessage.textContent =
+      "A new 6-digit login code has been sent.";
+    otpCode.focus();
+
+  } catch (error) {
+
+    console.error("KNG resend OTP error:", error);
+
+    otpMessage.className = "message error";
+    otpMessage.textContent =
+      error.message || "Unable to resend the login code.";
+
+  } finally {
+
+    resendOtpBtn.disabled = false;
+    verifyOtpBtn.disabled = false;
+    resendOtpBtn.textContent = "RESEND CODE";
+    verifyOtpBtn.textContent = "VERIFY & ENTER DASHBOARD";
+
+  }
+
+});
+
+
+backToEmailBtn.addEventListener("click", function() {
+  showEmailScreen();
 });
 
 
@@ -1084,6 +1383,15 @@ function showLogin() {
 
   dashboard.style.display = "none";
 
+  otpScreen.classList.remove("active");
+  loginForm.style.display = "block";
+  otpCode.value = "";
+  pendingLoginEmail = "";
+  verifyOtpBtn.disabled = false;
+  resendOtpBtn.disabled = false;
+  verifyOtpBtn.textContent = "VERIFY & ENTER DASHBOARD";
+  resendOtpBtn.textContent = "RESEND CODE";
+
 }
 
 
@@ -1122,20 +1430,20 @@ function updateUserInterface() {
       .toUpperCase();
 
   userBadge.textContent =
-    name + " • " + role;
+    name + " â€¢ " + role;
 
 
   document.getElementById("settingsEmail")
     .textContent =
-      currentUser.email || "—";
+      currentUser.email || "â€”";
 
   document.getElementById("settingsName")
     .textContent =
-      currentStaff.full_name || "—";
+      currentStaff.full_name || "â€”";
 
   document.getElementById("settingsRole")
     .textContent =
-      role || "—";
+      role || "â€”";
 
   document.getElementById("settingsStatus")
     .textContent =
@@ -1366,7 +1674,7 @@ async function loadStaff() {
     console.error("Staff error:", error);
 
     document.getElementById("totalStaff")
-      .textContent = "—";
+      .textContent = "â€”";
 
     overview.innerHTML =
       '<div class="empty">Unable to load staff.</div>';
@@ -1500,7 +1808,7 @@ async function loadOrders() {
     console.error("Orders error:", error);
 
     document.getElementById("totalOrders")
-      .textContent = "—";
+      .textContent = "â€”";
 
     recent.innerHTML = `
       <div class="empty">
@@ -1644,7 +1952,7 @@ async function loadCustomers() {
     console.error("Customer error:", error);
 
     document.getElementById("totalCustomers")
-      .textContent = "—";
+      .textContent = "â€”";
 
     container.innerHTML = `
       <div class="empty">
@@ -1768,7 +2076,7 @@ async function loadProducts() {
     console.error("Product error:", error);
 
     document.getElementById("totalProducts")
-      .textContent = "—";
+      .textContent = "â€”";
 
     container.innerHTML = `
       <div class="empty">
