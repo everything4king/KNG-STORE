@@ -1,0 +1,1852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KNG Dashboard</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #0b0b0b;
+      color: #f5f5f5;
+      min-height: 100vh;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    /* =========================
+       LOGIN
+    ========================= */
+
+    #loginScreen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 25px;
+      background:
+        radial-gradient(circle at top, #222 0%, #0b0b0b 45%, #050505 100%);
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 430px;
+      background: #111;
+      border: 1px solid #292929;
+      border-radius: 20px;
+      padding: 40px 30px;
+      box-shadow: 0 25px 80px rgba(0,0,0,.55);
+    }
+
+    .logo {
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f5f5f5;
+      color: #050505;
+      font-weight: 900;
+      font-size: 22px;
+      letter-spacing: -2px;
+    }
+
+    .login-card h1 {
+      text-align: center;
+      font-size: 30px;
+      margin-bottom: 8px;
+    }
+
+    .login-card .subtitle {
+      text-align: center;
+      color: #888;
+      margin-bottom: 30px;
+      line-height: 1.5;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 8px;
+      color: #aaa;
+      font-size: 13px;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      border: 1px solid #333;
+      background: #080808;
+      color: white;
+      outline: none;
+    }
+
+    .field input:focus {
+      border-color: #777;
+    }
+
+    .primary-btn {
+      width: 100%;
+      border: none;
+      border-radius: 10px;
+      padding: 14px;
+      background: white;
+      color: #050505;
+      font-weight: 700;
+      margin-top: 8px;
+    }
+
+    .primary-btn:hover {
+      opacity: .9;
+    }
+
+    .message {
+      margin-top: 15px;
+      text-align: center;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .error {
+      color: #ff7777;
+    }
+
+    .success {
+      color: #7ee787;
+    }
+
+    /* =========================
+       DASHBOARD
+    ========================= */
+
+    #dashboard {
+      display: none;
+      min-height: 100vh;
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 250px;
+      background: #0f0f0f;
+      border-right: 1px solid #252525;
+      padding: 24px 16px;
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      overflow-y: auto;
+    }
+
+    .brand {
+      padding: 8px 12px 28px;
+      border-bottom: 1px solid #252525;
+      margin-bottom: 20px;
+    }
+
+    .brand-name {
+      font-size: 25px;
+      font-weight: 900;
+      letter-spacing: -1px;
+    }
+
+    .brand-small {
+      color: #777;
+      font-size: 11px;
+      margin-top: 5px;
+      letter-spacing: 1px;
+    }
+
+    .nav-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 14px;
+      margin-bottom: 7px;
+      border: none;
+      background: transparent;
+      color: #999;
+      border-radius: 9px;
+      text-align: left;
+    }
+
+    .nav-btn:hover,
+    .nav-btn.active {
+      background: #202020;
+      color: white;
+    }
+
+    .nav-icon {
+      width: 22px;
+      text-align: center;
+    }
+
+    .logout-btn {
+      margin-top: 25px;
+      color: #ff7777;
+    }
+
+    .main {
+      margin-left: 250px;
+      width: calc(100% - 250px);
+      min-height: 100vh;
+      padding: 28px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #252525;
+    }
+
+    .topbar h1 {
+      font-size: 28px;
+    }
+
+    .topbar p {
+      color: #777;
+      margin-top: 5px;
+      font-size: 13px;
+    }
+
+    .user-badge {
+      border: 1px solid #303030;
+      background: #151515;
+      padding: 10px 14px;
+      border-radius: 30px;
+      font-size: 13px;
+    }
+
+    /* =========================
+       PAGES
+    ========================= */
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 25px;
+    }
+
+    .stat-card {
+      background: #111;
+      border: 1px solid #252525;
+      border-radius: 15px;
+      padding: 22px;
+    }
+
+    .stat-title {
+      color: #777;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      margin-bottom: 12px;
+    }
+
+    .stat-value {
+      font-size: 29px;
+      font-weight: 800;
+    }
+
+    .section {
+      background: #111;
+      border: 1px solid #252525;
+      border-radius: 15px;
+      padding: 22px;
+      margin-bottom: 20px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 18px;
+    }
+
+    .section-header h2 {
+      font-size: 18px;
+    }
+
+    .refresh-btn {
+      border: 1px solid #333;
+      background: #181818;
+      color: white;
+      border-radius: 8px;
+      padding: 9px 13px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 650px;
+    }
+
+    th {
+      text-align: left;
+      color: #777;
+      font-size: 11px;
+      text-transform: uppercase;
+      padding: 12px;
+      border-bottom: 1px solid #292929;
+    }
+
+    td {
+      padding: 14px 12px;
+      border-bottom: 1px solid #202020;
+      font-size: 13px;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 20px;
+      background: #222;
+      color: #ccc;
+      font-size: 11px;
+    }
+
+    .pill.active {
+      color: #7ee787;
+    }
+
+    .empty {
+      padding: 35px;
+      text-align: center;
+      color: #666;
+    }
+
+    .notice {
+      padding: 14px;
+      border: 1px solid #343434;
+      border-radius: 10px;
+      background: #171717;
+      color: #aaa;
+      margin-bottom: 18px;
+      line-height: 1.5;
+      font-size: 13px;
+    }
+
+    .danger {
+      color: #ff7777;
+    }
+
+    .staff-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .staff-card {
+      background: #161616;
+      border: 1px solid #282828;
+      border-radius: 13px;
+      padding: 18px;
+    }
+
+    .staff-card h3 {
+      margin-bottom: 6px;
+    }
+
+    .staff-card p {
+      color: #777;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    .role {
+      display: inline-block;
+      padding: 5px 9px;
+      background: #262626;
+      border-radius: 20px;
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
+    .settings-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      padding: 15px 0;
+      border-bottom: 1px solid #252525;
+    }
+
+    .settings-row:last-child {
+      border-bottom: none;
+    }
+
+    .settings-label {
+      color: #888;
+      font-size: 13px;
+    }
+
+    .settings-value {
+      font-weight: 600;
+      text-align: right;
+    }
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media (max-width: 1000px) {
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .staff-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 700px) {
+      .sidebar {
+        width: 70px;
+        padding: 15px 8px;
+      }
+
+      .brand-name {
+        font-size: 16px;
+        text-align: center;
+      }
+
+      .brand-small,
+      .nav-btn span:not(.nav-icon) {
+        display: none;
+      }
+
+      .nav-btn {
+        justify-content: center;
+        padding: 13px 5px;
+      }
+
+      .main {
+        margin-left: 70px;
+        width: calc(100% - 70px);
+        padding: 18px;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .staff-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- =========================
+     LOGIN SCREEN
+========================= -->
+
+<div id="loginScreen">
+
+  <div class="login-card">
+
+    <div class="logo">KNG</div>
+
+    <h1>KNG Dashboard</h1>
+
+    <p class="subtitle">
+      Management portal for KNG staff.
+      <br>
+      Admins and managers only.
+    </p>
+
+    <form id="loginForm">
+
+      <div class="field">
+        <label for="email">Staff Email</label>
+        <input
+          id="email"
+          type="email"
+          placeholder="Enter your staff email"
+          required
+        >
+      </div>
+
+      <button class="primary-btn" type="submit">
+        Send Login Code
+      </button>
+
+    </form>
+
+    <div id="loginMessage" class="message"></div>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     DASHBOARD
+========================= -->
+
+<div id="dashboard">
+
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+      <div class="brand">
+        <div class="brand-name">KNG.</div>
+        <div class="brand-small">MANAGEMENT</div>
+      </div>
+
+      <button class="nav-btn active" data-page="overview">
+        <span class="nav-icon">⌂</span>
+        <span>Overview</span>
+      </button>
+
+      <button class="nav-btn" data-page="orders">
+        <span class="nav-icon">▣</span>
+        <span>Orders</span>
+      </button>
+
+      <button class="nav-btn" data-page="staff">
+        <span class="nav-icon">♙</span>
+        <span>Staff</span>
+      </button>
+
+      <button class="nav-btn" data-page="customers">
+        <span class="nav-icon">♧</span>
+        <span>Customers</span>
+      </button>
+
+      <button class="nav-btn" data-page="products">
+        <span class="nav-icon">◇</span>
+        <span>Products</span>
+      </button>
+
+      <button class="nav-btn" data-page="settings">
+        <span class="nav-icon">⚙</span>
+        <span>Settings</span>
+      </button>
+
+      <button class="nav-btn logout-btn" id="logoutBtn">
+        <span class="nav-icon">↪</span>
+        <span>Log Out</span>
+      </button>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+      <div class="topbar">
+
+        <div>
+          <h1 id="pageTitle">Dashboard</h1>
+          <p id="pageSubtitle">
+            Welcome to KNG management.
+          </p>
+        </div>
+
+        <div class="user-badge" id="userBadge">
+          Loading...
+        </div>
+
+      </div>
+
+
+      <!-- =========================
+           OVERVIEW
+      ========================= -->
+
+      <section class="page active" id="overviewPage">
+
+        <div class="stats">
+
+          <div class="stat-card">
+            <div class="stat-title">Total Orders</div>
+            <div class="stat-value" id="totalOrders">—</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-title">Customers</div>
+            <div class="stat-value" id="totalCustomers">—</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-title">Products</div>
+            <div class="stat-value" id="totalProducts">—</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-title">Staff</div>
+            <div class="stat-value" id="totalStaff">—</div>
+          </div>
+
+        </div>
+
+
+        <div class="section">
+
+          <div class="section-header">
+
+            <h2>Recent Orders</h2>
+
+            <button class="refresh-btn" onclick="loadDashboard()">
+              Refresh
+            </button>
+
+          </div>
+
+          <div id="recentOrders">
+            <div class="empty">Loading orders...</div>
+          </div>
+
+        </div>
+
+
+        <div class="section">
+
+          <div class="section-header">
+            <h2>Staff</h2>
+          </div>
+
+          <div id="overviewStaff">
+            <div class="empty">Loading staff...</div>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =========================
+           ORDERS
+      ========================= -->
+
+      <section class="page" id="ordersPage">
+
+        <div class="section">
+
+          <div class="section-header">
+
+            <h2>Orders</h2>
+
+            <button class="refresh-btn" onclick="loadOrders()">
+              Refresh
+            </button>
+
+          </div>
+
+          <div class="notice">
+            This section will automatically display orders once the
+            KNG orders table is connected to the dashboard.
+          </div>
+
+          <div id="ordersTable">
+            <div class="empty">Loading...</div>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =========================
+           STAFF
+      ========================= -->
+
+      <section class="page" id="staffPage">
+
+        <div class="section">
+
+          <div class="section-header">
+
+            <h2>KNG Staff</h2>
+
+            <button class="refresh-btn" onclick="loadStaff()">
+              Refresh
+            </button>
+
+          </div>
+
+          <div id="staffList">
+            <div class="empty">Loading staff...</div>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =========================
+           CUSTOMERS
+      ========================= -->
+
+      <section class="page" id="customersPage">
+
+        <div class="section">
+
+          <div class="section-header">
+
+            <h2>Customers</h2>
+
+            <button class="refresh-btn" onclick="loadCustomers()">
+              Refresh
+            </button>
+
+          </div>
+
+          <div id="customersTable">
+            <div class="empty">Loading customers...</div>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =========================
+           PRODUCTS
+      ========================= -->
+
+      <section class="page" id="productsPage">
+
+        <div class="section">
+
+          <div class="section-header">
+
+            <h2>Products</h2>
+
+            <button class="refresh-btn" onclick="loadProducts()">
+              Refresh
+            </button>
+
+          </div>
+
+          <div id="productsTable">
+            <div class="empty">
+              Products will appear here when the products table is connected.
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =========================
+           SETTINGS
+      ========================= -->
+
+      <section class="page" id="settingsPage">
+
+        <div class="section">
+
+          <div class="section-header">
+            <h2>Account</h2>
+          </div>
+
+          <div class="settings-row">
+            <div class="settings-label">Signed in as</div>
+            <div class="settings-value" id="settingsEmail">—</div>
+          </div>
+
+          <div class="settings-row">
+            <div class="settings-label">Full name</div>
+            <div class="settings-value" id="settingsName">—</div>
+          </div>
+
+          <div class="settings-row">
+            <div class="settings-label">Role</div>
+            <div class="settings-value" id="settingsRole">—</div>
+          </div>
+
+          <div class="settings-row">
+            <div class="settings-label">Account status</div>
+            <div class="settings-value" id="settingsStatus">—</div>
+          </div>
+
+        </div>
+
+
+        <div class="section">
+
+          <div class="section-header">
+            <h2>System</h2>
+          </div>
+
+          <div class="settings-row">
+            <div class="settings-label">Supabase connection</div>
+            <div class="settings-value success">
+              Connected
+            </div>
+          </div>
+
+          <div class="settings-row">
+            <div class="settings-label">Dashboard version</div>
+            <div class="settings-value">
+              KNG Management v1
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+</div>
+
+
+<script>
+
+/* ============================================================
+   KNG SUPABASE CONNECTION
+============================================================ */
+
+const KNG_SUPABASE_URL =
+  "https://fnpmsbjcfyhxxmuducba.supabase.co";
+
+const KNG_SUPABASE_PUBLISHABLE_KEY =
+  "sb_publishable_m39Aa3I3rq mYildm1gE3KA_8s3LmIUb";
+
+const kngSupabase =
+  window.supabase.createClient(
+    KNG_SUPABASE_URL,
+    KNG_SUPABASE_PUBLISHABLE_KEY
+  );
+
+
+/* ============================================================
+   GLOBAL STATE
+============================================================ */
+
+let currentUser = null;
+let currentStaff = null;
+
+
+/* ============================================================
+   ELEMENTS
+============================================================ */
+
+const loginScreen =
+  document.getElementById("loginScreen");
+
+const dashboard =
+  document.getElementById("dashboard");
+
+const loginForm =
+  document.getElementById("loginForm");
+
+const loginMessage =
+  document.getElementById("loginMessage");
+
+const userBadge =
+  document.getElementById("userBadge");
+
+
+/* ============================================================
+   LOGIN
+============================================================ */
+
+loginForm.addEventListener("submit", async function(event) {
+
+  event.preventDefault();
+
+  const email =
+    document.getElementById("email").value.trim().toLowerCase();
+
+  loginMessage.className = "message";
+  loginMessage.textContent = "Sending login code...";
+
+  try {
+
+    const { error } =
+      await kngSupabase.auth.signInWithOtp({
+        email: email,
+        options: {
+          emailRedirectTo: window.location.href
+        }
+      });
+
+    if (error) {
+      throw error;
+    }
+
+    loginMessage.className = "message success";
+
+    loginMessage.textContent =
+      "Login code sent. Check your email and complete the verification.";
+
+  } catch (error) {
+
+    console.error(error);
+
+    loginMessage.className = "message error";
+
+    loginMessage.textContent =
+      error.message || "Unable to send login code.";
+
+  }
+
+});
+
+
+/* ============================================================
+   AUTH STATE
+============================================================ */
+
+kngSupabase.auth.onAuthStateChange(
+  async function(event, session) {
+
+    if (session && session.user) {
+
+      currentUser = session.user;
+
+      await checkStaffAccess();
+
+    } else {
+
+      currentUser = null;
+      currentStaff = null;
+
+      showLogin();
+
+    }
+
+  }
+);
+
+
+/* ============================================================
+   CHECK STAFF ACCESS
+============================================================ */
+
+async function checkStaffAccess() {
+
+  if (!currentUser) {
+    showLogin();
+    return;
+  }
+
+  try {
+
+    const { data, error } =
+      await kngSupabase
+        .from("staff")
+        .select("*")
+        .eq("user_id", currentUser.id)
+        .maybeSingle();
+
+    if (error) {
+      throw error;
+    }
+
+    if (!data) {
+
+      showLogin();
+
+      loginMessage.className = "message error";
+
+      loginMessage.textContent =
+        "This account is not registered as KNG staff.";
+
+      await kngSupabase.auth.signOut();
+
+      return;
+    }
+
+
+    /* Only active staff can enter */
+
+    if (data.active !== true) {
+
+      showLogin();
+
+      loginMessage.className = "message error";
+
+      loginMessage.textContent =
+        "Your KNG staff account is currently inactive.";
+
+      await kngSupabase.auth.signOut();
+
+      return;
+    }
+
+
+    /* Only admin and manager can use this dashboard */
+
+    const allowedRoles = [
+      "admin",
+      "manager"
+    ];
+
+    if (!allowedRoles.includes(
+      String(data.role).toLowerCase()
+    )) {
+
+      showLogin();
+
+      loginMessage.className = "message error";
+
+      loginMessage.textContent =
+        "You do not have permission to access this dashboard.";
+
+      await kngSupabase.auth.signOut();
+
+      return;
+    }
+
+
+    currentStaff = data;
+
+    showDashboard();
+
+    loadDashboard();
+
+  } catch (error) {
+
+    console.error(error);
+
+    showLogin();
+
+    loginMessage.className = "message error";
+
+    loginMessage.textContent =
+      "Unable to verify staff access. Check the staff table and permissions.";
+
+  }
+
+}
+
+
+/* ============================================================
+   SHOW LOGIN
+============================================================ */
+
+function showLogin() {
+
+  loginScreen.style.display = "flex";
+
+  dashboard.style.display = "none";
+
+}
+
+
+/* ============================================================
+   SHOW DASHBOARD
+============================================================ */
+
+function showDashboard() {
+
+  loginScreen.style.display = "none";
+
+  dashboard.style.display = "block";
+
+  updateUserInterface();
+
+}
+
+
+/* ============================================================
+   UPDATE USER INTERFACE
+============================================================ */
+
+function updateUserInterface() {
+
+  if (!currentUser || !currentStaff) {
+    return;
+  }
+
+  const name =
+    currentStaff.full_name ||
+    currentUser.email ||
+    "KNG Staff";
+
+  const role =
+    String(currentStaff.role || "")
+      .toUpperCase();
+
+  userBadge.textContent =
+    name + " • " + role;
+
+
+  document.getElementById("settingsEmail")
+    .textContent =
+      currentUser.email || "—";
+
+  document.getElementById("settingsName")
+    .textContent =
+      currentStaff.full_name || "—";
+
+  document.getElementById("settingsRole")
+    .textContent =
+      role || "—";
+
+  document.getElementById("settingsStatus")
+    .textContent =
+      currentStaff.active ? "Active" : "Inactive";
+
+}
+
+
+/* ============================================================
+   NAVIGATION
+============================================================ */
+
+document
+  .querySelectorAll(".nav-btn[data-page]")
+  .forEach(function(button) {
+
+    button.addEventListener("click", function() {
+
+      const page =
+        button.dataset.page;
+
+      document
+        .querySelectorAll(".nav-btn")
+        .forEach(function(btn) {
+          btn.classList.remove("active");
+        });
+
+      button.classList.add("active");
+
+      document
+        .querySelectorAll(".page")
+        .forEach(function(section) {
+          section.classList.remove("active");
+        });
+
+      const target =
+        document.getElementById(page + "Page");
+
+      if (target) {
+        target.classList.add("active");
+      }
+
+      const titles = {
+
+        overview: [
+          "Dashboard",
+          "KNG management overview"
+        ],
+
+        orders: [
+          "Orders",
+          "Manage KNG customer orders"
+        ],
+
+        staff: [
+          "Staff",
+          "KNG staff management"
+        ],
+
+        customers: [
+          "Customers",
+          "KNG customer accounts"
+        ],
+
+        products: [
+          "Products",
+          "KNG product management"
+        ],
+
+        settings: [
+          "Settings",
+          "Dashboard and account settings"
+        ]
+
+      };
+
+      if (titles[page]) {
+
+        document.getElementById("pageTitle")
+          .textContent = titles[page][0];
+
+        document.getElementById("pageSubtitle")
+          .textContent = titles[page][1];
+
+      }
+
+      if (page === "orders") {
+        loadOrders();
+      }
+
+      if (page === "staff") {
+        loadStaff();
+      }
+
+      if (page === "customers") {
+        loadCustomers();
+      }
+
+      if (page === "products") {
+        loadProducts();
+      }
+
+    });
+
+  });
+
+
+/* ============================================================
+   DASHBOARD LOADER
+============================================================ */
+
+async function loadDashboard() {
+
+  await loadStaff();
+
+  await loadOrders();
+
+  await loadCustomers();
+
+  await loadProducts();
+
+}
+
+
+/* ============================================================
+   STAFF
+============================================================ */
+
+async function loadStaff() {
+
+  const overview =
+    document.getElementById("overviewStaff");
+
+  const list =
+    document.getElementById("staffList");
+
+  try {
+
+    const { data, error } =
+      await kngSupabase
+        .from("staff")
+        .select("*")
+        .order("created_at", {
+          ascending: false
+        });
+
+    if (error) {
+      throw error;
+    }
+
+    const staff = data || [];
+
+    document.getElementById("totalStaff")
+      .textContent = staff.length;
+
+
+    if (!staff.length) {
+
+      overview.innerHTML =
+        '<div class="empty">No staff found.</div>';
+
+      list.innerHTML =
+        '<div class="empty">No staff found.</div>';
+
+      return;
+
+    }
+
+
+    /* Overview */
+
+    overview.innerHTML =
+      staff.slice(0, 6).map(function(member) {
+
+        return `
+          <div class="staff-card">
+            <h3>${escapeHTML(member.full_name || "Unnamed")}</h3>
+
+            <p>${escapeHTML(member.user_id || "")}</p>
+
+            <span class="role">
+              ${escapeHTML(member.role || "staff")}
+            </span>
+
+            <span class="pill ${member.active ? "active" : ""}">
+              ${member.active ? "Active" : "Inactive"}
+            </span>
+          </div>
+        `;
+
+      }).join("");
+
+
+    /* Full staff list */
+
+    list.innerHTML = `
+      <div class="staff-grid">
+        ${staff.map(function(member) {
+
+          return `
+            <div class="staff-card">
+
+              <h3>
+                ${escapeHTML(member.full_name || "Unnamed")}
+              </h3>
+
+              <p>
+                ${escapeHTML(member.user_id || "")}
+              </p>
+
+              <span class="role">
+                ${escapeHTML(member.role || "staff")}
+              </span>
+
+              <span class="pill ${member.active ? "active" : ""}">
+                ${member.active ? "Active" : "Inactive"}
+              </span>
+
+            </div>
+          `;
+
+        }).join("")}
+      </div>
+    `;
+
+  } catch (error) {
+
+    console.error("Staff error:", error);
+
+    document.getElementById("totalStaff")
+      .textContent = "—";
+
+    overview.innerHTML =
+      '<div class="empty">Unable to load staff.</div>';
+
+    list.innerHTML =
+      '<div class="empty">Unable to load staff.</div>';
+
+  }
+
+}
+
+
+/* ============================================================
+   ORDERS
+============================================================ */
+
+async function loadOrders() {
+
+  const recent =
+    document.getElementById("recentOrders");
+
+  const table =
+    document.getElementById("ordersTable");
+
+  try {
+
+    const { data, error } =
+      await kngSupabase
+        .from("orders")
+        .select("*")
+        .order("created_at", {
+          ascending: false
+        })
+        .limit(20);
+
+    if (error) {
+      throw error;
+    }
+
+    const orders = data || [];
+
+    document.getElementById("totalOrders")
+      .textContent = orders.length;
+
+
+    if (!orders.length) {
+
+      recent.innerHTML =
+        '<div class="empty">No orders yet.</div>';
+
+      table.innerHTML =
+        '<div class="empty">No orders yet.</div>';
+
+      return;
+
+    }
+
+
+    const headers =
+      Object.keys(orders[0] || {})
+        .slice(0, 8);
+
+
+    const createTable =
+      function(items) {
+
+        return `
+          <div class="table-wrap">
+
+            <table>
+
+              <thead>
+                <tr>
+                  ${headers.map(function(header) {
+                    return `<th>${escapeHTML(header)}</th>`;
+                  }).join("")}
+                </tr>
+              </thead>
+
+              <tbody>
+
+                ${items.map(function(order) {
+
+                  return `
+                    <tr>
+                      ${headers.map(function(header) {
+
+                        let value =
+                          order[header];
+
+                        if (
+                          value !== null &&
+                          typeof value === "object"
+                        ) {
+                          value =
+                            JSON.stringify(value);
+                        }
+
+                        return `
+                          <td>
+                            ${escapeHTML(
+                              String(value ?? "")
+                            )}
+                          </td>
+                        `;
+
+                      }).join("")}
+                    </tr>
+                  `;
+
+                }).join("")}
+
+              </tbody>
+
+            </table>
+
+          </div>
+        `;
+
+      };
+
+
+    recent.innerHTML =
+      createTable(orders.slice(0, 5));
+
+    table.innerHTML =
+      createTable(orders);
+
+  } catch (error) {
+
+    console.error("Orders error:", error);
+
+    document.getElementById("totalOrders")
+      .textContent = "—";
+
+    recent.innerHTML = `
+      <div class="empty">
+        Orders table is not connected yet.
+      </div>
+    `;
+
+    table.innerHTML = `
+      <div class="empty">
+        Orders table is not connected yet.
+      </div>
+    `;
+
+  }
+
+}
+
+
+/* ============================================================
+   CUSTOMERS
+============================================================ */
+
+async function loadCustomers() {
+
+  const container =
+    document.getElementById("customersTable");
+
+  try {
+
+    /*
+      We try the most likely KNG customer table names.
+    */
+
+    let result =
+      await kngSupabase
+        .from("customers")
+        .select("*")
+        .limit(100);
+
+    if (result.error) {
+
+      result =
+        await kngSupabase
+          .from("profiles")
+          .select("*")
+          .limit(100);
+
+    }
+
+    if (result.error) {
+      throw result.error;
+    }
+
+    const customers =
+      result.data || [];
+
+    document.getElementById("totalCustomers")
+      .textContent = customers.length;
+
+
+    if (!customers.length) {
+
+      container.innerHTML =
+        '<div class="empty">No customers found.</div>';
+
+      return;
+
+    }
+
+
+    const headers =
+      Object.keys(customers[0])
+        .slice(0, 8);
+
+
+    container.innerHTML = `
+      <div class="table-wrap">
+
+        <table>
+
+          <thead>
+
+            <tr>
+              ${headers.map(function(header) {
+
+                return `
+                  <th>
+                    ${escapeHTML(header)}
+                  </th>
+                `;
+
+              }).join("")}
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            ${customers.map(function(customer) {
+
+              return `
+                <tr>
+
+                  ${headers.map(function(header) {
+
+                    let value =
+                      customer[header];
+
+                    if (
+                      value !== null &&
+                      typeof value === "object"
+                    ) {
+                      value =
+                        JSON.stringify(value);
+                    }
+
+                    return `
+                      <td>
+                        ${escapeHTML(
+                          String(value ?? "")
+                        )}
+                      </td>
+                    `;
+
+                  }).join("")}
+
+                </tr>
+              `;
+
+            }).join("")}
+
+          </tbody>
+
+        </table>
+
+      </div>
+    `;
+
+  } catch (error) {
+
+    console.error("Customer error:", error);
+
+    document.getElementById("totalCustomers")
+      .textContent = "—";
+
+    container.innerHTML = `
+      <div class="empty">
+        Customer table is not connected yet.
+      </div>
+    `;
+
+  }
+
+}
+
+
+/* ============================================================
+   PRODUCTS
+============================================================ */
+
+async function loadProducts() {
+
+  const container =
+    document.getElementById("productsTable");
+
+  try {
+
+    const { data, error } =
+      await kngSupabase
+        .from("products")
+        .select("*")
+        .limit(100);
+
+    if (error) {
+      throw error;
+    }
+
+    const products =
+      data || [];
+
+    document.getElementById("totalProducts")
+      .textContent = products.length;
+
+
+    if (!products.length) {
+
+      container.innerHTML =
+        '<div class="empty">No products found.</div>';
+
+      return;
+
+    }
+
+
+    const headers =
+      Object.keys(products[0])
+        .slice(0, 8);
+
+
+    container.innerHTML = `
+      <div class="table-wrap">
+
+        <table>
+
+          <thead>
+
+            <tr>
+              ${headers.map(function(header) {
+
+                return `
+                  <th>
+                    ${escapeHTML(header)}
+                  </th>
+                `;
+
+              }).join("")}
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            ${products.map(function(product) {
+
+              return `
+                <tr>
+
+                  ${headers.map(function(header) {
+
+                    let value =
+                      product[header];
+
+                    if (
+                      value !== null &&
+                      typeof value === "object"
+                    ) {
+                      value =
+                        JSON.stringify(value);
+                    }
+
+                    return `
+                      <td>
+                        ${escapeHTML(
+                          String(value ?? "")
+                        )}
+                      </td>
+                    `;
+
+                  }).join("")}
+
+                </tr>
+              `;
+
+            }).join("")}
+
+          </tbody>
+
+        </table>
+
+      </div>
+    `;
+
+  } catch (error) {
+
+    console.error("Product error:", error);
+
+    document.getElementById("totalProducts")
+      .textContent = "—";
+
+    container.innerHTML = `
+      <div class="empty">
+        Products table is not connected yet.
+      </div>
+    `;
+
+  }
+
+}
+
+
+/* ============================================================
+   LOGOUT
+============================================================ */
+
+document
+  .getElementById("logoutBtn")
+  .addEventListener("click", async function() {
+
+    await kngSupabase.auth.signOut();
+
+    currentUser = null;
+
+    currentStaff = null;
+
+    showLogin();
+
+  });
+
+
+/* ============================================================
+   SECURITY / HTML ESCAPING
+============================================================ */
+
+function escapeHTML(value) {
+
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+}
+
+
+/* ============================================================
+   INITIAL SESSION CHECK
+============================================================ */
+
+async function initializeDashboard() {
+
+  const {
+    data: {
+      session
+    }
+  } = await kngSupabase.auth.getSession();
+
+  if (session && session.user) {
+
+    currentUser =
+      session.user;
+
+    await checkStaffAccess();
+
+  } else {
+
+    showLogin();
+
+  }
+
+}
+
+
+initializeDashboard();
+
+</script>
+
+</body>
+</html>
