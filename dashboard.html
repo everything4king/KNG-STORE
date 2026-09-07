@@ -1425,10 +1425,10 @@ function updateUserInterface() {
   const role = String(currentStaff.role || "").toLowerCase();
   const roleLabel = role === "admin" ? "OWNER / ADMIN" : role === "manager" ? "MANAGER" : role.toUpperCase();
 
-  userBadge.textContent = name + " â€¢ " + roleLabel;
-  document.getElementById("settingsEmail").textContent = currentUser.email || "â€”";
-  document.getElementById("settingsName").textContent = currentStaff.full_name || "â€”";
-  document.getElementById("settingsRole").textContent = roleLabel || "â€”";
+  userBadge.textContent = name + " " + roleLabel;
+  document.getElementById("settingsEmail").textContent = currentUser.email || "N/A";
+  document.getElementById("settingsName").textContent = currentStaff.full_name || "N/A";
+  document.getElementById("settingsRole").textContent = roleLabel || "N/A";
   document.getElementById("settingsStatus").textContent = currentStaff.active ? "Active" : "Inactive";
 }
 
