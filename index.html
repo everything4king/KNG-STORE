@@ -448,8 +448,7 @@ footer{border-top:1px solid var(--border);padding:55px 35px;background:#060606}
             <select id="state" onchange="updateDispatchOptions()" required>
               <option value="">Select state</option>
               <option value="Lagos">Lagos</option>
-              <option value="Ogun">Ogun</option>
-              <option value="other">Other Nigerian State</option>
+              <option value="Ogun">Ogun â€” Covenant University</option>
             </select>
           </div>
 
@@ -464,18 +463,15 @@ footer{border-top:1px solid var(--border);padding:55px 35px;background:#060606}
 
           <div class="dispatch-box">
             <h3>DELIVERY / DISPATCH</h3>
-            <p>Choose the delivery option that matches your location. The dispatch price is shown before you place the order. Covenant University delivery is fixed at <strong style="color:#fff">&#8358;3,000</strong>.</p>
+            <p>Select your state, then choose the delivery zone that contains your area. Every zone shows its areas and has one fixed delivery fee. KNG currently delivers only within Lagos and to Covenant University, Ogun State.</p>
 
             <div class="dispatch-options" id="dispatchOptions">
               <div style="color:#777;font-size:11px">Select your state to see delivery options.</div>
             </div>
 
             <div class="zone-help">
-              <strong>NOT SURE OF YOUR ZONE?</strong><br>
-              Zone 1 = nearest/local delivery areas.<br>
-              Zone 2 = mid-distance delivery areas.<br>
-              Zone 3 = long-distance delivery areas.<br>
-              If you are unsure, do not guess. Contact KNG with your exact area before dispatch.
+              <strong>DELIVERY AREAS</strong><br>
+              Choose the zone containing your delivery area. The exact fixed fee is shown beside each zone. No zone enquiry is needed.
             </div>
           </div>
         </div>
@@ -1243,10 +1239,10 @@ function removeCartItem(index){
 
 /* DISPATCH */
 const DISPATCH={
-  zone1:{label:"ZONE 1",range:"&#8358;8,500 - &#8358;9,000",low:8500},
-  zone2:{label:"ZONE 2",range:"&#8358;12,500 - &#8358;13,500",low:12500},
-  zone3:{label:"ZONE 3",range:"&#8358;14,000 - &#8358;15,500",low:14000},
-  covenant:{label:"COVENANT UNIVERSITY",range:"&#8358;3,000",low:3000}
+  zone1:{label:"ZONE 1",fee:2500,areas:["Egbeda","Igando","Iyana-Ipaja","Ijegun","Ejigbo","Isheri-Osun"]},
+  zone2:{label:"ZONE 2",fee:3500,areas:["Ikeja","Ogba","Yaba","Surulere","Festac","Oshodi","Gbagada"]},
+  zone3:{label:"ZONE 3",fee:5000,areas:["Victoria Island","Ikoyi","Lekki (Phase 1 / Ajah)","Ikorodu"]},
+  covenant:{label:"COVENANT UNIVERSITY",fee:3000,areas:["Covenant University, Ota"]}
 };
 
 function updateDispatchOptions(){
@@ -1255,7 +1251,7 @@ function updateDispatchOptions(){
   selectedDispatch=null;
 
   if(!state){
-    box.innerHTML='<div style="color:#777;font-size:11px">Select your state to see delivery options.</div>';
+    box.innerHTML='<div style="color:#777;font-size:11px">Select your state to see the delivery areas and fee.</div>';
     updateCheckoutTotals();
     return;
   }
@@ -1264,36 +1260,18 @@ function updateDispatchOptions(){
     box.innerHTML=`
       <label class="dispatch-option" onclick="selectDispatch('covenant')">
         <input type="radio" name="dispatch" value="covenant">
-        <span><strong>COVENANT UNIVERSITY</strong><br>University delivery</span>
-        <strong>&#8358;3,000</strong>
-      </label>
-
-      <label class="dispatch-option" onclick="selectDispatch('zone2')">
-        <input type="radio" name="dispatch" value="zone2">
-        <span><strong>ZONE 2</strong><br>Ogun delivery outside Covenant University</span>
-        <strong>&#8358;12,500 - &#8358;13,500</strong>
-      </label>
-    `;
+        <span><strong>COVENANT UNIVERSITY</strong><br>Ota, Ogun State<br><small>Covenant University only</small></span>
+        <strong>${money(DISPATCH.covenant.fee)}</strong>
+      </label>`;
+  }else if(state==="Lagos"){
+    box.innerHTML=Object.entries(DISPATCH).filter(([key])=>key!=="covenant").map(([key,d])=>`
+      <label class="dispatch-option" onclick="selectDispatch('${key}')">
+        <input type="radio" name="dispatch" value="${key}">
+        <span><strong>${d.label}</strong><br>${d.areas.map(esc).join(" â€¢ ")}</span>
+        <strong>${money(d.fee)}</strong>
+      </label>`).join("");
   }else{
-    box.innerHTML=`
-      <label class="dispatch-option" onclick="selectDispatch('zone1')">
-        <input type="radio" name="dispatch" value="zone1">
-        <span><strong>ZONE 1</strong><br>Nearest / local delivery areas</span>
-        <strong>&#8358;8,500 - &#8358;9,000</strong>
-      </label>
-
-      <label class="dispatch-option" onclick="selectDispatch('zone2')">
-        <input type="radio" name="dispatch" value="zone2">
-        <span><strong>ZONE 2</strong><br>Mid-distance delivery areas</span>
-        <strong>&#8358;12,500 - &#8358;13,500</strong>
-      </label>
-
-      <label class="dispatch-option" onclick="selectDispatch('zone3')">
-        <input type="radio" name="dispatch" value="zone3">
-        <span><strong>ZONE 3</strong><br>Long-distance delivery areas</span>
-        <strong>&#8358;14,000 - &#8358;15,500</strong>
-      </label>
-    `;
+    box.innerHTML='<div style="color:#777;font-size:11px">KNG currently delivers only within Lagos and to Covenant University, Ogun State.</div>';
   }
 
   updateCheckoutTotals();
@@ -1301,33 +1279,20 @@ function updateDispatchOptions(){
 
 function selectDispatch(key){
   selectedDispatch=key;
-
   document.querySelectorAll(".dispatch-option").forEach(x=>x.classList.remove("selected"));
-
   const radio=document.querySelector(`input[value="${key}"]`);
-  if(radio){
-    radio.checked=true;
-    radio.closest(".dispatch-option").classList.add("selected");
-  }
-
+  if(radio){radio.checked=true;radio.closest(".dispatch-option").classList.add("selected");}
   updateCheckoutTotals();
 }
 
-function getDispatchCharge(){
-  return selectedDispatch?DISPATCH[selectedDispatch].low:0;
-}
-
-function getDispatchDisplay(){
-  return selectedDispatch?DISPATCH[selectedDispatch].range:"Select location";
-}
-
+function getDispatchCharge(){return selectedDispatch?DISPATCH[selectedDispatch].fee:0}
+function getDispatchDisplay(){return selectedDispatch?money(DISPATCH[selectedDispatch].fee):"Select location"}
 function updateCheckoutTotals(){
   const subtotal=getCartSubtotal();
+  const delivery=getDispatchCharge();
   $("checkoutSubtotal").innerHTML=money(subtotal);
-  $("checkoutDelivery").innerHTML=getDispatchDisplay();
-  $("checkoutTotal").innerHTML=selectedDispatch
-    ? money(subtotal)+" + "+getDispatchDisplay()
-    : money(subtotal);
+  $("checkoutDelivery").innerHTML=selectedDispatch?money(delivery):"Select location";
+  $("checkoutTotal").innerHTML=money(subtotal+delivery);
 }
 
 /* CHECKOUT */
@@ -1712,7 +1677,7 @@ async function renderDashboard(user){
     <button class="account-close" onclick="closeAccount()">X</button>
 
     <div class="dashboard-hero">
-      <div class="avatar">${esc(first[0])}</div>
+      <div class="avatar" id="kngDashboardAvatar">${m.profile_picture_url ? `<img src="${esc(m.profile_picture_url)}" alt="Profile picture" style="width:100%;height:100%;object-fit:cover;border-radius:50%">` : esc(first[0])}</div>
       <div>
         <p class="account-kicker">THE INNER CIRCLE</p>
         <h2>WELCOME, <span>${esc(first)}.</span></h2>
@@ -1731,6 +1696,53 @@ async function renderDashboard(user){
   `;
 }
 
+const KNG_PROFILE_BUCKET="profile-pictures";
+
+async function kngCurrentUser(){
+  const {data:{user}}=await kngSupabase.auth.getUser();
+  return user||null;
+}
+
+async function kngUploadProfilePicture(input){
+  const file=input?.files?.[0];
+  if(!file)return;
+  if(!file.type.startsWith("image/")){alert("Please choose an image file.");input.value="";return;}
+  if(file.size>2*1024*1024){alert("Profile pictures must be 2 MB or smaller.");input.value="";return;}
+  const user=await kngCurrentUser();
+  if(!user){alert("Please sign in first.");return;}
+  try{
+    const ext=(file.name.split(".").pop()||"jpg").toLowerCase();
+    const path=`${user.id}/avatar-${Date.now()}.${ext}`;
+    const old=await kngSupabase.storage.from(KNG_PROFILE_BUCKET).list(user.id);
+    if(old.data?.length){
+      await kngSupabase.storage.from(KNG_PROFILE_BUCKET).remove(old.data.filter(x=>x.name).map(x=>`${user.id}/${x.name}`));
+    }
+    const up=await kngSupabase.storage.from(KNG_PROFILE_BUCKET).upload(path,file,{cacheControl:"3600",upsert:false,contentType:file.type});
+    if(up.error)throw up.error;
+    const {data:{publicUrl}}=kngSupabase.storage.from(KNG_PROFILE_BUCKET).getPublicUrl(path);
+    if(!publicUrl)throw new Error("Unable to create profile picture URL.");
+    const auth=await kngSupabase.auth.updateUser({data:{profile_picture_url:publicUrl}});
+    if(auth.error)throw auth.error;
+    showToast("PROFILE PICTURE UPDATED.");
+    await renderAccountHome();
+  }catch(e){console.error(e);alert(e.message||"Unable to upload your profile picture.");}
+  finally{input.value="";}
+}
+
+async function kngRemoveProfilePicture(){
+  const user=await kngCurrentUser();
+  if(!user)return;
+  if(!confirm("Remove your profile picture?"))return;
+  try{
+    const old=await kngSupabase.storage.from(KNG_PROFILE_BUCKET).list(user.id);
+    if(old.data?.length){await kngSupabase.storage.from(KNG_PROFILE_BUCKET).remove(old.data.filter(x=>x.name).map(x=>`${user.id}/${x.name}`));}
+    const auth=await kngSupabase.auth.updateUser({data:{profile_picture_url:null}});
+    if(auth.error)throw auth.error;
+    showToast("PROFILE PICTURE REMOVED.");
+    await renderAccountHome();
+  }catch(e){console.error(e);alert(e.message||"Unable to remove your profile picture.");}
+}
+
 async function showProfile(){
   const {data:{user}}=await kngSupabase.auth.getUser();
   const m=user?.user_metadata||{};
@@ -1740,6 +1752,19 @@ async function showProfile(){
     <div class="account-logo">KNG<span>.</span></div>
     <p class="account-kicker">KNG / PROFILE</p>
     <h2>YOUR<br><span>DETAILS.</span></h2>
+
+    <div style="display:flex;align-items:center;gap:18px;margin:20px 0 25px;padding:16px;border:1px solid var(--border);background:#0b0b0b">
+      <div class="avatar" style="width:82px;height:82px;overflow:hidden">
+        ${m.profile_picture_url ? `<img src="${esc(m.profile_picture_url)}" alt="Profile picture" style="width:100%;height:100%;object-fit:cover;border-radius:50%">` : esc((m.full_name||"K").trim().charAt(0).toUpperCase())}
+      </div>
+      <div>
+        <label style="display:block;color:#aaa;font-size:9px;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px">Profile Picture</label>
+        <label for="kngProfilePictureInput" class="account-primary" style="display:inline-block;cursor:pointer;padding:12px 16px">CHANGE PHOTO</label>
+        <input id="kngProfilePictureInput" type="file" accept="image/*" style="display:none" onchange="kngUploadProfilePicture(this)">
+        ${m.profile_picture_url ? `<button type="button" class="account-link" style="display:block;margin-top:8px" onclick="kngRemoveProfilePicture()">REMOVE PHOTO</button>` : ""}
+        <small style="display:block;color:#666;margin-top:7px">Image only, maximum 2 MB.</small>
+      </div>
+    </div>
 
     <form class="profile-form" onsubmit="saveProfile(event)">
       <div>
