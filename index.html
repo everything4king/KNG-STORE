@@ -1285,7 +1285,7 @@ function updateDispatchOptions(){
     box.innerHTML=Object.entries(DISPATCH).filter(([key])=>key!=="covenant").map(([key,d])=>`
       <label class="dispatch-option" onclick="selectDispatch('${key}')">
         <input type="radio" name="dispatch" value="${key}">
-        <span><strong>${d.label}</strong><br>${d.areas.map(esc).join(" â€¢ ")}</span>
+        <span><strong>${d.label}</strong><br>${d.areas.map(esc).join(" • ")}</span>
         <strong>${money(d.fee)}</strong>
       </label>`).join("");
   }else{
