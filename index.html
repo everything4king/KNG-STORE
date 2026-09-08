@@ -2,2413 +2,262 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="KNG - Official online store. Premium Nigerian streetwear built different. Wear the crown. Be the standard.">
-<meta name="keywords" content="KNG, KNGwears, KNG clothing, Nigerian fashion, Nigerian streetwear, hoodies, sweatpants, t-shirts, jorts, beanies, face caps, lapel pins">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="KNG â€” Official online store. Premium Nigerian streetwear built different. Wear the crown. Be the standard.">
+<meta name="keywords" content="KNG, KNGwears, Nigerian fashion, Nigerian streetwear, hoodies, polos, sweatpants, jorts">
 <meta name="author" content="KNG">
 <title>KNG - Official Store</title>
-
 <style>
-:root{--black:#050505;--black2:#0a0a0a;--gold:#e5b92f;--cream:#f5f1e8;--muted:#99948a;--border:rgba(255,255,255,.10);--goldborder:rgba(229,185,47,.45)}
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{background:var(--black);color:var(--cream);font-family:Arial,Helvetica,sans-serif;overflow-x:hidden}
-body.locked{overflow:hidden}
-button,input,select,textarea{font:inherit}
-button{cursor:pointer}
-a{color:inherit;text-decoration:none}
-header{position:sticky;top:0;z-index:1000;height:88px;background:rgba(5,5,5,.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
-.navbar{max-width:1350px;height:100%;margin:auto;padding:0 35px;display:flex;align-items:center;justify-content:space-between;gap:20px}
-.logo{font-size:34px;font-weight:1000;letter-spacing:-3px;cursor:pointer}.logo span,.footer-logo span,.account-logo span{color:var(--gold)}
-.nav-links{display:flex;align-items:center;gap:38px}.nav-links button{border:0;background:none;color:#bcb8af;text-transform:uppercase;letter-spacing:3px;font-size:13px;font-weight:700}.nav-links button:hover{color:var(--gold)}
-.nav-actions{display:flex;gap:10px}.icon-btn svg{width:22px;height:22px;display:block;margin:auto}.icon-btn{width:54px;height:54px;border-radius:50%;background:transparent;border:1px solid var(--border);color:var(--cream);position:relative}.icon-btn:hover{border-color:var(--gold);color:var(--gold)}
-.cart-count{position:absolute;top:-5px;right:-2px;min-width:23px;height:23px;border-radius:50%;background:var(--gold);color:#000;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center}.mobile-menu{display:none}
-.page{display:none}.page.active{display:block}
-.hero{min-height:calc(100vh - 88px);display:flex;align-items:center;justify-content:center;text-align:center;padding:80px 30px;background:radial-gradient(circle,rgba(229,185,47,.05),transparent 42%),#050505}
-.hero-content{max-width:1100px}.hero-kicker,.eyebrow{color:var(--gold);text-transform:uppercase;letter-spacing:6px;font-weight:800;font-size:12px}
-.hero-title{font-size:clamp(70px,10vw,150px);line-height:.86;letter-spacing:-8px;font-weight:1000;margin:55px 0 35px}.hero-title .gold{display:block;color:var(--gold)}
-.hero-description{color:#aaa59b;letter-spacing:6px;font-size:13px;line-height:1.8}.hero-buttons{display:flex;justify-content:center;gap:18px;margin-top:50px}
-.btn{min-height:54px;padding:0 30px;border:1px solid var(--gold);background:var(--gold);color:#000;font-weight:900;letter-spacing:2px;text-transform:uppercase}.btn-outline{background:transparent;color:var(--cream);border-color:rgba(255,255,255,.22)}.btn-outline:hover{border-color:var(--gold);color:var(--gold)}
-.section{max-width:1350px;margin:auto;padding:110px 35px}.section-title{font-size:clamp(48px,6vw,82px);line-height:.95;letter-spacing:-4px;font-weight:1000;margin-top:20px}.section-subtitle{color:#888;margin-top:18px;line-height:1.6}
-.collections-heading{text-align:center;margin-bottom:55px}.collection-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}.collection-card{min-height:480px;padding:35px;border:1px solid var(--border);background:linear-gradient(145deg,#0c0c0c,#070707);position:relative;overflow:hidden}.collection-card:before{content:"";position:absolute;width:260px;height:260px;border:1px solid rgba(229,185,47,.16);border-radius:50%;right:-80px;top:-80px}.collection-number,.collection-title,.collection-description,.collection-card .btn{position:relative;z-index:1}.collection-number{color:var(--gold);font-size:12px;letter-spacing:3px}.collection-visual{height:220px;margin:25px 0;background:radial-gradient(circle,rgba(229,185,47,.14),transparent 48%),#101010}.collection-title{font-size:38px;text-transform:uppercase;font-weight:1000}.collection-description{color:#8e8a82;margin:13px 0 28px;line-height:1.6}
-.wardrobe-header{padding:85px 35px 45px;max-width:1350px;margin:auto}.back-link{border:0;background:none;color:var(--muted);text-transform:uppercase;letter-spacing:2px;font-size:12px;margin-bottom:35px}.back-link:hover{color:var(--gold)}
-.wardrobe-tools{max-width:1350px;margin:auto;padding:0 35px 45px;display:flex;align-items:center;justify-content:space-between;gap:20px}.filters{display:flex;flex-wrap:wrap;gap:10px}.filter-btn{background:transparent;border:1px solid var(--border);color:#aaa59b;padding:13px 18px;text-transform:uppercase;letter-spacing:2px;font-size:11px;font-weight:700}.filter-btn.active,.filter-btn:hover{border-color:var(--gold);color:var(--gold)}.search-box{width:280px}.search-box input{width:100%;background:#0d0d0d;border:1px solid var(--border);color:#fff;padding:16px 18px;outline:0}
-.product-grid{max-width:1350px;margin:auto;padding:0 35px 100px;display:grid;grid-template-columns:repeat(4,1fr);gap:24px}.product-section-heading{grid-column:1/-1;padding:55px 0 5px;border-top:1px solid rgba(229,185,47,.18);margin-top:18px}.product-section-heading h2{font-size:34px;letter-spacing:-1px;margin-top:8px;text-transform:uppercase}.product-section-heading p{color:#777;margin-top:8px;font-size:13px}.product-card{background:#0b0b0b;border:1px solid var(--border);overflow:hidden}.product-card:hover{border-color:rgba(229,185,47,.4);transform:translateY(-5px)}.product-image{height:360px;background:radial-gradient(circle,rgba(229,185,47,.12),transparent 48%),#101010;display:flex;align-items:center;justify-content:center;position:relative}.product-image:after{content:"KNG";font-size:75px;font-weight:1000;letter-spacing:-7px;color:rgba(255,255,255,.035)}.new-badge{position:absolute;top:18px;left:18px;background:var(--gold);color:#000;padding:9px 12px;font-size:10px;font-weight:900;letter-spacing:2px}.product-info{padding:25px}.product-category{color:var(--gold);font-size:10px;text-transform:uppercase;letter-spacing:3px;margin-bottom:10px}.product-name{font-size:21px;font-weight:800;margin-bottom:12px}.product-price{color:#aaa59b;margin-bottom:22px}.product-card .btn{width:100%}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.84);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px}.modal-overlay.open{display:flex}.product-modal{width:min(900px,100%);max-height:92vh;overflow-y:auto;background:#0b0b0b;border:1px solid var(--goldborder);position:relative}.close-modal{position:absolute;right:18px;top:18px;width:42px;height:42px;border-radius:50%;border:1px solid var(--border);background:#080808;color:#fff;z-index:5}.product-modal-content{display:grid;grid-template-columns:1fr 1fr}.modal-image{min-height:600px;background:radial-gradient(circle,rgba(229,185,47,.12),transparent 45%),#101010;display:flex;align-items:center;justify-content:center}.modal-image span{font-size:130px;font-weight:1000;letter-spacing:-10px;color:rgba(255,255,255,.035)}.modal-details{padding:70px 40px 40px}.modal-details h2{font-size:38px;margin-bottom:15px}.modal-price{color:var(--gold);font-size:22px;margin-bottom:35px}.option-group{margin-bottom:25px}.option-group label{display:block;text-transform:uppercase;letter-spacing:2px;font-size:11px;color:#999;margin-bottom:10px}.option-buttons{display:flex;flex-wrap:wrap;gap:8px}.option-btn{background:transparent;border:1px solid var(--border);color:var(--cream);padding:12px 16px}.option-btn.selected,.option-btn:hover{border-color:var(--gold);color:var(--gold)}.modal-add{width:100%;margin-top:10px}
-.size-guide-section{margin-top:18px}.size-guide-toggle,.custom-size-button{width:100%;padding:13px 16px;border:1px solid rgba(255,255,255,.16);border-radius:10px;background:transparent;color:inherit;font-size:13px;font-weight:600;letter-spacing:.8px}.size-guide-panel{display:none;margin-top:12px;padding:18px;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:rgba(255,255,255,.035)}.size-guide-panel.active{display:block}.size-guide-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}.size-guide-close{width:30px;height:30px;border:0;border-radius:50%;background:rgba(255,255,255,.08);color:#fff;font-size:18px}.size-guide-content{display:none}.size-guide-content.active{display:block}.size-guide-note{margin:0 0 14px;font-size:11px;line-height:1.5;opacity:.65}.size-table-wrapper{width:100%;overflow-x:auto}.size-table{width:100%;min-width:480px;border-collapse:collapse;font-size:11px}.size-table th,.size-table td{padding:10px 8px;text-align:center;border-bottom:1px solid rgba(255,255,255,.08);white-space:nowrap}
-.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:2500;display:none}.drawer-overlay.open{display:block}.cart-drawer{position:fixed;right:0;top:0;width:min(430px,100%);height:100vh;background:#080808;border-left:1px solid var(--border);z-index:2600;transform:translateX(100%);transition:.3s;display:flex;flex-direction:column}.cart-drawer.open{transform:translateX(0)}.drawer-header{padding:25px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}.drawer-close{border:0;background:none;color:#fff;font-size:25px}.cart-items{flex:1;overflow-y:auto;padding:20px}.empty-cart{text-align:center;padding:80px 20px;color:var(--muted)}.cart-item{display:grid;grid-template-columns:85px 1fr;gap:15px;padding:18px 0;border-bottom:1px solid var(--border)}.cart-item-image{height:90px;background:radial-gradient(circle,rgba(229,185,47,.1),transparent),#111;display:flex;align-items:center;justify-content:center}.cart-item-image:after{content:"K";color:rgba(255,255,255,.08);font-size:35px;font-weight:1000}.cart-item-name{font-weight:800;margin-bottom:7px}.cart-item-meta{color:#888;font-size:12px;margin-bottom:8px}.cart-item-price{color:var(--gold);font-size:13px}.cart-controls{display:flex;align-items:center;gap:7px;margin-top:12px}.qty-btn{width:28px;height:28px;background:transparent;color:#fff;border:1px solid var(--border)}.remove-btn{border:0;background:none;color:#777;font-size:11px;margin-left:10px}.cart-footer{border-top:1px solid var(--border);padding:25px}.cart-total{display:flex;justify-content:space-between;margin-bottom:20px;font-size:20px;font-weight:800}.cart-footer .btn{width:100%}
-.checkout-layout{max-width:1200px;margin:auto;padding:70px 35px 100px;display:grid;grid-template-columns:1.2fr .8fr;gap:50px}.checkout-form,.order-summary{background:#0b0b0b;border:1px solid var(--border);padding:35px}.checkout-form h2,.order-summary h2{margin-bottom:30px;text-transform:uppercase}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.form-field{margin-bottom:18px}.form-field.full{grid-column:1/-1}.form-field label{display:block;color:#aaa;text-transform:uppercase;letter-spacing:1.5px;font-size:10px;margin-bottom:8px}.form-field input,.form-field textarea,.form-field select{width:100%;padding:15px;background:#080808;color:#fff;border:1px solid var(--border);outline:0}.payment-note{margin-top:25px;padding:18px;border:1px solid var(--goldborder);color:#aaa;font-size:13px;line-height:1.6}.summary-item{display:flex;justify-content:space-between;gap:15px;padding:14px 0;border-bottom:1px solid var(--border);color:#aaa;font-size:13px}.summary-total{display:flex;justify-content:space-between;margin-top:25px;font-size:21px;font-weight:900}.checkout-button{width:100%;margin-top:25px}
-.about-section{max-width:950px;margin:auto;padding:130px 35px;text-align:center}.about-text{color:#999;font-size:18px;line-height:1.9;margin-top:30px}
-footer{border-top:1px solid var(--border);background:#050505}.footer-inner{max-width:1350px;margin:auto;padding:80px 35px 30px}.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:50px}.footer-logo{font-size:48px;font-weight:1000;letter-spacing:-5px}.footer-description{max-width:330px;color:#777;line-height:1.7;margin-top:25px}.footer-title{color:var(--gold);text-transform:uppercase;letter-spacing:3px;font-size:11px;margin-bottom:25px;font-weight:900}.footer-links{display:flex;flex-direction:column;gap:16px}.footer-links button,.footer-links a{border:0;background:none;text-align:left;color:#777}.footer-bottom{margin-top:70px;padding-top:25px;border-top:1px solid var(--border);display:flex;justify-content:space-between;color:#555;font-size:11px;text-transform:uppercase;letter-spacing:1px}
-.toast{position:fixed;right:25px;bottom:25px;z-index:9000;background:var(--gold);color:#000;padding:16px 22px;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:1px;transform:translateY(120px);opacity:0;transition:.3s}.toast.show{transform:translateY(0);opacity:1}
-
-/* ACCOUNT FIX: one modal, scrollable panel, no page-lock bug */
-.account-modal{position:fixed;inset:0;z-index:7000;display:none;align-items:center;justify-content:center;padding:15px}.account-modal.active{display:flex}.account-overlay{position:absolute;inset:0;background:rgba(0,0,0,.84);backdrop-filter:blur(8px)}
-.account-panel{position:relative;z-index:1;width:min(520px,100%);max-height:calc(100vh - 30px);overflow-y:auto;background:#0a0a0a;border:1px solid var(--goldborder);border-radius:18px;padding:42px;box-shadow:0 30px 100px rgba(0,0,0,.7)}
-.account-close{position:absolute;right:18px;top:14px;border:0;background:none;color:#fff;font-size:30px;line-height:1}.account-logo{font-size:34px;font-weight:1000;letter-spacing:-3px}.account-kicker{color:var(--gold);text-transform:uppercase;letter-spacing:4px;font-size:11px;font-weight:800;margin-top:25px}.account-panel h2{font-size:48px;line-height:.95;margin:18px 0 20px;letter-spacing:-2px}.account-panel h2 span{color:var(--gold)}.account-description{color:#888;line-height:1.7;margin-bottom:28px}.account-buttons{display:grid;gap:12px}.account-primary,.account-secondary{width:100%;padding:16px;border:1px solid var(--gold);background:var(--gold);color:#000;font-weight:900;letter-spacing:2px}.account-secondary{background:transparent;color:var(--cream)}.account-form{display:grid;gap:10px}.account-form label{display:block;text-transform:uppercase;letter-spacing:2px;font-size:11px;color:#999;margin-top:4px}.account-form input{width:100%;padding:14px 15px;background:#111;color:#fff;border:1px solid rgba(255,255,255,.14);outline:0;border-radius:8px}.account-form input:focus{border-color:var(--gold)}.password-wrap{position:relative}.password-wrap input{padding-right:52px}.password-toggle{position:absolute;right:7px;top:50%;transform:translateY(-50%);border:0;background:none;color:#aaa;font-size:18px;padding:8px}.account-link{display:block;width:100%;border:0;background:none;color:#999;text-align:center;margin-top:20px;font-size:13px}.account-link span{color:var(--gold);font-weight:800}.account-note{text-align:center;color:#555;font-size:11px;margin-top:25px}.otp-message{color:#999;line-height:1.6;margin:20px 0}.otp-message strong{color:var(--cream);word-break:break-word}.otp-input{width:100%;padding:17px;text-align:center;letter-spacing:8px;font-size:25px;background:#111;color:#fff;border:1px solid rgba(255,255,255,.14);outline:0}.otp-input:focus{border-color:var(--gold)}.otp-error{color:#ff7070;font-size:12px;margin:10px 0;min-height:18px}
-
-@media(max-width:1000px){.nav-links{display:none}.mobile-menu{display:block}.collection-grid{grid-template-columns:1fr}.product-grid{grid-template-columns:repeat(2,1fr)}.checkout-layout{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:650px){header{height:72px}.navbar{padding:0 18px}.logo{font-size:28px}.icon-btn{width:44px;height:44px}.hero{min-height:calc(100vh - 72px);padding:65px 18px}.hero-title{font-size:62px;letter-spacing:-5px}.hero-description{letter-spacing:3px}.hero-buttons{flex-direction:column}.section{padding:75px 20px}.collection-card{min-height:470px}.wardrobe-header{padding:60px 20px 35px}.wardrobe-tools{padding:0 20px 35px;flex-direction:column;align-items:stretch}.search-box{width:100%}.product-grid{padding:0 20px 70px;grid-template-columns:1fr}.product-image{height:390px}.product-modal-content{grid-template-columns:1fr}.modal-image{min-height:300px}.modal-details{padding:35px 25px}.form-grid{grid-template-columns:1fr}.form-field.full{grid-column:auto}.footer-grid{grid-template-columns:1fr}.footer-bottom{flex-direction:column;gap:15px}.account-panel{padding:32px 22px}.account-panel h2{font-size:40px}}
+:root{--black:#050505;--black2:#0a0a0a;--panel:#0d0d0d;--gold:#e5b92f;--cream:#f5f1e8;--muted:#99948a;--border:rgba(255,255,255,.10);--goldborder:rgba(229,185,47,.45);--danger:#ff7070}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{background:var(--black);color:var(--cream);font-family:Arial,Helvetica,sans-serif;overflow-x:hidden}body.locked{overflow:hidden}button,input,select,textarea{font:inherit}button{cursor:pointer}a{color:inherit;text-decoration:none}.page{display:none}.page.active{display:block}
+.btn{min-height:54px;padding:0 28px;border:1px solid var(--gold);background:var(--gold);color:#050505;text-transform:uppercase;letter-spacing:2px;font-size:12px;font-weight:900;transition:.25s}.btn:hover{background:transparent;color:var(--gold)}.btn-outline{background:transparent;color:var(--cream);border-color:rgba(255,255,255,.22)}.btn-outline:hover{border-color:var(--gold);color:var(--gold)}
+.section{max-width:1350px;margin:auto;padding:95px 35px}.section-title{font-size:clamp(44px,6vw,82px);line-height:.92;text-transform:uppercase;font-weight:1000;letter-spacing:-4px}.section-subtitle{color:var(--muted);font-size:16px;margin-top:18px;line-height:1.6}.eyebrow{color:var(--gold);text-transform:uppercase;letter-spacing:5px;font-size:11px;font-weight:900}
+/* HEADER */
+header{position:sticky;top:0;z-index:1000;height:88px;background:rgba(5,5,5,.97);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}.navbar{max-width:1400px;height:100%;margin:auto;padding:0 35px;display:flex;align-items:center;justify-content:space-between;gap:25px}.logo{font-size:34px;font-weight:1000;letter-spacing:-3px;color:var(--cream);cursor:pointer}.logo span{color:var(--gold)}.nav-links{display:flex;align-items:center;gap:38px}.nav-links button{border:0;background:none;color:#bcb8af;text-transform:uppercase;letter-spacing:3px;font-size:12px;font-weight:800}.nav-links button:hover{color:var(--gold)}.nav-actions{display:flex;gap:10px}.icon-btn{width:52px;height:52px;border-radius:50%;background:transparent;border:1px solid var(--border);color:var(--cream);display:flex;align-items:center;justify-content:center;position:relative;transition:.2s}.icon-btn:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px)}.icon-btn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.cart-count{position:absolute;top:-5px;right:-2px;min-width:22px;height:22px;border-radius:50%;background:var(--gold);color:#000;font-size:10px;font-weight:900;display:flex;align-items:center;justify-content:center}.mobile-menu{display:none}
+/* HERO */
+.hero{min-height:calc(100vh - 88px);display:flex;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;background:radial-gradient(circle at center,rgba(229,185,47,.08),transparent 45%),var(--black)}.hero:before,.hero:after{content:"";position:absolute;border:1px solid rgba(229,185,47,.12);border-radius:50%;pointer-events:none}.hero:before{width:850px;height:850px}.hero:after{width:500px;height:500px}.hero-content{position:relative;z-index:2;max-width:1100px;padding:60px 25px}.hero-kicker{color:var(--gold);text-transform:uppercase;letter-spacing:8px;font-size:13px;font-weight:900;margin-bottom:35px}.hero-title{font-size:clamp(64px,12vw,170px);line-height:.82;font-weight:1000;letter-spacing:-9px;text-transform:uppercase}.hero-title .gold{color:var(--gold)}.hero-description{margin:35px auto;color:#aaa59b;text-transform:uppercase;letter-spacing:5px;font-size:13px}.hero-buttons{display:flex;justify-content:center;gap:15px;margin-top:45px}
+/* COLLECTIONS */
+.collections-heading{text-align:center;margin-bottom:60px}.collection-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}.collection-card{min-height:510px;border:1px solid var(--border);background:radial-gradient(circle at center,rgba(229,185,47,.08),transparent 45%),#0a0a0a;padding:35px;display:flex;flex-direction:column;justify-content:flex-end;position:relative;overflow:hidden;transition:.3s}.collection-card:hover{border-color:var(--goldborder);transform:translateY(-6px)}.collection-number{position:absolute;right:28px;top:28px;color:var(--gold);font-size:11px;letter-spacing:3px}.collection-visual{position:absolute;inset:70px 30px 150px;display:flex;align-items:center;justify-content:center}.collection-visual:before{content:"KNG";font-size:130px;font-weight:1000;letter-spacing:-10px;color:rgba(255,255,255,.025)}.collection-title{font-size:38px;text-transform:uppercase;font-weight:1000;position:relative;z-index:2}.collection-description{color:#8e8a82;margin:13px 0 25px;line-height:1.6;position:relative;z-index:2}.collection-card .btn{position:relative;z-index:2;width:fit-content}
+/* WARDROBE */
+.wardrobe-header{padding:80px 35px 40px;max-width:1350px;margin:auto}.back-link{border:0;background:none;color:var(--muted);text-transform:uppercase;letter-spacing:2px;font-size:11px;margin-bottom:30px}.back-link:hover{color:var(--gold)}.wardrobe-tools{max-width:1350px;margin:auto;padding:0 35px 40px;display:flex;justify-content:space-between;gap:20px}.filters{display:flex;flex-wrap:wrap;gap:9px}.filter-btn{background:transparent;border:1px solid var(--border);color:#aaa59b;padding:12px 16px;text-transform:uppercase;letter-spacing:1.5px;font-size:10px;font-weight:800}.filter-btn.active,.filter-btn:hover{border-color:var(--gold);color:var(--gold)}.search-box{width:280px}.search-box input{width:100%;padding:15px;background:#0d0d0d;border:1px solid var(--border);color:#fff;outline:0}.search-box input:focus{border-color:var(--gold)}.product-grid{max-width:1350px;margin:auto;padding:0 35px 100px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px}.product-section-heading{grid-column:1/-1;padding:35px 0 5px;border-bottom:1px solid var(--border);margin-top:20px}.product-section-heading h2{font-size:32px;margin-top:8px;text-transform:uppercase}.product-section-heading p{color:#777;margin-top:8px}.product-card{background:#0b0b0b;border:1px solid var(--border);transition:.3s;overflow:hidden}.product-card:hover{border-color:var(--goldborder);transform:translateY(-4px)}.product-image{height:330px;background:radial-gradient(circle at center,rgba(229,185,47,.12),transparent 48%),#101010;display:flex;align-items:center;justify-content:center;position:relative}.product-image:after{content:"KNG";font-size:75px;font-weight:1000;letter-spacing:-7px;color:rgba(255,255,255,.035)}.new-badge{position:absolute;top:16px;left:16px;z-index:2;background:var(--gold);color:#000;padding:8px 11px;font-size:9px;font-weight:900;letter-spacing:2px}.product-info{padding:22px}.product-category{color:var(--gold);font-size:9px;text-transform:uppercase;letter-spacing:2.5px;margin-bottom:9px}.product-name{font-size:20px;font-weight:900;margin-bottom:10px}.product-price{color:#aaa59b;margin-bottom:18px}.product-card .btn{width:100%;min-height:48px}
+/* MODALS */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.84);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px}.modal-overlay.open{display:flex}.product-modal{width:min(950px,100%);max-height:92vh;overflow-y:auto;background:#0b0b0b;border:1px solid var(--goldborder);position:relative}.close-modal{position:absolute;right:18px;top:18px;width:42px;height:42px;border-radius:50%;border:1px solid var(--border);background:#080808;color:#fff;z-index:5}.product-modal-content{display:grid;grid-template-columns:1fr 1fr}.modal-image{min-height:590px;background:radial-gradient(circle,rgba(229,185,47,.12),transparent 45%),#101010;display:flex;align-items:center;justify-content:center}.modal-image span{font-size:130px;font-weight:1000;letter-spacing:-10px;color:rgba(255,255,255,.035)}.modal-details{padding:65px 38px 35px}.modal-details h2{font-size:38px;margin:12px 0}.modal-price{color:var(--gold);font-size:21px;margin-bottom:28px}.option-group{margin-bottom:22px}.option-group>label{display:block;text-transform:uppercase;letter-spacing:2px;font-size:10px;color:#999;margin-bottom:9px}.option-buttons{display:flex;flex-wrap:wrap;gap:8px}.option-btn{background:transparent;border:1px solid var(--border);color:var(--cream);padding:11px 15px}.option-btn.selected,.option-btn:hover{border-color:var(--gold);color:var(--gold)}.modal-add{width:100%;margin-top:8px}
+/* SIZE GUIDE */
+.size-guide-section{margin-top:18px}.size-guide-toggle{width:100%;padding:14px 16px;border:1px solid rgba(255,255,255,.16);background:transparent;color:inherit;border-radius:9px;font-size:12px;font-weight:800;letter-spacing:1px}.size-guide-toggle:hover{border-color:var(--gold);color:var(--gold)}.size-guide-panel{display:none;margin-top:12px;padding:18px;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:#090909}.size-guide-panel.active{display:block}.size-guide-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px}.size-guide-header h3{font-size:20px;letter-spacing:1px}.size-guide-close{width:30px;height:30px;border:0;border-radius:50%;background:rgba(255,255,255,.08);color:#fff}.size-tabs{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:16px}.size-tab{padding:11px;border:1px solid var(--border);background:#0e0e0e;color:#aaa;font-weight:900;font-size:10px;letter-spacing:1.5px}.size-tab.active{background:var(--gold);border-color:var(--gold);color:#000}.size-content{display:none}.size-content.active{display:block}.size-content h4{font-size:17px;margin-bottom:5px}.size-note{font-size:11px;line-height:1.6;color:#888;margin-bottom:12px}.size-subtabs{display:flex;gap:7px;margin:12px 0}.body-tab{flex:1;padding:9px;border:1px solid var(--border);background:transparent;color:#aaa;font-size:9px;font-weight:900;letter-spacing:1px}.body-tab.active{border-color:var(--gold);color:var(--gold)}.size-table-wrap{width:100%;overflow-x:auto}.size-table{width:100%;min-width:540px;border-collapse:collapse;font-size:10px}.size-table th{color:var(--gold);padding:9px 7px;border-bottom:1px solid rgba(255,255,255,.12);text-align:center;letter-spacing:1px}.size-table td{padding:10px 7px;border-bottom:1px solid rgba(255,255,255,.07);text-align:center;white-space:nowrap}.size-table td:first-child{font-weight:900;color:var(--gold)}.measure-help{margin-top:13px;padding:12px;background:#101010;border-left:3px solid var(--gold);color:#999;font-size:10px;line-height:1.6}.measure-help strong{color:#fff}.custom-size-button{width:100%;margin-top:12px;padding:13px;border:1px solid rgba(255,255,255,.16);background:transparent;color:#fff;border-radius:9px;font-size:11px;font-weight:800;letter-spacing:1px}.custom-size-button:hover{border-color:var(--gold);color:var(--gold)}
+/* CART */
+.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:2500;display:none}.drawer-overlay.open{display:block}.cart-drawer{position:fixed;right:0;top:0;height:100%;width:min(500px,100%);background:#090909;border-left:1px solid var(--border);z-index:2600;transform:translateX(100%);transition:.3s;display:flex;flex-direction:column}.cart-drawer.open{transform:translateX(0)}.drawer-header{padding:23px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}.drawer-header h2{font-size:20px;text-transform:uppercase}.drawer-close{border:0;background:none;color:#fff;font-size:24px}.cart-items{flex:1;overflow-y:auto;padding:18px}.empty-cart{text-align:center;padding:75px 20px;color:var(--muted)}.cart-item{display:grid;grid-template-columns:80px 1fr;gap:14px;padding:17px 0;border-bottom:1px solid var(--border)}.cart-item-image{height:85px;background:radial-gradient(circle,rgba(229,185,47,.1),transparent),#111;display:flex;align-items:center;justify-content:center}.cart-item-image:after{content:"K";font-size:34px;font-weight:1000;color:rgba(255,255,255,.08)}.cart-item-name{font-weight:900;margin-bottom:6px}.cart-item-meta{color:#888;font-size:11px;line-height:1.6}.cart-item-price{color:var(--gold);font-size:12px;margin-top:5px}.cart-controls{display:flex;align-items:center;gap:7px;margin-top:10px}.qty-btn{width:28px;height:28px;background:transparent;color:#fff;border:1px solid var(--border)}.remove-btn{border:0;background:none;color:#777;font-size:10px;margin-left:8px}.remove-btn:hover{color:var(--danger)}.cart-footer{border-top:1px solid var(--border);padding:22px}.cart-total{display:flex;justify-content:space-between;margin-bottom:18px;font-size:19px;font-weight:900}.cart-footer .btn{width:100%}
+/* CHECKOUT */
+.checkout-layout{max-width:1200px;margin:auto;padding:70px 35px 100px;display:grid;grid-template-columns:1.15fr .85fr;gap:35px}.checkout-form,.order-summary{background:#0b0b0b;border:1px solid var(--border);padding:32px}.checkout-form h2,.order-summary h2{margin:12px 0 28px;text-transform:uppercase}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.form-field{margin-bottom:2px}.form-field.full{grid-column:1/-1}.form-field label{display:block;color:#aaa;text-transform:uppercase;letter-spacing:1.5px;font-size:9px;margin-bottom:7px}.form-field input,.form-field textarea,.form-field select{width:100%;padding:14px;background:#080808;color:#fff;border:1px solid var(--border);outline:0}.form-field input:focus,.form-field textarea:focus,.form-field select:focus{border-color:var(--gold)}.dispatch-box{grid-column:1/-1;border:1px solid var(--goldborder);background:rgba(229,185,47,.035);padding:17px}.dispatch-box h3{font-size:13px;letter-spacing:1px;margin-bottom:8px}.dispatch-box p{color:#999;font-size:11px;line-height:1.7}.dispatch-options{display:grid;gap:8px;margin-top:12px}.dispatch-option{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--border);padding:12px;background:#090909;cursor:pointer}.dispatch-option.selected{border-color:var(--gold)}.dispatch-option strong{color:var(--gold);font-size:12px}.dispatch-option span{font-size:11px;color:#bbb}.dispatch-option input{accent-color:var(--gold)}.zone-help{margin-top:12px;padding:11px;background:#101010;color:#777;font-size:10px;line-height:1.6}.zone-help strong{color:#eee}.payment-note{margin-top:20px;padding:15px;border:1px solid var(--goldborder);background:rgba(229,185,47,.04);color:#aaa;font-size:11px;line-height:1.6}.summary-item{display:flex;justify-content:space-between;gap:15px;padding:13px 0;border-bottom:1px solid var(--border);color:#aaa;font-size:12px}.summary-total{display:flex;justify-content:space-between;margin-top:22px;font-size:20px;font-weight:900}.summary-line{display:flex;justify-content:space-between;margin-top:10px;color:#888;font-size:12px}.summary-line strong{color:#eee}.checkout-button{width:100%;margin-top:22px}
+/* ACCOUNT */
+.account-modal{position:fixed;inset:0;z-index:7000;display:none;align-items:center;justify-content:center;padding:15px}.account-modal.active{display:flex}.account-overlay{position:absolute;inset:0;background:rgba(0,0,0,.86);backdrop-filter:blur(8px)}.account-panel{position:relative;z-index:1;width:min(850px,100%);max-height:calc(100vh - 30px);overflow-y:auto;background:#0a0a0a;border:1px solid var(--goldborder);border-radius:18px;padding:40px;box-shadow:0 30px 100px rgba(0,0,0,.7)}.account-close{position:absolute;right:18px;top:14px;border:0;background:none;color:#fff;font-size:28px}.account-logo{font-size:32px;font-weight:1000;letter-spacing:-3px}.account-logo span{color:var(--gold)}.account-kicker{color:var(--gold);text-transform:uppercase;letter-spacing:4px;font-size:10px;font-weight:900;margin-top:22px}.account-panel h2{font-size:43px;line-height:.95;margin:15px 0 20px;letter-spacing:-2px}.account-panel h2 span{color:var(--gold)}.account-description{color:#888;line-height:1.7;margin-bottom:25px}.account-buttons{display:grid;gap:10px}.account-primary,.account-secondary{width:100%;padding:15px;border:1px solid var(--gold);background:var(--gold);color:#000;font-weight:900;letter-spacing:2px}.account-secondary{background:transparent;color:var(--cream)}.account-form{display:grid;gap:9px}.account-form label{display:block;text-transform:uppercase;letter-spacing:2px;font-size:10px;color:#999;margin-top:4px}.account-form input{width:100%;padding:14px;background:#111;color:#fff;border:1px solid rgba(255,255,255,.14);outline:0;border-radius:8px}.account-form input:focus{border-color:var(--gold)}.password-wrap{position:relative}.password-wrap input{padding-right:58px}.password-toggle{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:none;color:#aaa;font-size:10px;padding:8px}.account-link{display:block;width:100%;border:0;background:none;color:#999;text-align:center;margin-top:18px;font-size:12px}.account-link span{color:var(--gold);font-weight:900}.account-note{text-align:center;color:#555;font-size:10px;margin-top:22px}.otp-message{color:#999;line-height:1.6;margin:18px 0}.otp-message strong{color:var(--cream);word-break:break-word}.otp-input{width:100%;padding:16px;text-align:center;letter-spacing:8px;font-size:24px;background:#111;color:#fff;border:1px solid rgba(255,255,255,.14);outline:0}.otp-error{color:var(--danger);font-size:11px;margin:9px 0;min-height:17px}.dashboard-hero{display:grid;grid-template-columns:130px 1fr;gap:25px;align-items:center;padding:10px 0 30px}.avatar{width:115px;height:115px;border-radius:50%;background:#151515;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:45px;font-weight:900;color:#fff}.dashboard-hero h2{font-size:34px;margin:8px 0}.dashboard-hero p{color:#777;line-height:1.6;font-size:12px}.dashboard-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}.dashboard-card{border:1px solid var(--border);background:#0d0d0d;padding:18px;min-height:90px}.dashboard-card button{width:100%;height:100%;border:0;background:none;color:#fff;font-size:10px;font-weight:900;letter-spacing:1.4px}.dashboard-card:hover{border-color:var(--gold)}.profile-form{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:15px}.profile-form .full{grid-column:1/-1}.profile-form label{display:block;color:#999;font-size:9px;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}.profile-form input,.profile-form textarea{width:100%;background:#111;color:#fff;border:1px solid var(--border);padding:12px;outline:0}.simple-page h2{font-size:40px;margin:14px 0 25px}.simple-card{border:1px solid var(--border);padding:18px;margin-bottom:10px;background:#0d0d0d}.simple-card small{display:block;color:#777;margin-top:5px}
+/* FOOTER */
+footer{border-top:1px solid var(--border);background:#050505}.footer-inner{max-width:1350px;margin:auto;padding:70px 35px 25px}.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px}.footer-logo{font-size:32px;font-weight:1000;letter-spacing:-3px}.footer-logo span{color:var(--gold)}.footer-description{color:#777;line-height:1.7;margin-top:15px;max-width:300px}.footer-title{font-size:10px;letter-spacing:2px;color:var(--gold);font-weight:900;margin-bottom:15px}.footer-links{display:grid;gap:9px}.footer-links button,.footer-links a{border:0;background:none;color:#777;text-align:left;font-size:12px}.footer-links button:hover,.footer-links a:hover{color:#fff}.footer-bottom{border-top:1px solid var(--border);margin-top:50px;padding-top:20px;display:flex;justify-content:space-between;color:#555;font-size:9px;letter-spacing:1.5px}.toast{position:fixed;left:50%;bottom:25px;transform:translate(-50%,20px);background:var(--cream);color:#050505;padding:13px 20px;border-radius:8px;font-size:11px;font-weight:900;letter-spacing:1px;opacity:0;pointer-events:none;transition:.25s;z-index:10000}.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:1050px){.nav-links{display:none}.mobile-menu{display:flex}.collection-grid{grid-template-columns:1fr 1fr}.product-grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:800px){.product-modal-content{grid-template-columns:1fr}.modal-image{min-height:300px}.checkout-layout{grid-template-columns:1fr}.footer-grid{grid-template-columns:1fr 1fr}.dashboard-grid{grid-template-columns:1fr}.dashboard-hero{grid-template-columns:1fr;text-align:center}.avatar{margin:auto}}@media(max-width:650px){.navbar{padding:0 16px}.logo{font-size:29px}.nav-actions{gap:6px}.icon-btn{width:45px;height:45px}.hero-title{letter-spacing:-5px}.hero-description{font-size:10px;letter-spacing:3px}.hero-buttons{flex-direction:column}.collection-grid{grid-template-columns:1fr}.product-grid{grid-template-columns:1fr 1fr;padding-left:15px;padding-right:15px}.wardrobe-header,.wardrobe-tools{padding-left:15px;padding-right:15px}.wardrobe-tools{flex-direction:column}.search-box{width:100%}.form-grid,.profile-form{grid-template-columns:1fr}.form-field.full,.profile-form .full{grid-column:auto}.account-panel{padding:30px 20px}.account-panel h2{font-size:34px}.footer-grid{grid-template-columns:1fr}.footer-bottom{flex-direction:column;gap:10px}.size-table{min-width:510px}}@media(max-width:450px){.product-grid{grid-template-columns:1fr}.hero-content{padding-left:15px;padding-right:15px}.section{padding-left:18px;padding-right:18px}}
 </style>
 </head>
-
 <body>
 <header><div class="navbar">
-<div class="logo" onclick="goHome()">KNG<span>.</span></div>
-<nav class="nav-links">
-<button onclick="goHome()">Home</button><button onclick="goToCollections()">Categories</button><button onclick="openWardrobe('men')">Men</button><button onclick="openWardrobe('women')">Women</button><button onclick="openWardrobe('accessories')">Accessories</button><button onclick="showPage('about')">About</button>
-</nav>
-<div class="nav-actions">
-<button class="icon-btn" onclick="openSearch()" aria-label="Search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8"></circle><path d="M16 16L21 21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg></button>
-<button class="icon-btn" onclick="openCart()" aria-label="Cart"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h2l1.5 10.5h9.8L20 8H7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="9" cy="19" r="1.2" fill="currentColor"></circle><circle cx="17" cy="19" r="1.2" fill="currentColor"></circle></svg><span class="cart-count" id="cartCount">0</span></button>
-<button class="icon-btn" onclick="openAccount()" aria-label="Account"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.2" fill="none" stroke="currentColor" stroke-width="1.8"></circle><path d="M5.5 20c.8-3.4 3.1-5.2 6.5-5.2s5.7 1.8 6.5 5.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg></button>
-<button class="icon-btn mobile-menu" onclick="toggleMobileMenu()" aria-label="Menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg></button>
-</div></div></header>
+  <div class="logo" onclick="goHome()">KNG<span>.</span></div>
+  <nav class="nav-links" id="navLinks">
+    <button onclick="goHome()">HOME</button><button onclick="goToCollections()">CATEGORIES</button><button onclick="openWardrobe('men')">MEN</button><button onclick="openWardrobe('women')">WOMEN</button><button onclick="openWardrobe('accessories')">ACCESSORIES</button><button onclick="showPage('about')">ABOUT</button>
+  </nav>
+  <div class="nav-actions">
+    <button class="icon-btn" onclick="openSearch()" aria-label="Search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 5 5"></path></svg></button>
+    <button class="icon-btn" onclick="openCart()" aria-label="Cart"><svg viewBox="0 0 24 24"><path d="M4 5h2l1.5 10h10L20 8H7"></path><circle cx="9" cy="19" r="1.2"></circle><circle cx="17" cy="19" r="1.2"></circle></svg><span class="cart-count" id="cartCount">0</span></button>
+    <button class="icon-btn" onclick="openAccount()" aria-label="Account"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 20c.8-3.7 3.1-5.5 7-5.5s6.2 1.8 7 5.5"></path></svg></button>
+    <button class="icon-btn mobile-menu" onclick="toggleMobileMenu()" aria-label="Menu"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"></path></svg></button>
+  </div>
+</div></header>
 
-<main id="homePage" class="page active">
-<section class="hero"><div class="hero-content"><div class="hero-kicker">KNG / OFFICIAL STORE</div><h1 class="hero-title">WEAR THE<span class="gold">CROWN.</span></h1><p class="hero-description">BUILT DIFFERENT. / WEAR THE CROWN. / BE THE STANDARD.</p><div class="hero-buttons"><button class="btn" onclick="goToCollections()">SHOP THE COLLECTION</button><button class="btn btn-outline" onclick="showPage('about')">ABOUT KNG</button></div></div></section>
+<main id="homePage" class="page active"><section class="hero"><div class="hero-content"><div class="hero-kicker">KNG / OFFICIAL STORE</div><h1 class="hero-title">WEAR THE<span class="gold">CROWN.</span></h1><p class="hero-description">BUILT DIFFERENT. / WEAR THE CROWN. / BE THE STANDARD.</p><div class="hero-buttons"><button class="btn" onclick="goToCollections()">SHOP THE COLLECTION</button><button class="btn btn-outline" onclick="showPage('about')">ABOUT KNG</button></div></div></section>
 <section class="section collections" id="collections"><div class="collections-heading"><div class="eyebrow">THE COLLECTIONS</div><h2 class="section-title">FIND YOUR STANDARD.</h2><p class="section-subtitle">Choose your collection and enter your KNG wardrobe.</p></div><div class="collection-grid">
 <article class="collection-card"><span class="collection-number">01</span><div class="collection-visual"></div><h3 class="collection-title">Men</h3><p class="collection-description">Upper body, lower body and statement pieces built for the KNG standard.</p><button class="btn btn-outline" onclick="openWardrobe('men')">ENTER MEN'S WARDROBE</button></article>
 <article class="collection-card"><span class="collection-number">02</span><div class="collection-visual"></div><h3 class="collection-title">Women</h3><p class="collection-description">Designed differently. Built for confidence. Enter the women's KNG wardrobe.</p><button class="btn btn-outline" onclick="openWardrobe('women')">ENTER WOMEN'S WARDROBE</button></article>
 <article class="collection-card"><span class="collection-number">03</span><div class="collection-visual"></div><h3 class="collection-title">Accessories</h3><p class="collection-description">Finish the fit with KNG beanies, face caps and branded lapel pins.</p><button class="btn btn-outline" onclick="openWardrobe('accessories')">ENTER ACCESSORIES</button></article>
-</div></section>
-</main>
+</div></section></main>
 
-<main id="wardrobePage" class="page"><section class="wardrobe-header"><button class="back-link" onclick="goHome()"> BACK TO COLLECTIONS</button><div class="eyebrow" id="wardrobeEyebrow">KNG / COLLECTION</div><h1 class="section-title" id="wardrobeTitle">MEN'S WARDROBE.</h1><p class="section-subtitle" id="wardrobeSubtitle">Select your pieces. Build your standard.</p></section><div class="wardrobe-tools"><div class="filters" id="filters"></div><div class="search-box"><input id="productSearch" type="text" placeholder="Search this wardrobe..." oninput="renderProducts()"></div></div><div class="product-grid" id="productGrid"></div></main>
+<main id="wardrobePage" class="page"><section class="wardrobe-header"><button class="back-link" onclick="goToCollections()">BACK TO COLLECTIONS</button><div class="eyebrow" id="wardrobeEyebrow">KNG / MEN</div><h1 class="section-title" id="wardrobeTitle">MEN'S WARDROBE.</h1><p class="section-subtitle" id="wardrobeSubtitle">Upper body and lower body. Choose a piece and build your KNG standard.</p></section><div class="wardrobe-tools"><div class="filters" id="filters"></div><div class="search-box"><input id="productSearch" type="text" placeholder="Search this wardrobe..." oninput="renderProducts()"></div></div><div class="product-grid" id="productGrid"></div></main>
+<main id="aboutPage" class="page"><section class="section" style="max-width:1000px;text-align:center"><div class="eyebrow">KNG</div><h1 class="section-title">BUILT DIFFERENT.</h1><p class="section-subtitle" style="font-size:18px;line-height:1.9">KNG is a Nigerian fashion brand built around confidence, individuality and the mindset of becoming the standard.<br><br>We don't just make clothes. We build pieces for people who know who they are.<br><br><strong style="color:#fff">WEAR THE CROWN. / BE THE STANDARD.</strong></p><button class="btn" style="margin-top:35px" onclick="goToCollections()">SHOP KNG</button></section></main>
 
-<main id="aboutPage" class="page"><section class="about-section"><div class="eyebrow">KNG</div><h1 class="section-title">BUILT DIFFERENT.</h1><p class="about-text">KNG is a Nigerian fashion brand built around confidence, individuality and the mindset of becoming the standard.<br><br>We don't just make clothes. We build pieces for people who know who they are.<br><br>WEAR THE CROWN.<br>BE THE STANDARD.</p><br><br><button class="btn" onclick="goToCollections()">SHOP KNG</button></section></main>
-
-<main id="checkoutPage" class="page"><div class="checkout-layout"><div class="checkout-form"><button class="back-link" onclick="openCart()"> BACK TO CART</button><div class="eyebrow">KNG / CHECKOUT</div><h2>COMPLETE YOUR ORDER</h2><form id="checkoutForm"><div class="form-grid">
-<div class="form-field"><label>First Name</label><input id="firstName" required></div><div class="form-field"><label>Last Name</label><input id="lastName" required></div>
-<div class="form-field"><label>Email</label><input id="email" type="email" required></div><div class="form-field"><label>Phone Number</label><input id="phone" type="tel" required></div>
-<div class="form-field full"><label>Delivery Address</label><textarea id="address" rows="4" required></textarea></div>
-<div class="form-field"><label>State</label><select id="state" required><option value="">Select state</option><option>Lagos</option><option>Ogun (Covenant University)</option></select></div>
+<main id="checkoutPage" class="page"><div class="checkout-layout">
+<div class="checkout-form"><button class="back-link" onclick="openCart()">BACK TO CART</button><div class="eyebrow">KNG / CHECKOUT</div><h2>COMPLETE YOUR ORDER</h2><form id="checkoutForm"><div class="form-grid">
+<div class="form-field"><label>First Name</label><input id="firstName" required></div><div class="form-field"><label>Last Name</label><input id="lastName" required></div><div class="form-field"><label>Email</label><input id="email" type="email" required></div><div class="form-field"><label>Phone Number</label><input id="phone" type="tel" required></div><div class="form-field full"><label>Delivery Address</label><textarea id="address" rows="4" required></textarea></div>
+<div class="form-field"><label>State</label><select id="state" onchange="updateDispatchOptions()" required><option value="">Select state</option><option value="Lagos">Lagos</option><option value="Ogun">Ogun</option><option value="other">Other Nigerian State</option></select></div>
 <div class="form-field"><label>Payment Method</label><select id="paymentMethod" required><option value="">Select payment</option><option value="card">Card / Online Payment</option><option value="transfer">Bank Transfer</option></select></div>
-</div><div class="payment-note"> Your secure payment gateway will be connected here. Payment is not processed by this prototype yet.</div><button type="submit" class="btn checkout-button">PROCEED TO PAYMENT</button></form></div>
-<aside class="order-summary"><div class="eyebrow">YOUR ORDER</div><h2>ORDER SUMMARY</h2><div id="checkoutSummary"></div><div class="summary-total"><span>TOTAL</span><span id="checkoutTotal">\u20A60</span></div></aside></div></main>
+<div class="dispatch-box"><h3>DELIVERY / DISPATCH</h3><p>Choose the delivery area that matches your location. The delivery price is shown before you place the order. Covenant University delivery is fixed at <strong style="color:#fff">â‚¦3,000</strong>.</p><div class="dispatch-options" id="dispatchOptions"><div style="color:#777;font-size:11px">Select your state to see delivery options.</div></div><div class="zone-help"><strong>NOT SURE OF YOUR ZONE?</strong><br>Zone 1 = nearest/local delivery areas. Zone 2 = mid-distance delivery areas. Zone 3 = long-distance delivery areas. If you are unsure, do not guess â€” contact KNG with your exact area before dispatch.</div></div>
+</div><div class="payment-note">Payment gateway connection will be added separately. This checkout currently collects order and delivery information without charging the customer.</div><button type="submit" class="btn checkout-button">PROCEED TO PAYMENT</button></form></div>
+<aside class="order-summary"><div class="eyebrow">YOUR ORDER</div><h2>ORDER SUMMARY</h2><div id="checkoutSummary"></div><div class="summary-line"><span>ITEMS</span><strong id="checkoutSubtotal">â‚¦0</strong></div><div class="summary-line"><span>DELIVERY</span><strong id="checkoutDelivery">Select location</strong></div><div class="summary-total"><span>TOTAL</span><span id="checkoutTotal">â‚¦0</span></div></aside>
+</div></main>
 
+<!-- PRODUCT MODAL -->
 <div class="modal-overlay" id="productModal" onclick="closeProductModalOnBackdrop(event)"><div class="product-modal"><button class="close-modal" onclick="closeProductModal()">X</button><div class="product-modal-content"><div class="modal-image"><span>KNG</span></div><div class="modal-details">
 <div class="product-category" id="modalCategory"></div><h2 id="modalName"></h2><div class="modal-price" id="modalPrice"></div>
-<div class="option-group" id="sizeGroup"><label>Select Size</label><div class="option-buttons" id="sizeOptions"></div><div class="size-guide-section"><button type="button" class="size-guide-toggle" onclick="openSizeGuide()"> VIEW SIZE GUIDE</button><div id="sizeGuidePanel" class="size-guide-panel"><div class="size-guide-header"><h3>KNG SIZE GUIDE</h3><button type="button" class="size-guide-close" onclick="closeSizeGuide()">X</button></div>
-<div id="mensSizeGuide" class="size-guide-content"><h4>MEN'S SIZE GUIDE</h4><p class="size-guide-note">Measurements are approximate. For the best fit, compare with a similar garment you already own.</p><div class="size-table-wrapper"><table class="size-table"><thead><tr><th>SIZE</th><th>CHEST</th><th>LENGTH</th><th>SLEEVE</th><th>SHOULDER</th></tr></thead><tbody><tr><td>S</td><td>36"</td><td>27"</td><td>8"</td><td>16"</td></tr><tr><td>M</td><td>38"</td><td>28"</td><td>8.5"</td><td>17"</td></tr><tr><td>L</td><td>40"</td><td>29"</td><td>9"</td><td>18"</td></tr><tr><td>XL</td><td>42"</td><td>30"</td><td>9.5"</td><td>19"</td></tr><tr><td>XXL</td><td>44"</td><td>31"</td><td>10"</td><td>20"</td></tr></tbody></table></div></div>
-<div id="womensSizeGuide" class="size-guide-content"><h4>WOMEN'S SIZE GUIDE</h4><p class="size-guide-note">Measurements are approximate. For the best fit, compare with a similar garment you already own.</p><div class="size-table-wrapper"><table class="size-table"><thead><tr><th>SIZE</th><th>CHEST</th><th>LENGTH</th><th>SLEEVE</th><th>SHOULDER</th></tr></thead><tbody><tr><td>XS</td><td>32"</td><td>24"</td><td>7"</td><td>15"</td></tr><tr><td>S</td><td>34"</td><td>25"</td><td>7.5"</td><td>15.5"</td></tr><tr><td>M</td><td>36"</td><td>26"</td><td>8"</td><td>16"</td></tr><tr><td>L</td><td>38"</td><td>27"</td><td>8.5"</td><td>17"</td></tr><tr><td>XL</td><td>40"</td><td>28"</td><td>9"</td><td>18"</td></tr></tbody></table></div></div>
-<div style="margin-top:18px;text-align:center"><p style="font-size:12px;opacity:.7;margin-bottom:10px">Need a different fit?</p><button type="button" class="custom-size-button" onclick="openCustomSize()">USE CUSTOM SIZE</button></div>
-</div></div></div>
-<div class="option-group"><label>Select Colour</label><div class="option-buttons" id="colorOptions"></div></div>
+<div class="option-group" id="sizeGroup"><label>Select Size</label><div class="option-buttons" id="sizeOptions"></div><div class="size-guide-section"><button type="button" class="size-guide-toggle" onclick="openSizeGuide()">VIEW SIZE GUIDE</button>
+<div id="sizeGuidePanel" class="size-guide-panel"><div class="size-guide-header"><h3>KNG SIZE GUIDE</h3><button type="button" class="size-guide-close" onclick="closeSizeGuide()">X</button></div>
+<div class="size-tabs"><button id="kingsTab" class="size-tab active" onclick="selectSizeGender('men')">KINGS</button><button id="queensTab" class="size-tab" onclick="selectSizeGender('women')">QUEENS</button></div>
+<div id="kingsSizeContent" class="size-content active"><h4>KINGS</h4><p class="size-note">KNG garment measurements. All measurements are in inches. Compare with a similar garment you already own for the closest fit.</p><div class="size-subtabs"><button class="body-tab active" id="kingsUpperBtn" onclick="showBodyGuide('men','upper')">UPPER BODY</button><button class="body-tab" id="kingsLowerBtn" onclick="showBodyGuide('men','lower')">LOWER BODY</button></div>
+<div id="kingsUpperGuide"><div class="size-table-wrap"><table class="size-table"><thead><tr><th>SIZE</th><th>CHEST</th><th>SHOULDER</th><th>SLEEVE</th><th>LENGTH</th></tr></thead><tbody><tr><td>S</td><td>36"</td><td>16"</td><td>8"</td><td>27"</td></tr><tr><td>M</td><td>38"</td><td>17"</td><td>8.5"</td><td>28"</td></tr><tr><td>L</td><td>40"</td><td>18"</td><td>9"</td><td>29"</td></tr><tr><td>XL</td><td>42"</td><td>19"</td><td>9.5"</td><td>30"</td></tr><tr><td>XXL</td><td>44"</td><td>20"</td><td>10"</td><td>31"</td></tr></tbody></table></div><div class="measure-help"><strong>UPPER BODY:</strong> Chest is around the garment. Shoulder is edge-to-edge across the back. Sleeve is shoulder seam to sleeve end. Length is shoulder/high-point to bottom hem.</div></div>
+<div id="kingsLowerGuide" style="display:none"><div class="size-table-wrap"><table class="size-table"><thead><tr><th>SIZE</th><th>WAIST</th><th>HIP</th><th>INSEAM</th><th>OUTSEAM</th></tr></thead><tbody><tr><td>S</td><td>30"</td><td>40"</td><td>29"</td><td>40"</td></tr><tr><td>M</td><td>32"</td><td>42"</td><td>29.5"</td><td>41"</td></tr><tr><td>L</td><td>34"</td><td>44"</td><td>30"</td><td>42"</td></tr><tr><td>XL</td><td>36"</td><td>46"</td><td>31"</td><td>43"</td></tr><tr><td>XXL</td><td>38"</td><td>48"</td><td>31.5"</td><td>44"</td></tr></tbody></table></div><div class="measure-help"><strong>LOWER BODY:</strong> Waist is around the waistband. Hip is across the widest part. Inseam is crotch seam to hem. Outseam is waistband to hem.</div></div></div>
+<div id="queensSizeContent" class="size-content"><h4>QUEENS</h4><p class="size-note">KNG garment measurements. All measurements are in inches. Compare with a similar garment you already own for the closest fit.</p><div class="size-subtabs"><button class="body-tab active" id="queensUpperBtn" onclick="showBodyGuide('women','upper')">UPPER BODY</button><button class="body-tab" id="queensLowerBtn" onclick="showBodyGuide('women','lower')">LOWER BODY</button></div>
+<div id="queensUpperGuide"><div class="size-table-wrap"><table class="size-table"><thead><tr><th>SIZE</th><th>BUST</th><th>SHOULDER</th><th>SLEEVE</th><th>LENGTH</th></tr></thead><tbody><tr><td>S</td><td>34"</td><td>14"</td><td>7"</td><td>20"</td></tr><tr><td>M</td><td>36"</td><td>15"</td><td>7.5"</td><td>21"</td></tr><tr><td>L</td><td>38"</td><td>16"</td><td>8"</td><td>22"</td></tr><tr><td>XL</td><td>40"</td><td>17"</td><td>8.5"</td><td>23"</td></tr><tr><td>XXL</td><td>42"</td><td>18"</td><td>9"</td><td>24"</td></tr></tbody></table></div><div class="measure-help"><strong>UPPER BODY:</strong> Bust is around the garment. Shoulder is edge-to-edge. Sleeve is shoulder seam to sleeve end. Length is shoulder/high-point to bottom hem.</div></div>
+<div id="queensLowerGuide" style="display:none"><div class="size-table-wrap"><table class="size-table"><thead><tr><th>SIZE</th><th>WAIST</th><th>HIP</th><th>INSEAM</th><th>OUTSEAM</th></tr></thead><tbody><tr><td>S</td><td>26"</td><td>36"</td><td>28"</td><td>38"</td></tr><tr><td>M</td><td>28"</td><td>38"</td><td>28.5"</td><td>39"</td></tr><tr><td>L</td><td>30"</td><td>40"</td><td>29"</td><td>40"</td></tr><tr><td>XL</td><td>32"</td><td>42"</td><td>29.5"</td><td>41"</td></tr><tr><td>XXL</td><td>34"</td><td>44"</td><td>30"</td><td>42"</td></tr></tbody></table></div><div class="measure-help"><strong>LOWER BODY:</strong> Waist, hip, inseam and outseam only. No shoulder or sleeve measurements are used for lower-body pieces.</div></div></div>
+<button type="button" class="custom-size-button" onclick="openCustomSize()">USE CUSTOM SIZE</button></div></div></div>
+<div class="option-group"><label>Select Colour</label><div class="option-buttons" id="colorOptions"></div></div><div class="option-group" id="styleGroup" style="display:none"></div>
 <div class="option-group"><label>Quantity</label><div class="option-buttons"><button type="button" class="option-btn" onclick="changeModalQuantity(-1)">-</button><button type="button" class="option-btn" id="modalQuantity">1</button><button type="button" class="option-btn" onclick="changeModalQuantity(1)">+</button></div></div>
 <button type="button" class="btn modal-add" onclick="addCurrentProductToCart()">ADD TO CART</button>
 </div></div></div></div>
 
-<div class="drawer-overlay" id="drawerOverlay" onclick="closeCart()"></div><aside class="cart-drawer" id="cartDrawer"><div class="drawer-header"><h2>YOUR CART</h2><button class="drawer-close" onclick="closeCart()">X</button></div><div class="cart-items" id="cartItems"></div><div class="cart-footer"><div class="cart-total"><span>TOTAL</span><span id="cartTotal">\u20A60</span></div><button class="btn" onclick="goToCheckout()">CHECKOUT</button></div></aside>
-
-<div class="modal-overlay" id="searchModal" onclick="closeSearchOnBackdrop(event)"><div class="product-modal" style="max-width:650px"><button class="close-modal" onclick="closeSearch()">X</button><div style="padding:70px 35px 45px"><div class="eyebrow">KNG / SEARCH</div><h2 style="font-size:40px;margin:20px 0 25px">FIND YOUR PIECE.</h2><input id="globalSearch" type="text" placeholder="Search KNG..." oninput="globalSearchProducts()" style="width:100%;padding:18px;background:#080808;border:1px solid rgba(255,255,255,.12);color:#fff;outline:0"><div id="globalResults" style="margin-top:25px"></div></div></div></div>
-
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeCart()"></div><aside class="cart-drawer" id="cartDrawer"><div class="drawer-header"><h2>YOUR CART</h2><button class="drawer-close" onclick="closeCart()">X</button></div><div class="cart-items" id="cartItems"></div><div class="cart-footer"><div class="cart-total"><span>TOTAL</span><span id="cartTotal">â‚¦0</span></div><button class="btn" onclick="goToCheckout()">CHECKOUT</button></div></aside>
+<div class="modal-overlay" id="searchModal" onclick="closeSearchOnBackdrop(event)"><div class="product-modal" style="max-width:650px"><button class="close-modal" onclick="closeSearch()">X</button><div style="padding:70px 35px 45px"><div class="eyebrow">KNG / SEARCH</div><h2 style="font-size:40px;margin:20px 0 25px">FIND YOUR PIECE.</h2><input id="globalSearch" type="text" placeholder="Search KNG..." oninput="globalSearchProducts()" style="width:100%;padding:17px;background:#080808;border:1px solid var(--border);color:#fff;outline:0"><div id="globalResults" style="margin-top:22px"></div></div></div></div>
+<div class="account-modal" id="accountModal" aria-hidden="true"><div class="account-overlay" onclick="closeAccount()"></div><div class="account-panel" id="accountPanel"></div></div>
 <div class="toast" id="toast"></div>
 
-<footer><div class="footer-inner"><div class="footer-grid"><div><div class="footer-logo">KNG<span>.</span></div><p class="footer-description">A Nigerian fashion brand built different. Wear the crown. Be the standard.</p></div><div><div class="footer-title">Shop</div><div class="footer-links"><button onclick="openWardrobe('men')">Men</button><button onclick="openWardrobe('women')">Women</button><button onclick="openWardrobe('accessories')">Accessories</button></div></div><div><div class="footer-title">KNG</div><div class="footer-links"><button onclick="showPage('about')">About</button><button onclick="goHome()">Home</button><a href="https://everything4king.github.io/KNG/" target="_blank" rel="noopener">KNG Profile</a></div></div><div><div class="footer-title">Contact</div><div class="footer-links"><a href="mailto:contact@kngwears.com">Email</a><a href="https://instagram.com/kngwears001" target="_blank" rel="noopener">Instagram</a></div></div></div><div class="footer-bottom"><span>(c) 2026 KNG. ALL RIGHTS RESERVED.</span><span>BUILT DIFFERENT. / WEAR THE CROWN.</span></div></div></footer>
-
-<!-- ONE ACCOUNT MODAL ONLY -->
-<div class="account-modal" id="accountModal" aria-hidden="true"><div class="account-overlay" onclick="closeAccount()"></div><div class="account-panel" id="accountPanel"></div></div>
+<footer><div class="footer-inner"><div class="footer-grid"><div><div class="footer-logo">KNG<span>.</span></div><p class="footer-description">A Nigerian fashion brand built different. Wear the crown. Be the standard.</p></div><div><div class="footer-title">SHOP</div><div class="footer-links"><button onclick="openWardrobe('men')">Men</button><button onclick="openWardrobe('women')">Women</button><button onclick="openWardrobe('accessories')">Accessories</button></div></div><div><div class="footer-title">KNG</div><div class="footer-links"><button onclick="showPage('about')">About</button><button onclick="goHome()">Home</button><a href="https://everything4king.github.io/KNG/" target="_blank" rel="noopener">KNG Profile</a></div></div><div><div class="footer-title">CONTACT</div><div class="footer-links"><a href="mailto:wearkng@gmail.com">Email</a><a href="https://instagram.com/kngwears001" target="_blank" rel="noopener">Instagram</a></div></div></div><div class="footer-bottom"><span>(c) 2026 KNG. ALL RIGHTS RESERVED.</span><span>BUILT DIFFERENT. / WEAR THE CROWN.</span></div></div></footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const products=[
-/* =========================================================
-   KINGS COLLECTION - UPPER BODY
-========================================================= */
-{id:"men-basic-short-sleeve",name:"Basic / Short Sleeve Tops",price:100,gender:"men",section:"Upper Body",category:"Basic / Short Sleeve Tops",colors:["Obsidian Black","White","Rich Brown","Royal Burgundy","Dark Blue"],sizes:["S","M","L","XL","XXL"],new:false},
-{id:"men-polos",name:"Polos",price:100,gender:"men",section:"Upper Body",category:"Polos",colors:["Obsidian Black","White","Rich Brown","Royal Burgundy","Dark Blue"],sizes:["S","M","L","XL","XXL"],new:false},
-{id:"men-hoodies",name:"Hoodies",price:100,gender:"men",section:"Upper Body",category:"Hoodies",colors:["Obsidian Black","White","Rich Brown","Royal Burgundy","Dark Blue"],sizes:["S","M","L","XL","XXL"],new:false},
-{id:"men-tank-sleeveless",name:"Tank Tops / Sleeveless",price:100,gender:"men",section:"Upper Body",category:"Tank Tops / Sleeveless",colors:["Obsidian Black","White","Rich Brown","Royal Burgundy","Dark Blue"],sizes:["S","M","L","XL","XXL"],new:false},
-{id:"men-long-sleeve",name:"Long Sleeve Tops",price:100,gender:"men",section:"Upper Body",category:"Long Sleeve Tops",colors:["Obsidian Black","White","Rich Brown","Royal Burgundy","Dark Blue"],sizes:["S","M","L","XL","XXL"],new:false},
-{id:"men-cropped-shirts",name:"Cropped Shirts",price:100,gender:"men",section:"Upper Body",category:"Cropped Shirts",colors:["Obsidian Black","White","Rich Brown","Royal Burgundy","Dark Blue"],sizes:["S","M","L","XL","XXL"],new:false},
-
-/* =========================================================
-   KINGS COLLECTION - LOWER BODY
-========================================================= */
-{id:"men-jorts",name:"Jorts",price:100,gender:"men",section:"Lower Body",category:"Jorts",colors:["Obsidian Black","Ash Grey","Stone","Rich Brown","Dark Indigo"],sizes:["S","M","L","XL","XXL"],new:false},
-{id:"men-baggy-sweatpants",name:"Baggy Sweatpants",price:100,gender:"men",section:"Lower Body",category:"Baggy Sweatpants",colors:["Obsidian Black","Ash Grey","Stone","Rich Brown","Dark Indigo"],sizes:["S","M","L","XL","XXL"],new:false},
-{id:"men-shorts",name:"Shorts",price:100,gender:"men",section:"Lower Body",category:"Shorts",colors:["Obsidian Black","Ash Grey","Stone","Rich Brown","Dark Indigo"],sizes:["S","M","L","XL","XXL"],new:false},
-{id:"men-tracksuit-pants",name:"Tracksuit Pants",price:100,gender:"men",section:"Lower Body",category:"Tracksuit Pants",colors:["Obsidian Black","Ash Grey","Stone","Rich Brown","Dark Indigo"],sizes:["S","M","L","XL","XXL"],new:false},
-
-/* =========================================================
-   QUEENS COLLECTION - UPPER BODY
-========================================================= */
-{id:"women-basic-short-sleeve",name:"Basic / Short Sleeve Tops",price:100,gender:"women",section:"Upper Body",category:"Basic / Short Sleeve Tops",colors:["Obsidian Black","Bone","Deep Olive","Royal Burgundy","Dusty Rose","Chocolate Brown"],sizes:["XS","S","M","L","XL"],new:false},
-{id:"women-long-sleeve",name:"Long Sleeve Tops",price:100,gender:"women",section:"Upper Body",category:"Long Sleeve Tops",colors:["Obsidian Black","Bone","Deep Olive","Royal Burgundy","Dusty Rose","Chocolate Brown"],sizes:["XS","S","M","L","XL"],new:false},
-{id:"women-tank-sleeveless",name:"Tank Tops / Sleeveless",price:100,gender:"women",section:"Upper Body",category:"Tank Tops / Sleeveless",colors:["Obsidian Black","Bone","Deep Olive","Royal Burgundy","Dusty Rose","Chocolate Brown"],sizes:["XS","S","M","L","XL"],new:false},
-{id:"women-polos",name:"Polos",price:100,gender:"women",section:"Upper Body",category:"Polos",colors:["Obsidian Black","Bone","Deep Olive","Royal Burgundy","Dusty Rose","Chocolate Brown"],sizes:["XS","S","M","L","XL"],new:false},
-{id:"women-hoodies",name:"Hoodies",price:100,gender:"women",section:"Upper Body",category:"Hoodies",colors:["Obsidian Black","Bone","Deep Olive","Royal Burgundy","Dusty Rose","Chocolate Brown"],sizes:["XS","S","M","L","XL"],new:false},
-{id:"women-fitted-crop",name:"Fitted Crop Tops",price:100,gender:"women",section:"Upper Body",category:"Fitted Crop Tops",colors:["Obsidian Black","Bone","Deep Olive","Royal Burgundy","Dusty Rose","Chocolate Brown"],sizes:["XS","S","M","L","XL"],new:false},
-{id:"women-loose-crop",name:"Loose Crop Tops",price:100,gender:"women",section:"Upper Body",category:"Loose Crop Tops",colors:["Obsidian Black","Bone","Deep Olive","Royal Burgundy","Dusty Rose","Chocolate Brown"],sizes:["XS","S","M","L","XL"],new:false},
-
-/* =========================================================
-   QUEENS COLLECTION - LOWER BODY
-========================================================= */
-{id:"women-jorts",name:"Jorts",price:100,gender:"women",section:"Lower Body",category:"Jorts",colors:["Obsidian Black","Ash Grey","Stone Beige","Deep Olive","Dark Indigo"],sizes:["XS","S","M","L","XL"],new:false},
-{id:"women-baggy-sweatpants",name:"Baggy Sweatpants",price:100,gender:"women",section:"Lower Body",category:"Baggy Sweatpants",colors:["Obsidian Black","Ash Grey","Stone Beige","Deep Olive","Dark Indigo"],sizes:["XS","S","M","L","XL"],new:false},
-{id:"women-shorts",name:"Shorts",price:100,gender:"women",section:"Lower Body",category:"Shorts",colors:["Obsidian Black","Ash Grey","Stone Beige","Deep Olive","Dark Indigo"],sizes:["XS","S","M","L","XL"],new:false},
-{id:"women-tracksuit-pants",name:"Tracksuit Pants",price:100,gender:"women",section:"Lower Body",category:"Tracksuit Pants",colors:["Obsidian Black","Ash Grey","Stone Beige","Deep Olive","Dark Indigo"],sizes:["XS","S","M","L","XL"],new:false},
-
-/* =========================================================
-   ACCESSORIES - HEADWEAR
-========================================================= */
-{id:"kng-straight-cap",name:"Straight Cap",price:100,gender:"accessories",section:"Headwear",category:"Straight Cap",colors:["Obsidian Black","Bone","Deep Olive","Royal Burgundy","Slate Grey"],sizes:["ONE SIZE"],new:false},
-{id:"kng-bent-cap",name:"Bent Cap",price:100,gender:"accessories",section:"Headwear",category:"Bent Cap",colors:["Obsidian Black","Bone","Deep Olive","Royal Burgundy","Slate Grey"],sizes:["ONE SIZE"],new:false},
-{id:"kng-beanie",name:"Beanie",price:100,gender:"accessories",section:"Headwear",category:"Beanie",colors:["Obsidian Black","Bone","Deep Olive","Royal Burgundy","Slate Grey"],sizes:["ONE SIZE"],new:false},
-
-/* =========================================================
-   ACCESSORIES - LAPEL PINS
-========================================================= */
-{id:"kng-customised-lapel-pins",name:"Customised Lapel Pins",price:100,gender:"accessories",section:"Lapel Pins",category:"Customised Lapel Pins",colors:["Black & Gold","White & Silver"],styles:["Circle","Square"],sizes:["ONE SIZE"],new:false},
-{id:"kng-plain-lapel-pin",name:"Plain Lapel Pin",price:100,gender:"accessories",section:"Lapel Pins",category:"Plain Lapel Pin",colors:["Black & Gold"],styles:["Plain"],sizes:["ONE SIZE"],new:false}
+const PRODUCTS=[
+{id:"men-basic-short-sleeve",name:"Basic / Short Sleeve Tops",price:100,gender:"men",section:"Upper Body",category:"Basic / Short Sleeve Tops",colors:["Obsidian Black","White","Rich Brown","Royal Burgundy","Dark Blue"],sizes:["S","M","L","XL","XXL"]},
+{id:"men-polos",name:"Polos",price:100,gender:"men",section:"Upper Body",category:"Polos",colors:["Obsidian Black","White","Rich Brown","Royal Burgundy","Dark Blue"],sizes:["S","M","L","XL","XXL"]},
+{id:"men-hoodies",name:"Hoodies",price:100,gender:"men",section:"Upper Body",category:"Hoodies",colors:["Obsidian Black","White","Rich Brown","Royal Burgundy","Dark Blue"],sizes:["S","M","L","XL","XXL"]},
+{id:"men-tank-sleeveless",name:"Tank Tops / Sleeveless",price:100,gender:"men",section:"Upper Body",category:"Tank Tops / Sleeveless",colors:["Obsidian Black","White","Rich Brown","Royal Burgundy","Dark Blue"],sizes:["S","M","L","XL","XXL"]},
+{id:"men-long-sleeve",name:"Long Sleeve Tops",price:100,gender:"men",section:"Upper Body",category:"Long Sleeve Tops",colors:["Obsidian Black","White","Rich Brown","Royal Burgundy","Dark Blue"],sizes:["S","M","L","XL","XXL"]},
+{id:"men-cropped-shirts",name:"Cropped Shirts",price:100,gender:"men",section:"Upper Body",category:"Cropped Shirts",colors:["Obsidian Black","White","Rich Brown","Royal Burgundy","Dark Blue"],sizes:["S","M","L","XL","XXL"]},
+{id:"men-jorts",name:"Jorts",price:100,gender:"men",section:"Lower Body",category:"Jorts",colors:["Obsidian Black","Ash Grey","Stone","Rich Brown","Dark Indigo"],sizes:["S","M","L","XL","XXL"]},
+{id:"men-baggy-sweatpants",name:"Baggy Sweatpants",price:100,gender:"men",section:"Lower Body",category:"Baggy Sweatpants",colors:["Obsidian Black","Ash Grey","Stone","Rich Brown","Dark Indigo"],sizes:["S","M","L","XL","XXL"]},
+{id:"men-shorts",name:"Shorts",price:100,gender:"men",section:"Lower Body",category:"Shorts",colors:["Obsidian Black","Ash Grey","Stone","Rich Brown","Dark Indigo"],sizes:["S","M","L","XL","XXL"]},
+{id:"men-tracksuit-pants",name:"Tracksuit Pants",price:100,gender:"men",section:"Lower Body",category:"Tracksuit Pants",colors:["Obsidian Black","Ash Grey","Stone","Rich Brown","Dark Indigo"],sizes:["S","M","L","XL","XXL"]},
+{id:"women-basic-short-sleeve",name:"Basic / Short Sleeve Tops",price:100,gender:"women",section:"Upper Body",category:"Basic / Short Sleeve Tops",colors:["Obsidian Black","Bone","Deep Olive","Royal Burgundy","Dusty Rose","Chocolate Brown"],sizes:["S","M","L","XL","XXL"]},
+{id:"women-long-sleeve",name:"Long Sleeve Tops",price:100,gender:"women",section:"Upper Body",category:"Long Sleeve Tops",colors:["Obsidian Black","Bone","Deep Olive","Royal Burgundy","Dusty Rose","Chocolate Brown"],sizes:["S","M","L","XL","XXL"]},
+{id:"women-tank-sleeveless",name:"Tank Tops / Sleeveless",price:100,gender:"women",section:"Upper Body",category:"Tank Tops / Sleeveless",colors:["Obsidian Black","Bone","Deep Olive","Royal Burgundy","Dusty Rose","Chocolate Brown"],sizes:["S","M","L","XL","XXL"]},
+{id:"women-polos",name:"Polos",price:100,gender:"women",section:"Upper Body",category:"Polos",colors:["Obsidian Black","Bone","Deep Olive","Royal Burgundy","Dusty Rose","Chocolate Brown"],sizes:["S","M","L","XL","XXL"]},
+{id:"women-hoodies",name:"Hoodies",price:100,gender:"women",section:"Upper Body",category:"Hoodies",colors:["Obsidian Black","Bone","Deep Olive","Royal Burgundy","Dusty Rose","Chocolate Brown"],sizes:["S","M","L","XL","XXL"]},
+{id:"women-fitted-crop",name:"Fitted Crop Tops",price:100,gender:"women",section:"Upper Body",category:"Fitted Crop Tops",colors:["Obsidian Black","Bone","Deep Olive","Royal Burgundy","Dusty Rose","Chocolate Brown"],sizes:["S","M","L","XL","XXL"]},
+{id:"women-loose-crop",name:"Loose Crop Tops",price:100,gender:"women",section:"Upper Body",category:"Loose Crop Tops",colors:["Obsidian Black","Bone","Deep Olive","Royal Burgundy","Dusty Rose","Chocolate Brown"],sizes:["S","M","L","XL","XXL"]},
+{id:"women-jorts",name:"Jorts",price:100,gender:"women",section:"Lower Body",category:"Jorts",colors:["Obsidian Black","Ash Grey","Stone Beige","Deep Olive","Dark Indigo"],sizes:["S","M","L","XL","XXL"]},
+{id:"women-baggy-sweatpants",name:"Baggy Sweatpants",price:100,gender:"women",section:"Lower Body",category:"Baggy Sweatpants",colors:["Obsidian Black","Ash Grey","Stone Beige","Deep Olive","Dark Indigo"],sizes:["S","M","L","XL","XXL"]},
+{id:"women-shorts",name:"Shorts",price:100,gender:"women",section:"Lower Body",category:"Shorts",colors:["Obsidian Black","Ash Grey","Stone Beige","Deep Olive","Dark Indigo"],sizes:["S","M","L","XL","XXL"]},
+{id:"women-tracksuit-pants",name:"Tracksuit Pants",price:100,gender:"women",section:"Lower Body",category:"Tracksuit Pants",colors:["Obsidian Black","Ash Grey","Stone Beige","Deep Olive","Dark Indigo"],sizes:["S","M","L","XL","XXL"]},
+{id:"kng-straight-cap",name:"Straight Cap",price:100,gender:"accessories",section:"Headwear",category:"Straight Cap",colors:["Obsidian Black","Bone","Deep Olive","Royal Burgundy","Slate Grey"],sizes:["ONE SIZE"]},
+{id:"kng-bent-cap",name:"Bent Cap",price:100,gender:"accessories",section:"Headwear",category:"Bent Cap",colors:["Obsidian Black","Bone","Deep Olive","Royal Burgundy","Slate Grey"],sizes:["ONE SIZE"]},
+{id:"kng-beanie",name:"Beanie",price:100,gender:"accessories",section:"Headwear",category:"Beanie",colors:["Obsidian Black","Bone","Deep Olive","Royal Burgundy","Slate Grey"],sizes:["ONE SIZE"]},
+{id:"kng-customised-lapel-pins",name:"Customised Lapel Pins",price:100,gender:"accessories",section:"Lapel Pins",category:"Customised Lapel Pins",colors:["Black & Gold","White & Silver"],styles:["Circle","Square"],sizes:["ONE SIZE"]},
+{id:"kng-plain-lapel-pin",name:"Plain Lapel Pin",price:100,gender:"accessories",section:"Lapel Pins",category:"Plain Lapel Pin",colors:["Black & Gold"],styles:["Plain"],sizes:["ONE SIZE"]}
 ];
+let currentCollection="men",currentFilter="All",currentProduct=null,selectedSize="",selectedColor="",selectedStyle="",modalQuantity=1,cart=JSON.parse(localStorage.getItem("kngCart")||"[]"),selectedDispatch=null,pendingOtpEmail="";
+if(!Array.isArray(cart))cart=[];
+const money=n=>"â‚¦"+Number(n||0).toLocaleString("en-NG"),esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+function showToast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("show");clearTimeout(window.kngToastTimer);window.kngToastTimer=setTimeout(()=>t.classList.remove("show"),2500)}
+function lockBody(){document.body.classList.add("locked")}function unlockBodyIfClear(){if(!document.querySelector(".modal-overlay.open")&&!document.getElementById("cartDrawer").classList.contains("open")&&!document.getElementById("accountModal").classList.contains("active"))document.body.classList.remove("locked")}
 
-let currentCollection="men",currentFilter="All",currentProduct=null,selectedSize="",selectedColor="",modalQuantity=1;window.selectedStyle="";
-let cart=[];try{cart=JSON.parse(localStorage.getItem("kngCart")||"[]");if(!Array.isArray(cart))cart=[]}catch(e){cart=[]}
-let kngPendingOtpEmail="",kngPendingSignupProfile=null;
-
+/* SUPABASE - same project currently used by the KNG store */
 const KNG_SUPABASE_URL="https://fnpmsbjcfyhxxmuducba.supabase.co";
 const KNG_SUPABASE_PUBLISHABLE_KEY="sb_publishable_m39Aa3I3rqmYildm1gE3KA_8s3LmlUB";
-const kngSupabase=window.supabase.createClient(KNG_SUPABASE_URL,KNG_SUPABASE_PUBLISHABLE_KEY);
-window.kngSupabase=kngSupabase;
-console.log("KNG Supabase connected.");
+const kngSupabase=window.supabase.createClient(KNG_SUPABASE_URL,KNG_SUPABASE_PUBLISHABLE_KEY);window.kngSupabase=kngSupabase;
+/* ACCOUNT SECURITY â€” AUTO LOGOUT AFTER 10 MINUTES OF INACTIVITY */
+const KNG_INACTIVITY_LIMIT = 10 * 60 * 1000;
+const KNG_ACTIVITY_KEY = "kngLastActivity";
+let kngInactivityTimer = null;
+let kngActivityWriteTimer = null;
+let kngSessionActive = false;
 
-/* PAGE */
-function hideAllPages(){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"))}
-function showPage(n){hideAllPages();document.getElementById(n+"Page")?.classList.add("active");window.scrollTo({top:0,behavior:"auto"})}
-function goHome(){showPage("home")}
-function goToCollections(){showPage("home");setTimeout(()=>document.getElementById("collections")?.scrollIntoView({behavior:"smooth"}),50)}
-
-/* WARDROBE */
-function openWardrobe(g){
-currentCollection=g;currentFilter="All";showPage("wardrobe");
-const t={men:"MEN'S WARDROBE.",women:"WOMEN'S WARDROBE.",accessories:"ACCESSORIES WARDROBE."},s={men:"Upper body and lower body. Choose a piece and build your KNG standard.",women:"Upper body and lower body. Choose a piece and build your KNG standard.",accessories:"Straight caps, bent caps, beanies and KNG lapel pins."};
-document.getElementById("wardrobeEyebrow").textContent="KNG / "+g.toUpperCase();document.getElementById("wardrobeTitle").textContent=t[g];document.getElementById("wardrobeSubtitle").textContent=s[g];document.getElementById("productSearch").value="";createFilters();renderProducts()
-}
-function createFilters(){
-const c=document.getElementById("filters");
-c.innerHTML="";
-const cats=[...new Set(products.filter(p=>p.gender===currentCollection).map(p=>p.category))];
-["All",...cats].forEach(cat=>{
-const b=document.createElement("button");
-b.type="button";
-b.className="filter-btn "+(currentFilter===cat?"active":"");
-b.textContent=cat;
-b.onclick=()=>{currentFilter=cat;createFilters();renderProducts()};
-c.appendChild(b)
-})
+function kngRecordActivity(){
+  if(!kngSessionActive)return;
+  const now=Date.now();
+  if(kngActivityWriteTimer)return;
+  kngActivityWriteTimer=setTimeout(()=>{
+    localStorage.setItem(KNG_ACTIVITY_KEY,String(Date.now()));
+    kngActivityWriteTimer=null;
+  },1000);
+  clearTimeout(kngInactivityTimer);
+  kngInactivityTimer=setTimeout(kngAutoLogout,KNG_INACTIVITY_LIMIT);
 }
 
-function renderProducts(){
-const grid=document.getElementById("productGrid");
-const q=(document.getElementById("productSearch")?.value||"").toLowerCase().trim();
-let list=products.filter(p=>p.gender===currentCollection);
-if(currentFilter!=="All")list=list.filter(p=>p.category===currentFilter);
-if(q)list=list.filter(p=>(p.name+" "+p.category+" "+p.gender+" "+p.section).toLowerCase().includes(q));
-
-if(!list.length){
-grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:80px;color:#777">NO KNG PIECES FOUND.</div>';
-return;
+async function kngAutoLogout(){
+  if(!kngSessionActive)return;
+  kngSessionActive=false;
+  clearTimeout(kngInactivityTimer);
+  clearTimeout(kngActivityWriteTimer);
+  localStorage.removeItem(KNG_ACTIVITY_KEY);
+  try{await kngSupabase.auth.signOut()}catch(e){}
+  closeAccount();
+  showToast("YOU WERE SIGNED OUT AFTER 10 MINUTES OF INACTIVITY.");
 }
 
-const grouped={};
-list.forEach(p=>{
-const key=currentCollection==="accessories"?p.section:p.section;
-if(!grouped[key])grouped[key]=[];
-grouped[key].push(p);
+function kngStartInactivityTimer(){
+  kngSessionActive=true;
+  const last=Number(localStorage.getItem(KNG_ACTIVITY_KEY)||0);
+  if(last && Date.now()-last >= KNG_INACTIVITY_LIMIT)return kngAutoLogout();
+  localStorage.setItem(KNG_ACTIVITY_KEY,String(Date.now()));
+  clearTimeout(kngInactivityTimer);
+  kngInactivityTimer=setTimeout(kngAutoLogout,Math.max(1000,KNG_INACTIVITY_LIMIT-(last?Date.now()-last:0)));
+}
+
+function kngStopInactivityTimer(){
+  kngSessionActive=false;
+  clearTimeout(kngInactivityTimer);
+  clearTimeout(kngActivityWriteTimer);
+  kngInactivityTimer=null;
+  kngActivityWriteTimer=null;
+  localStorage.removeItem(KNG_ACTIVITY_KEY);
+}
+
+["click","mousemove","mousedown","keydown","scroll","touchstart","touchmove"].forEach(evt=>{
+  document.addEventListener(evt,kngRecordActivity,{passive:true});
 });
 
-grid.innerHTML=Object.entries(grouped).map(([section,items])=>`
-<div class="product-section-heading">
-<div class="eyebrow">KNG / ${esc(section)}</div>
-<h2>${esc(section)}</h2>
-<p>${currentCollection==="accessories"
-?"Choose your accessory and build your standard."
-:"Choose from the pieces available in this section."
-}</p>
-</div>
-${items.map(p=>`
-<article class="product-card">
-<div class="product-image">
-${p.new?'<div class="new-badge">NEW</div>':''}
-</div>
-<div class="product-info">
-<div class="product-category">${currentCollection==="accessories"?"KNG / ACCESSORIES / "+esc(p.category):"KNG / "+esc(p.category)}</div>
-<h3 class="product-name">${esc(p.name)}</h3>
-<div class="product-price">${money(p.price)}</div>
-<button type="button" class="btn btn-outline" onclick="openProductModal('${p.id}')">VIEW PIECE</button>
-</div>
-</article>
-`).join("")}
-`).join("");
-}
+kngSupabase.auth.onAuthStateChange((event,session)=>{
+  if(session?.user){
+    if(event==="SIGNED_IN" || event==="TOKEN_REFRESHED" || event==="INITIAL_SESSION"){
+      kngStartInactivityTimer();
+    }
+  }else{
+    kngStopInactivityTimer();
+  }
+});
+
+
+/* PAGES */
+function hideAllPages(){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"))}function showPage(name){hideAllPages();document.getElementById(name+"Page")?.classList.add("active");window.scrollTo({top:0,behavior:"auto"})}function goHome(){showPage("home")}function goToCollections(){showPage("home");setTimeout(()=>document.getElementById("collections")?.scrollIntoView({behavior:"smooth"}),40)}
+
+/* WARDROBE */
+function openWardrobe(g){currentCollection=g;currentFilter="All";showPage("wardrobe");const title={men:"MEN'S WARDROBE.",women:"WOMEN'S WARDROBE.",accessories:"ACCESSORIES WARDROBE."},sub={men:"Upper body and lower body. Choose a piece and build your KNG standard.",women:"Upper body and lower body. Choose a piece and build your KNG standard.",accessories:"Straight caps, bent caps, beanies and KNG lapel pins."};document.getElementById("wardrobeEyebrow").textContent="KNG / "+g.toUpperCase();document.getElementById("wardrobeTitle").textContent=title[g];document.getElementById("wardrobeSubtitle").textContent=sub[g];document.getElementById("productSearch").value="";createFilters();renderProducts()}
+function createFilters(){const c=document.getElementById("filters");c.innerHTML="";const cats=[...new Set(PRODUCTS.filter(p=>p.gender===currentCollection).map(p=>p.category))];["All",...cats].forEach(cat=>{const b=document.createElement("button");b.type="button";b.className="filter-btn "+(currentFilter===cat?"active":"");b.textContent=cat;b.onclick=()=>{currentFilter=cat;createFilters();renderProducts()};c.appendChild(b)})}
+function renderProducts(){const grid=document.getElementById("productGrid"),q=(document.getElementById("productSearch")?.value||"").toLowerCase().trim();let list=PRODUCTS.filter(p=>p.gender===currentCollection);if(currentFilter!=="All")list=list.filter(p=>p.category===currentFilter);if(q)list=list.filter(p=>(p.name+" "+p.category+" "+p.gender+" "+p.section).toLowerCase().includes(q));if(!list.length){grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:80px;color:#777">NO KNG PIECES FOUND.</div>';return}const grouped={};list.forEach(p=>(grouped[p.section]??=[]).push(p));grid.innerHTML=Object.entries(grouped).map(([section,items])=>`<div class="product-section-heading"><div class="eyebrow">KNG / ${esc(section)}</div><h2>${esc(section)}</h2><p>Choose from the pieces available in this section.</p></div>${items.map(p=>`<article class="product-card"><div class="product-image">${p.new?'<div class="new-badge">NEW</div>':''}</div><div class="product-info"><div class="product-category">KNG / ${esc(p.category)}</div><h3 class="product-name">${esc(p.name)}</h3><div class="product-price">${money(p.price)}</div><button type="button" class="btn btn-outline" onclick="openProductModal('${p.id}')">VIEW PIECE</button></div></article>`).join("")}`).join("")}
 
 /* PRODUCT */
-function openProductModal(id){
-const p=products.find(x=>x.id===id);
-if(!p)return;
-currentProduct=p;
-selectedSize=p.sizes.length===1?p.sizes[0]:"";
-selectedColor=p.colors[0];
-modalQuantity=1;
+function openProductModal(id){const p=PRODUCTS.find(x=>x.id===id);if(!p)return;currentProduct=p;selectedSize=p.sizes.length===1?p.sizes[0]:"";selectedColor=p.colors[0];selectedStyle=p.styles?.[0]||"";modalQuantity=1;document.getElementById("modalCategory").textContent="KNG / "+p.category;document.getElementById("modalName").textContent=p.name;document.getElementById("modalPrice").textContent=money(p.price);const sg=document.getElementById("sizeGroup"),so=document.getElementById("sizeOptions");if(p.sizes.length===1&&p.sizes[0]==="ONE SIZE"){sg.style.display="none"}else{sg.style.display="block";so.innerHTML=p.sizes.map(s=>`<button type="button" class="option-btn ${s===selectedSize?"selected":""}" onclick="selectSize('${s}')">${s}</button>`).join("")+`<button type="button" class="option-btn" onclick="openCustomSize()">CUSTOM FIT</button>`}const styleGroup=document.getElementById("styleGroup");if(p.styles?.length){styleGroup.style.display="block";styleGroup.innerHTML=`<label>${p.name==="Customised Lapel Pins"?"PIN SHAPE":"STYLE"}</label><div class="option-buttons">${p.styles.map((s,i)=>`<button type="button" class="option-btn ${i===0?"selected":""}" onclick="selectStyle('${esc(s)}')">${esc(s)}</button>`).join("")}</div>`}else{styleGroup.style.display="none";styleGroup.innerHTML=""}document.getElementById("colorOptions").innerHTML=p.colors.map((c,i)=>`<button type="button" class="option-btn ${i===0?"selected":""}" onclick="selectColor('${esc(c)}')">${esc(c)}</button>`).join("");closeSizeGuide();updateModalQuantity();document.getElementById("productModal").classList.add("open");lockBody()}
+function selectSize(s){selectedSize=s;document.querySelectorAll("#sizeOptions .option-btn").forEach(b=>b.classList.toggle("selected",b.textContent.trim()===s))}function selectColor(c){selectedColor=c;document.querySelectorAll("#colorOptions .option-btn").forEach(b=>b.classList.toggle("selected",b.textContent.trim()===c))}function selectStyle(s){selectedStyle=s;document.querySelectorAll("#styleGroup .option-btn").forEach(b=>b.classList.toggle("selected",b.textContent.trim()===s))}function closeProductModal(){document.getElementById("productModal").classList.remove("open");unlockBodyIfClear()}function closeProductModalOnBackdrop(e){if(e.target.id==="productModal")closeProductModal()}function changeModalQuantity(n){modalQuantity=Math.max(1,Math.min(20,modalQuantity+n));updateModalQuantity()}function updateModalQuantity(){document.getElementById("modalQuantity").textContent=modalQuantity}
 
-document.getElementById("modalCategory").textContent="KNG / "+p.category;
-document.getElementById("modalName").textContent=p.name;
-document.getElementById("modalPrice").textContent=money(p.price);
-
-const sg=document.getElementById("sizeGroup");
-const so=document.getElementById("sizeOptions");
-if(p.sizes.length===1&&p.sizes[0]==="ONE SIZE"){
-sg.style.display="none";
-}else{
-sg.style.display="block";
-so.innerHTML=p.sizes.map(s=>`<button type="button" class="option-btn ${s===selectedSize?"selected":""}" onclick="selectSize('${s}')">${s}</button>`).join("")+`<button type="button" class="option-btn" onclick="openCustomSize()">CUSTOM FIT</button>`;
-}
-
-const existingStyleGroup=document.getElementById("styleGroup");
-if(existingStyleGroup)existingStyleGroup.remove();
-
-if(p.styles&&p.styles.length){
-const styleGroup=document.createElement("div");
-styleGroup.className="option-group";
-styleGroup.id="styleGroup";
-styleGroup.innerHTML=`<label>${p.name==="Customised Lapel Pins"?"Pin Shape":"Style"}</label><div class="option-buttons" id="styleOptions">${p.styles.map((s,i)=>`<button type="button" class="option-btn ${i===0?"selected":""}" onclick="selectStyle('${escAttr(s)}')">${esc(s)}</button>`).join("")}</div>`;
-document.getElementById("colorOptions").closest(".option-group").before(styleGroup);
-window.selectedStyle=p.styles[0];
-}else{
-window.selectedStyle="";
-}
-
-document.getElementById("colorOptions").innerHTML=p.colors.map(c=>`<button type="button" class="option-btn ${c===selectedColor?"selected":""}" onclick="selectColor('${escAttr(c)}')">${esc(c)}</button>`).join("");
-
-closeSizeGuide();
-updateModalQuantity();
-document.getElementById("productModal").classList.add("open");
-document.body.classList.add("locked")
-}
-
-function selectStyle(s){
-window.selectedStyle=s;
-document.querySelectorAll("#styleOptions .option-btn").forEach(b=>b.classList.toggle("selected",b.textContent.trim()===s));
-}
-
-function closeProductModal(){document.getElementById("productModal").classList.remove("open");if(!document.querySelector(".modal-overlay.open")&&!document.getElementById("accountModal").classList.contains("active")&&!document.getElementById("cartDrawer").classList.contains("open"))document.body.classList.remove("locked")}
-function closeProductModalOnBackdrop(e){if(e.target.id==="productModal")closeProductModal()}
-function selectSize(s){selectedSize=s;document.querySelectorAll("#sizeOptions .option-btn").forEach(b=>b.classList.toggle("selected",b.textContent.trim()===s))}
-function selectColor(c){selectedColor=c;document.querySelectorAll("#colorOptions .option-btn").forEach(b=>b.classList.toggle("selected",b.textContent.trim()===c))}
-function changeModalQuantity(n){modalQuantity=Math.max(1,Math.min(20,modalQuantity+n));updateModalQuantity()}
-function updateModalQuantity(){document.getElementById("modalQuantity").textContent=modalQuantity}
-function openSizeGuide(){document.getElementById("sizeGuidePanel").classList.add("active");document.getElementById("mensSizeGuide").classList.toggle("active",currentProduct?.gender==="men");document.getElementById("womensSizeGuide").classList.toggle("active",currentProduct?.gender==="women")}
-function closeSizeGuide(){document.getElementById("sizeGuidePanel").classList.remove("active")}
-function openCustomSize(){const c=prompt("Chest (inches)");if(c===null)return;const w=prompt("Waist (inches)");if(w===null)return;const h=prompt("Hip (inches)");if(h===null)return;const l=prompt("Length (inches)");if(l===null)return;localStorage.setItem("KNG_Custom_Size",JSON.stringify({chest:c,waist:w,hip:h,length:l}));showToast("CUSTOM SIZE SAVED.")}
+/* SIZE GUIDE */
+function openSizeGuide(){document.getElementById("sizeGuidePanel").classList.add("active");selectSizeGender(currentProduct?.gender==="women"?"women":"men")}function closeSizeGuide(){document.getElementById("sizeGuidePanel").classList.remove("active")}
+function selectSizeGender(g){document.getElementById("kingsTab").classList.toggle("active",g==="men");document.getElementById("queensTab").classList.toggle("active",g==="women");document.getElementById("kingsSizeContent").classList.toggle("active",g==="men");document.getElementById("queensSizeContent").classList.toggle("active",g==="women")}
+function showBodyGuide(g,b){const u=document.getElementById(g==="men"?"kingsUpperGuide":"queensUpperGuide"),l=document.getElementById(g==="men"?"kingsLowerGuide":"queensLowerGuide"),ub=document.getElementById(g==="men"?"kingsUpperBtn":"queensUpperBtn"),lb=document.getElementById(g==="men"?"kingsLowerBtn":"queensLowerBtn");u.style.display=b==="upper"?"block":"none";l.style.display=b==="lower"?"block":"none";ub.classList.toggle("active",b==="upper");lb.classList.toggle("active",b==="lower")}
+function openCustomSize(){const upper=currentProduct?.section==="Upper Body";const a=prompt(upper?"Chest/Bust measurement in inches:":"Waist measurement in inches:");if(a===null)return;const b=prompt(upper?"Shoulder measurement in inches:":"Hip measurement in inches:");if(b===null)return;const c=prompt(upper?"Sleeve measurement in inches:":"Inseam measurement in inches:");if(c===null)return;const d=prompt(upper?"Top length in inches:":"Outseam/full length in inches:");if(d===null)return;localStorage.setItem("KNG_Custom_Size",JSON.stringify({type:upper?"upper":"lower",a,b,c,d,product:currentProduct?.id||""}));showToast("CUSTOM MEASUREMENTS SAVED.")}
 
 /* CART */
-function saveCart(){localStorage.setItem("kngCart",JSON.stringify(cart))}
-function addCurrentProductToCart(){
-if(!currentProduct)return;
-if(!selectedSize){showToast("PLEASE SELECT A SIZE.");return}
-if(!selectedColor){showToast("PLEASE SELECT A COLOUR.");return}
-if(currentProduct.styles&&currentProduct.styles.length&&!window.selectedStyle){showToast("PLEASE SELECT AN OPTION.");return}
-const style=window.selectedStyle||"";
-const x=cart.find(i=>i.id===currentProduct.id&&i.size===selectedSize&&i.color===selectedColor&&i.style===style);
-if(x)x.quantity+=modalQuantity;
-else cart.push({id:currentProduct.id,name:currentProduct.name,price:currentProduct.price,size:selectedSize,color:selectedColor,style,quantity:modalQuantity});
-saveCart();
-closeProductModal();
-updateCartUI();
-showToast(currentProduct.name+" ADDED TO CART.")
-}
-function openCart(){updateCartUI();document.getElementById("drawerOverlay").classList.add("open");document.getElementById("cartDrawer").classList.add("open");document.body.classList.add("locked")}
-function closeCart(){document.getElementById("drawerOverlay").classList.remove("open");document.getElementById("cartDrawer").classList.remove("open");if(!document.querySelector(".modal-overlay.open")&&!document.getElementById("accountModal").classList.contains("active"))document.body.classList.remove("locked")}
-function updateCartUI(){
-const e=document.getElementById("cartItems");
-const n=cart.reduce((a,i)=>a+Number(i.quantity||0),0);
-document.getElementById("cartCount").textContent=n;
-if(!cart.length){
-e.innerHTML='<div class="empty-cart"><h3>YOUR CART IS EMPTY.</h3><p style="margin-top:15px">Enter a KNG wardrobe and choose your pieces.</p><button type="button" class="btn" style="margin-top:25px" onclick="closeCart();goToCollections()">FIND YOUR STANDARD</button></div>';
-}else{
-e.innerHTML=cart.map((i,k)=>`<div class="cart-item"><div class="cart-item-image"></div><div><div class="cart-item-name">${esc(i.name)}</div><div class="cart-item-meta">${i.style?`Option: ${esc(i.style)}<br>`:""}Size: ${esc(i.size)}<br>Colour: ${esc(i.color)}</div><div class="cart-item-price">${money(i.price*i.quantity)}</div><div class="cart-controls"><button type="button" class="qty-btn" onclick="changeCartQuantity(${k},-1)">-</button><span>${i.quantity}</span><button type="button" class="qty-btn" onclick="changeCartQuantity(${k},1)">+</button><button type="button" class="remove-btn" onclick="removeCartItem(${k})">REMOVE</button></div></div></div>`).join("");
-}
-document.getElementById("cartTotal").textContent=money(getCartTotal())
-}
-function changeCartQuantity(i,n){if(!cart[i])return;cart[i].quantity+=n;if(cart[i].quantity<=0)cart.splice(i,1);saveCart();updateCartUI()}
-function removeCartItem(i){cart.splice(i,1);saveCart();updateCartUI();showToast("ITEM REMOVED.")}
-function getCartTotal(){return cart.reduce((a,i)=>a+Number(i.price)*Number(i.quantity),0)}
+function saveCart(){localStorage.setItem("kngCart",JSON.stringify(cart))}function addCurrentProductToCart(){if(!currentProduct)return;if(!selectedSize)return void showToast("PLEASE SELECT A SIZE.");if(!selectedColor)return void showToast("PLEASE SELECT A COLOUR.");const x=cart.find(i=>i.id===currentProduct.id&&i.size===selectedSize&&i.color===selectedColor&&i.style===selectedStyle);if(x)x.quantity+=modalQuantity;else cart.push({id:currentProduct.id,name:currentProduct.name,price:currentProduct.price,size:selectedSize,color:selectedColor,style:selectedStyle,quantity:modalQuantity});saveCart();closeProductModal();updateCartUI();showToast(currentProduct.name+" ADDED TO CART.")}
+function openCart(){updateCartUI();document.getElementById("drawerOverlay").classList.add("open");document.getElementById("cartDrawer").classList.add("open");lockBody()}function closeCart(){document.getElementById("drawerOverlay").classList.remove("open");document.getElementById("cartDrawer").classList.remove("open");unlockBodyIfClear()}function getCartSubtotal(){return cart.reduce((a,i)=>a+Number(i.price)*Number(i.quantity),0)}
+function updateCartUI(){const e=document.getElementById("cartItems"),n=cart.reduce((a,i)=>a+Number(i.quantity||0),0);document.getElementById("cartCount").textContent=n;if(!cart.length)e.innerHTML='<div class="empty-cart"><h3>YOUR CART IS EMPTY.</h3><p style="margin-top:12px">Enter a KNG wardrobe and choose your pieces.</p><button type="button" class="btn" style="margin-top:22px" onclick="closeCart();goToCollections()">FIND YOUR STANDARD</button></div>';else e.innerHTML=cart.map((i,k)=>`<div class="cart-item"><div class="cart-item-image"></div><div><div class="cart-item-name">${esc(i.name)}</div><div class="cart-item-meta">${i.style?`Option: ${esc(i.style)}<br>`:""}Size: ${esc(i.size)}<br>Colour: ${esc(i.color)}</div><div class="cart-item-price">${money(i.price*i.quantity)}</div><div class="cart-controls"><button class="qty-btn" onclick="changeCartQuantity(${k},-1)">-</button><span>${i.quantity}</span><button class="qty-btn" onclick="changeCartQuantity(${k},1)">+</button><button class="remove-btn" onclick="removeCartItem(${k})">REMOVE</button></div></div></div>`).join("");document.getElementById("cartTotal").textContent=money(getCartSubtotal())}
+function changeCartQuantity(i,n){if(!cart[i])return;cart[i].quantity+=n;if(cart[i].quantity<=0)cart.splice(i,1);saveCart();updateCartUI()}function removeCartItem(i){cart.splice(i,1);saveCart();updateCartUI();showToast("ITEM REMOVED.")}
+
+/* DISPATCH */
+const DISPATCH={zone1:{label:"ZONE 1",range:"â‚¦8,500 - â‚¦9,000",low:8500},zone2:{label:"ZONE 2",range:"â‚¦12,500 - â‚¦13,500",low:12500},zone3:{label:"ZONE 3",range:"â‚¦14,000 - â‚¦15,500",low:14000},covenant:{label:"COVENANT UNIVERSITY",range:"â‚¦3,000",low:3000}};
+function updateDispatchOptions(){const s=document.getElementById("state").value,b=document.getElementById("dispatchOptions");selectedDispatch=null;if(!s){b.innerHTML='<div style="color:#777;font-size:11px">Select your state to see delivery options.</div>';return updateCheckoutTotals()}if(s==="Ogun"){b.innerHTML=`<label class="dispatch-option" onclick="selectDispatch('covenant')"><input type="radio" name="dispatch" value="covenant"><span><strong>COVENANT UNIVERSITY</strong><br>University delivery</span><strong>â‚¦3,000</strong></label><label class="dispatch-option" onclick="selectDispatch('zone2')"><input type="radio" name="dispatch" value="zone2"><span><strong>ZONE 2</strong><br>Ogun delivery outside Covenant University</span><strong>â‚¦12,500 - â‚¦13,500</strong></label>`}else{b.innerHTML=`<label class="dispatch-option" onclick="selectDispatch('zone1')"><input type="radio" name="dispatch" value="zone1"><span><strong>ZONE 1</strong><br>Nearest / local delivery areas</span><strong>â‚¦8,500 - â‚¦9,000</strong></label><label class="dispatch-option" onclick="selectDispatch('zone2')"><input type="radio" name="dispatch" value="zone2"><span><strong>ZONE 2</strong><br>Mid-distance delivery areas</span><strong>â‚¦12,500 - â‚¦13,500</strong></label><label class="dispatch-option" onclick="selectDispatch('zone3')"><input type="radio" name="dispatch" value="zone3"><span><strong>ZONE 3</strong><br>Long-distance delivery areas</span><strong>â‚¦14,000 - â‚¦15,500</strong></label>`}updateCheckoutTotals()}
+function selectDispatch(k){selectedDispatch=k;document.querySelectorAll(".dispatch-option").forEach(x=>x.classList.remove("selected"));const r=document.querySelector(`input[value="${k}"]`);if(r){r.checked=true;r.closest(".dispatch-option").classList.add("selected")}updateCheckoutTotals()}function getDispatchCharge(){return selectedDispatch?DISPATCH[selectedDispatch].low:0}function getDispatchDisplay(){return selectedDispatch?DISPATCH[selectedDispatch].range:"Select location"}function updateCheckoutTotals(){const s=getCartSubtotal();document.getElementById("checkoutSubtotal").textContent=money(s);document.getElementById("checkoutDelivery").textContent=getDispatchDisplay();document.getElementById("checkoutTotal").textContent=selectedDispatch?money(s)+" + "+getDispatchDisplay():money(s)}
 
 /* CHECKOUT */
-async function goToCheckout(){if(!cart.length){showToast("YOUR CART IS EMPTY.");return}const {data:{user},error}=await kngSupabase.auth.getUser();if(error||!user){showToast("PLEASE SIGN IN OR CREATE A KNG ACCOUNT BEFORE CHECKOUT.");closeCart();openAccount("signin");return}closeCart();showPage("checkout");renderCheckoutSummary();fillCheckoutFromAccount()}
-function renderCheckoutSummary(){document.getElementById("checkoutSummary").innerHTML=cart.map(i=>`<div class="summary-item"><span>${esc(i.name)} X ${i.quantity}<br><small>${esc(i.size)} / ${esc(i.color)}</small></span><strong>${money(i.price*i.quantity)}</strong></div>`).join("");document.getElementById("checkoutTotal").textContent=money(getCartTotal())}
-async function fillCheckoutFromAccount(){try{const {data:{user}}=await kngSupabase.auth.getUser();if(!user)return;const m=user.user_metadata||{},parts=(m.full_name||"").trim().split(/\s+/);document.getElementById("firstName").value=parts.shift()||"";document.getElementById("lastName").value=parts.join(" ");document.getElementById("email").value=user.email||"";document.getElementById("phone").value=m.phone_number||""}catch(e){console.error(e)}}
-document.getElementById("checkoutForm").addEventListener("submit",e=>{e.preventDefault();alert("KNG CHECKOUT\n\nYour order information has been collected.\n\nThe secure payment gateway will be connected next.")})
+async function goToCheckout(){if(!cart.length)return void showToast("YOUR CART IS EMPTY.");const {data}=await kngSupabase.auth.getUser();if(!data?.user){showToast("PLEASE SIGN IN OR CREATE A KNG ACCOUNT BEFORE CHECKOUT.");closeCart();openAccount();return}closeCart();showPage("checkout");renderCheckoutSummary();fillCheckoutFromAccount();document.getElementById("state").value="";updateDispatchOptions()}
+function renderCheckoutSummary(){document.getElementById("checkoutSummary").innerHTML=cart.map(i=>`<div class="summary-item"><span>${esc(i.name)} x ${i.quantity}<br><small>${esc(i.size)} / ${esc(i.color)}</small></span><strong>${money(i.price*i.quantity)}</strong></div>`).join("");updateCheckoutTotals()}
+async function fillCheckoutFromAccount(){try{const {data:{user}}=await kngSupabase.auth.getUser();if(!user)return;const m=user.user_metadata||{},parts=(m.full_name||"").trim().split(/\s+/);document.getElementById("firstName").value=parts.shift()||"";document.getElementById("lastName").value=parts.join(" ");document.getElementById("email").value=user.email||"";document.getElementById("phone").value=m.phone_number||"";document.getElementById("address").value=m.address_line||""}catch(e){console.error(e)}}
+document.getElementById("checkoutForm").addEventListener("submit",e=>{e.preventDefault();if(!selectedDispatch)return void showToast("PLEASE SELECT YOUR DELIVERY ZONE.");const o={items:cart,customer:{firstName:document.getElementById("firstName").value,lastName:document.getElementById("lastName").value,email:document.getElementById("email").value,phone:document.getElementById("phone").value,address:document.getElementById("address").value,state:document.getElementById("state").value},dispatch:selectedDispatch,dispatchDisplay:getDispatchDisplay(),subtotal:getCartSubtotal(),totalDisplay:money(getCartSubtotal())+" + "+getDispatchDisplay(),createdAt:new Date().toISOString()};localStorage.setItem("kngLastOrder",JSON.stringify(o));alert("KNG ORDER\n\nYour order information has been collected successfully.\n\nDispatch: "+getDispatchDisplay()+"\nTotal: "+o.totalDisplay+"\n\nPayment gateway will be connected next.")});
 
 /* SEARCH */
-function openSearch(){document.getElementById("searchModal").classList.add("open");document.body.classList.add("locked");setTimeout(()=>document.getElementById("globalSearch").focus(),100)}
-function closeSearch(){document.getElementById("searchModal").classList.remove("open");if(!document.getElementById("cartDrawer").classList.contains("open")&&!document.getElementById("accountModal").classList.contains("active"))document.body.classList.remove("locked")}
-function closeSearchOnBackdrop(e){if(e.target.id==="searchModal")closeSearch()}
-function globalSearchProducts(){const q=document.getElementById("globalSearch").value.toLowerCase().trim(),r=document.getElementById("globalResults");if(!q){r.innerHTML="";return}const m=products.filter(p=>(p.name+" "+p.category+" "+p.gender).toLowerCase().includes(q));r.innerHTML=m.length?m.map(p=>`<div style="padding:18px 0;border-bottom:1px solid rgba(255,255,255,.1);display:flex;justify-content:space-between;gap:20px;align-items:center"><div><strong>${esc(p.name)}</strong><div style="color:#999;font-size:12px;margin-top:6px">${money(p.price)}</div></div><button type="button" class="btn" style="min-height:42px;padding:0 16px" onclick="closeSearch();openWardrobe('${p.gender}');setTimeout(()=>openProductModal('${p.id}'),100)">VIEW</button></div>`).join(""):'<p style="color:#777">No KNG pieces found.</p>'}
-function toggleMobileMenu(){const n=document.querySelector(".nav-links");if(window.innerWidth>1000)return;n.style.display=n.style.display==="flex"?"":"flex";if(n.style.display==="flex"){n.style.position="absolute";n.style.top="72px";n.style.left="0";n.style.right="0";n.style.background="#050505";n.style.padding="25px";n.style.flexDirection="column";n.style.alignItems="flex-start";n.style.gap="25px"}}
-function money(a){return "\u20A6"+Number(a||0).toLocaleString("en-NG")}
-function showToast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("show");clearTimeout(window.kngToastTimer);window.kngToastTimer=setTimeout(()=>t.classList.remove("show"),2500)}
-function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
-function escAttr(s){return String(s??"").replace(/'/g,"\\'")}
-
-/* =========================================================
-   KNG ACCOUNT SYSTEM - FIXED
-   NO profiles table is used.
-   Phone + WhatsApp are saved in Supabase Auth user metadata.
-========================================================= */
-function openAccount(view="home"){const m=document.getElementById("accountModal");m.classList.add("active");m.setAttribute("aria-hidden","false");document.body.classList.add("locked");if(view==="signin")showSignIn();else if(view==="create")showCreateAccount();else showAccountHome()}
-function closeAccount(){const m=document.getElementById("accountModal");m.classList.remove("active");m.setAttribute("aria-hidden","true");kngPendingOtpEmail="";kngPendingSignupProfile=null;if(!document.querySelector(".modal-overlay.open")&&!document.getElementById("cartDrawer").classList.contains("open"))document.body.classList.remove("locked")}
-function panel(){return document.getElementById("accountPanel")}
-function showAccountHome(){panel().innerHTML=`<button class="account-close" type="button" onclick="closeAccount()">X</button><div class="account-logo">KNG<span>.</span></div><p class="account-kicker">THE INNER CIRCLE</p><h2>YOUR KNG<br><span>ACCOUNT.</span></h2><p class="account-description">Sign in to your KNG account or create one to track orders, save your details and stay connected to every new standard.</p><div class="account-buttons"><button type="button" class="account-primary" onclick="showSignIn()">SIGN IN</button><button type="button" class="account-secondary" onclick="showCreateAccount()">CREATE ACCOUNT</button></div><p class="account-note">Your KNG account is completely free.</p>`}
-function showSignIn(){panel().innerHTML=`<button class="account-close" type="button" onclick="closeAccount()">X</button><div class="account-logo">KNG<span>.</span></div><p class="account-kicker">WELCOME BACK</p><h2>SIGN<br><span>IN.</span></h2><form class="account-form" onsubmit="handleSignIn(event)"><label>Email Address</label><input id="signInEmail" type="email" placeholder="Enter your email" autocomplete="email" required><label>Password</label><div class="password-wrap"><input id="signInPassword" type="password" placeholder="Enter your password" autocomplete="current-password" required><button type="button" class="password-toggle" onclick="togglePassword('signInPassword',this)">SHOW</button></div><button type="submit" class="account-primary">SIGN IN</button></form><button type="button" class="account-link" onclick="showCreateAccount()">Don't have an account? <span>CREATE ONE</span></button>`}
-function showCreateAccount(){panel().innerHTML=`<button class="account-close" type="button" onclick="closeAccount()">X</button><div class="account-logo">KNG<span>.</span></div><p class="account-kicker">JOIN THE INNER CIRCLE</p><h2>CREATE<br><span>ACCOUNT.</span></h2><form class="account-form" onsubmit="handleCreateAccount(event)"><label>Full Name</label><input id="createName" type="text" placeholder="Your full name" autocomplete="name" required><label>Email Address</label><input id="createEmail" type="email" placeholder="Your email address" autocomplete="email" required><label>Phone Number</label><input id="createPhone" type="tel" placeholder="Your phone number" inputmode="tel" autocomplete="tel" required><label>WhatsApp Number</label><input id="createWhatsapp" type="tel" placeholder="Your WhatsApp number" inputmode="tel" autocomplete="tel" required><label>Password</label><div class="password-wrap"><input id="createPassword" type="password" placeholder="Create a password (8+ characters)" minlength="8" autocomplete="new-password" required><button type="button" class="password-toggle" onclick="togglePassword('createPassword',this)">SHOW</button></div><button type="submit" class="account-primary">CREATE ACCOUNT</button></form><button type="button" class="account-link" onclick="showSignIn()">Already have an account? <span>SIGN IN</span></button>`}
-function togglePassword(id,b){const i=document.getElementById(id);if(!i)return;i.type=i.type==="password"?"text":"password";b.textContent=i.type==="password"?"SHOW":"HIDE"}
-
-async function handleSignIn(e){e.preventDefault();const email=document.getElementById("signInEmail").value.trim().toLowerCase(),password=document.getElementById("signInPassword").value,btn=e.target.querySelector("button[type=submit]");btn.disabled=true;btn.textContent="SIGNING IN...";try{const {data,error}=await kngSupabase.auth.signInWithPassword({email,password});if(error)throw error;alert("Welcome back to KNG!");closeAccount();updateKngAccountState()}catch(err){console.error("KNG sign in error:",err);alert(err.message||"Unable to sign in. Please check your email and password.")}finally{btn.disabled=false;btn.textContent="SIGN IN"}}
-
-async function handleCreateAccount(e){
-e.preventDefault();
-const name=document.getElementById("createName").value.trim(),email=document.getElementById("createEmail").value.trim().toLowerCase(),phone=document.getElementById("createPhone").value.trim(),whatsapp=document.getElementById("createWhatsapp").value.trim(),password=document.getElementById("createPassword").value,btn=e.target.querySelector("button[type=submit]");
-if(!name||!email||!phone||!whatsapp||!password){alert("Please fill in all fields.");return}
-if(password.length<8){alert("Password must be at least 8 characters.");return}
-btn.disabled=true;btn.textContent="CREATING ACCOUNT...";
-try{
-const {data,error}=await kngSupabase.auth.signUp({email,password,options:{data:{full_name:name,phone_number:phone,whatsapp_number:whatsapp}}});
-if(error)throw error;
-kngPendingOtpEmail=email;kngPendingSignupProfile={full_name:name,email,phone_number:phone,whatsapp_number:whatsapp};
-if(data?.session){await saveCustomerMetadata(data.user);alert("ACCOUNT CREATED SUCCESSFULLY!");closeAccount();return}
-if(data?.user){showKngOtp(email);return}
-showKngOtp(email)
-}catch(err){console.error("KNG signup error:",err);alert(err.message||"Unable to create your KNG account.")}finally{btn.disabled=false;btn.textContent="CREATE ACCOUNT"}
-}
-
-function showKngOtp(email){kngPendingOtpEmail=email;panel().innerHTML=`<button class="account-close" type="button" onclick="cancelKngOtp()">X</button><div class="account-logo">KNG<span>.</span></div><p class="account-kicker">SECURITY CHECK</p><h2>VERIFY<br><span>YOUR EMAIL.</span></h2><p class="otp-message">We sent a 6-digit verification code to <strong>${esc(email)}</strong></p><label>VERIFICATION CODE</label><input class="otp-input" id="kngOtpCode" type="text" maxlength="6" inputmode="numeric" autocomplete="one-time-code" placeholder="000000"><div id="otpError" class="otp-error"></div><button type="button" class="account-primary" onclick="verifyKngOtp()">VERIFY CODE</button><button type="button" class="account-link" onclick="resendKngOtp()">Didn't receive the code? <span>RESEND</span></button><button type="button" class="account-link" onclick="cancelKngOtp()"> BACK TO SIGN IN</button>`;
-const i=document.getElementById("kngOtpCode");i.focus();i.addEventListener("input",()=>i.value=i.value.replace(/\D/g,"").slice(0,6));i.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();verifyKngOtp()}})}
-
-async function saveCustomerMetadata(user){if(!user||!kngPendingSignupProfile)return;const p=kngPendingSignupProfile;const {error}=await kngSupabase.auth.updateUser({data:{full_name:p.full_name,phone_number:p.phone_number,whatsapp_number:p.whatsapp_number}});if(error)throw error;console.log("KNG customer details saved to Auth metadata.",user.id)}
-
-async function verifyKngOtp(){
-const input=document.getElementById("kngOtpCode"),err=document.getElementById("otpError");if(!input)return;const token=input.value.trim();if(!/^\d{6}$/.test(token)){err.textContent="Please enter the 6-digit verification code.";input.focus();return}if(!kngPendingOtpEmail){err.textContent="Your verification session expired. Please create the account again.";return}
-const buttons=[...panel().querySelectorAll("button")],btn=buttons.find(b=>b.textContent.includes("VERIFY CODE"));if(btn){btn.disabled=true;btn.textContent="VERIFYING..."}err.textContent="";
-try{const {data,error}=await kngSupabase.auth.verifyOtp({email:kngPendingOtpEmail,token,type:"signup"});if(error)throw error;if(data?.user)await saveCustomerMetadata(data.user);alert("ACCOUNT CREATED SUCCESSFULLY!");kngPendingOtpEmail="";kngPendingSignupProfile=null;closeAccount();updateKngAccountState()}catch(e){console.error("KNG OTP verification error:",e);err.textContent=e.message||"Invalid or expired verification code.";if(btn){btn.disabled=false;btn.textContent="VERIFY CODE"}}
-}
-
-async function resendKngOtp(){if(!kngPendingOtpEmail){alert("Your verification session expired. Please create the account again.");return}try{const {error}=await kngSupabase.auth.resend({type:"signup",email:kngPendingOtpEmail});if(error)throw error;alert("A new verification code has been sent to your email.");const i=document.getElementById("kngOtpCode");if(i){i.value="";i.focus()}}catch(e){console.error(e);alert(e.message||"Unable to resend the verification code.")}}
-function cancelKngOtp(){kngPendingOtpEmail="";kngPendingSignupProfile=null;showSignIn()}
-async function updateKngAccountState(){try{const {data:{user}}=await kngSupabase.auth.getUser();if(user)console.log("KNG customer signed in:",user.email,user.user_metadata)}catch(e){console.error(e)}}
-async function checkKngSession(){try{const {data:{session}}=await kngSupabase.auth.getSession();if(session?.user)console.log("KNG session active:",session.user.email)}catch(e){console.error(e)}}
-kngSupabase.auth.onAuthStateChange((event,session)=>{if(event==="SIGNED_IN")console.log("KNG SIGNED_IN",session?.user?.email);if(event==="SIGNED_OUT")console.log("KNG SIGNED_OUT")})
-
-/* INIT */
-updateCartUI();createFilters();renderProducts();checkKngSession();
-   /* =========================================================
-   KNG CUSTOMER PROFILE DASHBOARD
-   ADDED WITHOUT REMOVING THE EXISTING OTP / CART / CHECKOUT
-========================================================= */
-
-(function () {
-
-    const KNG_PROFILE_BUCKET = "profile-pictures";
-
-    function kngAccountPanel() {
-        return document.getElementById("accountPanel");
-    }
-
-    function kngSupabaseClient() {
-        return window.kngSupabase || window.supabase;
-    }
-
-    function kngEscape(value) {
-        if (typeof esc === "function") return esc(value);
-        return String(value ?? "").replace(/[&<>"']/g, function (c) {
-            return {
-                "&": "&amp;",
-                "<": "&lt;",
-                ">": "&gt;",
-                '"': "&quot;",
-                "'": "&#039;"
-            }[c];
-        });
-    }
-
-    function kngAvatarFallback(name) {
-        const letter = String(name || "K").trim().charAt(0).toUpperCase() || "K";
-
-        return `
-            <div class="kng-profile-avatar-fallback">
-                ${kngEscape(letter)}
-            </div>
-        `;
-    }
-
-    function kngGetUserMetadata(user) {
-        return user && user.user_metadata
-            ? user.user_metadata
-            : {};
-    }
-
-    async function kngGetCurrentUser() {
-
-        const sb = kngSupabaseClient();
-
-        if (!sb || !sb.auth) {
-            return null;
-        }
-
-        try {
-
-            const result = await sb.auth.getUser();
-
-            return result &&
-                   result.data &&
-                   result.data.user
-                ? result.data.user
-                : null;
-
-        } catch (error) {
-
-            console.error(
-                "KNG current user error:",
-                error
-            );
-
-            return null;
-        }
-    }
-
-
-    /* =====================================================
-       LOAD CUSTOMER PROFILE
-    ===================================================== */
-
-    async function kngLoadCustomerProfile(user) {
-
-        const sb = kngSupabaseClient();
-
-        const metadata =
-            kngGetUserMetadata(user);
-
-        let profile = {};
-
-        /*
-         * First try the customer_profiles table.
-         * If the table is unavailable or RLS blocks it,
-         * the customer can still use their Auth information.
-         */
-
-        try {
-
-            if (sb) {
-
-                const result =
-                    await sb
-                        .from("customer_profiles")
-                        .select("*")
-                        .eq("id", user.id)
-                        .maybeSingle();
-
-                if (
-                    !result.error &&
-                    result.data
-                ) {
-
-                    profile = result.data;
-                }
-            }
-
-        } catch (error) {
-
-            console.warn(
-                "KNG customer_profiles could not be loaded:",
-                error
-            );
-        }
-
-
-        return {
-
-            full_name:
-                profile.full_name ||
-                metadata.full_name ||
-                "",
-
-            email:
-                user.email ||
-                profile.email ||
-                "",
-
-            phone_number:
-                profile.phone_number ||
-                metadata.phone_number ||
-                "",
-
-            whatsapp_number:
-                profile.whatsapp_number ||
-                metadata.whatsapp_number ||
-                "",
-
-            address_line:
-                profile.address_line ||
-                "",
-
-            city:
-                profile.city ||
-                "",
-
-            state:
-                profile.state ||
-                "",
-
-            country:
-                profile.country ||
-                "Nigeria",
-
-            measurements:
-                profile.measurements ||
-                {},
-
-            avatar_url:
-                profile.profile_picture_url ||
-                profile.avatar_url ||
-                metadata.profile_picture_url ||
-                metadata.avatar_url ||
-                "",
-
-            raw:
-                profile
-        };
-    }
-
-
-    /* =====================================================
-       SAVE CUSTOMER PROFILE
-    ===================================================== */
-
-    async function kngSaveCustomerProfile(fields) {
-
-        const sb = kngSupabaseClient();
-
-        if (!sb) {
-            throw new Error(
-                "KNG Supabase connection is unavailable."
-            );
-        }
-
-        const user = await kngGetCurrentUser();
-
-        if (!user) {
-            throw new Error(
-                "Please sign in before saving your profile."
-            );
-        }
-
-
-        /*
-         * Save the basic identity information
-         * to Supabase Auth metadata.
-         *
-         * This preserves the system we already built.
-         */
-
-        const metadataUpdate = {
-            full_name:
-                fields.full_name,
-
-            phone_number:
-                fields.phone_number,
-
-            whatsapp_number:
-                fields.whatsapp_number
-        };
-
-        const authResult =
-            await sb.auth.updateUser({
-                data: metadataUpdate
-            });
-
-        if (authResult.error) {
-            throw authResult.error;
-        }
-
-
-        /*
-         * Save additional customer information
-         * into customer_profiles.
-         */
-
-        const profileData = {
-
-            id:
-                user.id,
-
-            full_name:
-                fields.full_name,
-
-            phone_number:
-                fields.phone_number,
-
-            whatsapp_number:
-                fields.whatsapp_number,
-
-            address_line:
-                fields.address_line,
-
-            city:
-                fields.city,
-
-            state:
-                fields.state,
-
-            country:
-                fields.country || "Nigeria",
-
-            measurements:
-                fields.measurements || {}
-        };
-
-
-        /*
-         * Keep profile picture if we have one.
-         */
-
-        if (fields.avatar_url) {
-
-            profileData.avatar_url =
-                fields.avatar_url;
-        }
-
-
-        const result =
-            await sb
-                .from("customer_profiles")
-                .upsert(
-                    profileData,
-                    {
-                        onConflict: "id"
-                    }
-                );
-
-        if (result.error) {
-
-            console.warn(
-                "KNG customer_profiles save warning:",
-                result.error
-            );
-
-            /*
-             * Auth metadata was already saved,
-             * so don't pretend the whole operation failed.
-             */
-
-            return {
-                warning:
-                    result.error.message
-            };
-        }
-
-        return {
-            success: true
-        };
-    }
-
-
-    /* =====================================================
-       PROFILE PICTURE UPLOAD
-    ===================================================== */
-
-    window.kngUploadProfilePicture =
-        async function (input) {
-
-            if (
-                !input ||
-                !input.files ||
-                !input.files[0]
-            ) {
-                return;
-            }
-
-            const file =
-                input.files[0];
-
-            if (!file.type.startsWith("image/")) {
-
-                alert(
-                    "Please choose an image file."
-                );
-
-                input.value = "";
-                return;
-            }
-
-            if (file.size > 2 * 1024 * 1024) {
-
-                alert(
-                    "Profile pictures must be 2 MB or smaller."
-                );
-
-                input.value = "";
-                return;
-            }
-
-            const sb =
-                kngSupabaseClient();
-
-            const user =
-                await kngGetCurrentUser();
-
-            if (!sb || !user) {
-
-                alert(
-                    "Please sign in before uploading a profile picture."
-                );
-
-                return;
-            }
-
-
-            const button =
-                document.getElementById(
-                    "kngProfileUploadButton"
-                );
-
-            if (button) {
-                button.disabled = true;
-                button.textContent = "UPLOADING...";
-            }
-
-
-            try {
-
-                /*
-                 * Each customer gets their own folder.
-                 */
-
-                const extension =
-                    file.name
-                        .split(".")
-                        .pop()
-                        .toLowerCase();
-
-                const filePath =
-                    user.id +
-                    "/avatar-" +
-                    Date.now() +
-                    "." +
-                    extension;
-
-
-                /*
-                 * Remove old pictures where possible.
-                 */
-
-                try {
-
-                    const oldFiles =
-                        await sb.storage
-                            .from(KNG_PROFILE_BUCKET)
-                            .list(user.id);
-
-                    if (
-                        oldFiles &&
-                        oldFiles.data &&
-                        oldFiles.data.length
-                    ) {
-
-                        const oldPaths =
-                            oldFiles.data
-                                .filter(function (item) {
-                                    return item.name;
-                                })
-                                .map(function (item) {
-                                    return user.id +
-                                        "/" +
-                                        item.name;
-                                });
-
-                        if (oldPaths.length) {
-
-                            await sb.storage
-                                .from(KNG_PROFILE_BUCKET)
-                                .remove(oldPaths);
-                        }
-                    }
-
-                } catch (cleanupError) {
-
-                    console.warn(
-                        "KNG old profile picture cleanup warning:",
-                        cleanupError
-                    );
-                }
-
-
-                /*
-                 * Upload new image.
-                 */
-
-                const uploadResult =
-                    await sb.storage
-                        .from(KNG_PROFILE_BUCKET)
-                        .upload(
-                            filePath,
-                            file,
-                            {
-                                cacheControl: "3600",
-                                upsert: false,
-                                contentType: file.type
-                            }
-                        );
-
-                if (uploadResult.error) {
-                    throw uploadResult.error;
-                }
-
-
-                /*
-                 * Get public URL.
-                 */
-
-                const publicResult =
-                    sb.storage
-                        .from(KNG_PROFILE_BUCKET)
-                        .getPublicUrl(filePath);
-
-                const publicUrl =
-                    publicResult &&
-                    publicResult.data
-                        ? publicResult.data.publicUrl
-                        : "";
-
-
-                if (!publicUrl) {
-                    throw new Error(
-                        "The profile picture URL could not be created."
-                    );
-                }
-
-
-                /*
-                 * Save URL in Auth metadata too.
-                 * This gives us a reliable fallback.
-                 */
-
-                const authResult =
-                    await sb.auth.updateUser({
-                        data: {
-                            profile_picture_url:
-                                publicUrl
-                        }
-                    });
-
-                if (authResult.error) {
-                    throw authResult.error;
-                }
-
-
-                /*
-                 * Try saving URL to customer_profiles.
-                 */
-
-                try {
-
-                    await sb
-                        .from("customer_profiles")
-                        .upsert(
-                            {
-                                id:
-                                    user.id,
-
-                                profile_picture_url:
-                                    publicUrl,
-
-                                avatar_url:
-                                    publicUrl
-                            },
-                            {
-                                onConflict: "id"
-                            }
-                        );
-
-                } catch (profileError) {
-
-                    console.warn(
-                        "KNG profile picture database save warning:",
-                        profileError
-                    );
-                }
-
-
-                showToast(
-                    "PROFILE PICTURE UPDATED"
-                );
-
-                await kngRenderCustomerDashboard();
-
-            } catch (error) {
-
-                console.error(
-                    "KNG profile picture upload error:",
-                    error
-                );
-
-                alert(
-                    error.message ||
-                    "Unable to upload your profile picture."
-                );
-
-            } finally {
-
-                if (button) {
-
-                    button.disabled = false;
-                    button.textContent =
-                        "CHANGE PHOTO";
-                }
-
-                input.value = "";
-            }
-        };
-
-
-    /* =====================================================
-       REMOVE PROFILE PICTURE
-    ===================================================== */
-
-    window.kngRemoveProfilePicture =
-        async function () {
-
-            const sb =
-                kngSupabaseClient();
-
-            const user =
-                await kngGetCurrentUser();
-
-            if (!sb || !user) {
-                return;
-            }
-
-            if (
-                !confirm(
-                    "Remove your profile picture?"
-                )
-            ) {
-                return;
-            }
-
-            try {
-
-                /*
-                 * Find customer pictures.
-                 */
-
-                const listResult =
-                    await sb.storage
-                        .from(KNG_PROFILE_BUCKET)
-                        .list(user.id);
-
-                if (
-                    !listResult.error &&
-                    listResult.data
-                ) {
-
-                    const paths =
-                        listResult.data
-                            .filter(function (item) {
-                                return item.name;
-                            })
-                            .map(function (item) {
-                                return user.id +
-                                    "/" +
-                                    item.name;
-                            });
-
-                    if (paths.length) {
-
-                        await sb.storage
-                            .from(KNG_PROFILE_BUCKET)
-                            .remove(paths);
-                    }
-                }
-
-
-                /*
-                 * Clear Auth metadata.
-                 */
-
-                const authResult =
-                    await sb.auth.updateUser({
-                        data: {
-                            profile_picture_url:
-                                null
-                        }
-                    });
-
-                if (authResult.error) {
-                    throw authResult.error;
-                }
-
-
-                /*
-                 * Clear database field where possible.
-                 */
-
-                try {
-
-                    await sb
-                        .from("customer_profiles")
-                        .update({
-                            profile_picture_url:
-                                null,
-                            avatar_url:
-                                null
-                        })
-                        .eq("id", user.id);
-
-                } catch (profileError) {
-
-                    console.warn(
-                        "KNG profile picture database cleanup warning:",
-                        profileError
-                    );
-                }
-
-
-                showToast(
-                    "PROFILE PICTURE REMOVED"
-                );
-
-                await kngRenderCustomerDashboard();
-
-            } catch (error) {
-
-                console.error(
-                    "KNG profile picture removal error:",
-                    error
-                );
-
-                alert(
-                    error.message ||
-                    "Unable to remove your profile picture."
-                );
-            }
-        };
-
-
-    /* =====================================================
-       SAVE EDITED PROFILE
-    ===================================================== */
-
-    window.kngSaveProfile =
-        async function (event) {
-
-            if (event) {
-                event.preventDefault();
-            }
-
-            const saveButton =
-                document.getElementById(
-                    "kngSaveProfileButton"
-                );
-
-            if (saveButton) {
-                saveButton.disabled = true;
-                saveButton.textContent =
-                    "SAVING...";
-            }
-
-            try {
-
-                const fields = {
-
-                    full_name:
-                        document.getElementById(
-                            "kngProfileName"
-                        ).value.trim(),
-
-                    phone_number:
-                        document.getElementById(
-                            "kngProfilePhone"
-                        ).value.trim(),
-
-                    whatsapp_number:
-                        document.getElementById(
-                            "kngProfileWhatsapp"
-                        ).value.trim(),
-
-                    address_line:
-                        document.getElementById(
-                            "kngProfileAddress"
-                        ).value.trim(),
-
-                    city:
-                        document.getElementById(
-                            "kngProfileCity"
-                        ).value.trim(),
-
-                    state:
-                        document.getElementById(
-                            "kngProfileState"
-                        ).value.trim(),
-
-                    country:
-                        document.getElementById(
-                            "kngProfileCountry"
-                        ).value.trim() ||
-                        "Nigeria"
-                };
-
-
-                if (!fields.full_name) {
-
-                    alert(
-                        "Please enter your full name."
-                    );
-
-                    return;
-                }
-
-                await kngSaveCustomerProfile(
-                    fields
-                );
-
-                showToast(
-                    "PROFILE SAVED"
-                );
-
-                await kngRenderCustomerDashboard();
-
-            } catch (error) {
-
-                console.error(
-                    "KNG profile save error:",
-                    error
-                );
-
-                alert(
-                    error.message ||
-                    "Unable to save your profile."
-                );
-
-            } finally {
-
-                if (saveButton) {
-
-                    saveButton.disabled = false;
-                    saveButton.textContent =
-                        "SAVE CHANGES";
-                }
-            }
-        };
-
-
-    /* =====================================================
-       CUSTOMER DASHBOARD
-    ===================================================== */
-
-    window.kngRenderCustomerDashboard =
-        async function () {
-
-            const panel =
-                kngAccountPanel();
-
-            if (!panel) {
-                return;
-            }
-
-            const user =
-                await kngGetCurrentUser();
-
-            if (!user) {
-
-                /*
-                 * Keep the original signed-out account
-                 * screen intact.
-                 */
-
-                if (
-                    typeof window.kngOriginalShowAccountHome ===
-                    "function"
-                ) {
-
-                    window.kngOriginalShowAccountHome();
-
-                }
-
-                return;
-            }
-
-
-            const profile =
-                await kngLoadCustomerProfile(
-                    user
-                );
-
-            const firstName =
-                (
-                    profile.full_name ||
-                    "KNG CUSTOMER"
-                )
-                    .split(" ")[0];
-
-
-            const avatarHtml =
-                profile.avatar_url
-                    ? `
-                        <img
-                            src="${kngEscape(profile.avatar_url)}"
-                            alt="Profile picture"
-                            class="kng-profile-avatar-image"
-                        >
-                    `
-                    : kngAvatarFallback(
-                        profile.full_name
-                    );
-
-
-            panel.innerHTML = `
-
-                <button
-                    class="account-close"
-                    type="button"
-                    onclick="closeAccount()"
-                    aria-label="Close account"
-                >X</button>
-
-
-                <div class="kng-customer-dashboard">
-
-                    <div class="kng-profile-hero">
-
-                        <div class="kng-profile-photo-wrap">
-
-                            <div class="kng-profile-photo">
-                                ${avatarHtml}
-                            </div>
-
-                            <label
-                                class="kng-photo-button"
-                                for="kngProfilePictureInput"
-                                id="kngProfileUploadButton"
-                            >
-                                CHANGE PHOTO
-                            </label>
-
-                            <input
-                                id="kngProfilePictureInput"
-                                type="file"
-                                accept="image/*"
-                                style="display:none"
-                                onchange="kngUploadProfilePicture(this)"
-                            >
-
-                            ${
-                                profile.avatar_url
-                                ? `
-                                    <button
-                                        type="button"
-                                        class="kng-remove-photo"
-                                        onclick="kngRemoveProfilePicture()"
-                                    >
-                                        REMOVE PHOTO
-                                    </button>
-                                `
-                                : ""
-                            }
-
-                        </div>
-
-
-                        <div class="kng-profile-heading">
-
-                            <p class="account-kicker">
-                                THE INNER CIRCLE
-                            </p>
-
-                            <h2>
-                                WELCOME,
-                                <span>${kngEscape(firstName).toUpperCase()}.</span>
-                            </h2>
-
-                            <p>
-                                Manage your KNG account,
-                                personal details and delivery information.
-                            </p>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="kng-profile-section">
-
-                        <div class="kng-section-heading">
-                            <span>01</span>
-                            <h3>PERSONAL INFORMATION</h3>
-                        </div>
-
-
-                        <form
-                            class="kng-profile-form"
-                            onsubmit="kngSaveProfile(event)"
-                        >
-
-                            <div class="kng-profile-grid">
-
-                                <div>
-                                    <label>FULL NAME</label>
-                                    <input
-                                        id="kngProfileName"
-                                        type="text"
-                                        value="${kngEscape(profile.full_name)}"
-                                        autocomplete="name"
-                                        required
-                                    >
-                                </div>
-
-
-                                <div>
-                                    <label>EMAIL ADDRESS</label>
-                                    <input
-                                        type="email"
-                                        value="${kngEscape(profile.email)}"
-                                        disabled
-                                    >
-                                </div>
-
-
-                                <div>
-                                    <label>PHONE NUMBER</label>
-                                    <input
-                                        id="kngProfilePhone"
-                                        type="tel"
-                                        value="${kngEscape(profile.phone_number)}"
-                                        autocomplete="tel"
-                                    >
-                                </div>
-
-
-                                <div>
-                                    <label>WHATSAPP NUMBER</label>
-                                    <input
-                                        id="kngProfileWhatsapp"
-                                        type="tel"
-                                        value="${kngEscape(profile.whatsapp_number)}"
-                                        autocomplete="tel"
-                                    >
-                                </div>
-
-                            </div>
-
-
-                            <div class="kng-section-heading">
-                                <span>02</span>
-                                <h3>DELIVERY INFORMATION</h3>
-                            </div>
-
-
-                            <div class="kng-profile-grid">
-
-                                <div class="kng-profile-full">
-                                    <label>ADDRESS</label>
-                                    <input
-                                        id="kngProfileAddress"
-                                        type="text"
-                                        value="${kngEscape(profile.address_line)}"
-                                        autocomplete="street-address"
-                                        placeholder="Your delivery address"
-                                    >
-                                </div>
-
-
-                                <div>
-                                    <label>CITY</label>
-                                    <input
-                                        id="kngProfileCity"
-                                        type="text"
-                                        value="${kngEscape(profile.city)}"
-                                        autocomplete="address-level2"
-                                        placeholder="City"
-                                    >
-                                </div>
-
-
-                                <div>
-                                    <label>STATE</label>
-                                    <input
-                                        id="kngProfileState"
-                                        type="text"
-                                        value="${kngEscape(profile.state)}"
-                                        autocomplete="address-level1"
-                                        placeholder="State"
-                                    >
-                                </div>
-
-
-                                <div>
-                                    <label>COUNTRY</label>
-                                    <input
-                                        id="kngProfileCountry"
-                                        type="text"
-                                        value="${kngEscape(profile.country || "Nigeria")}"
-                                        autocomplete="country-name"
-                                    >
-                                </div>
-
-                            </div>
-
-
-                            <button
-                                id="kngSaveProfileButton"
-                                type="submit"
-                                class="account-primary"
-                            >
-                                SAVE CHANGES
-                            </button>
-
-                        </form>
-
-                    </div>
-
-
-                    <div class="kng-profile-section">
-
-                        <div class="kng-section-heading">
-                            <span>03</span>
-                            <h3>MY KNG ACCOUNT</h3>
-                        </div>
-
-
-                        <div class="kng-account-actions">
-
-                            <button
-                                type="button"
-                                onclick="kngShowOrders()"
-                            >
-                                MY ORDERS
-                            </button>
-
-                            <button
-                                type="button"
-                                onclick="kngShowMeasurements()"
-                            >
-                                MY MEASUREMENTS
-                            </button>
-
-                            <button
-                                type="button"
-                                onclick="kngShowWishlist()"
-                            >
-                                WISHLIST
-                            </button>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="kng-profile-footer">
-
-                        <button
-                            type="button"
-                            onclick="kngCustomerSignOut()"
-                            class="kng-signout-button"
-                        >
-                            SIGN OUT
-                        </button>
-
-                    </div>
-
-                </div>
-            `;
-
-        };
-
-
-    /* =====================================================
-       MY ORDERS
-    ===================================================== */
-
-    window.kngShowOrders =
-        async function () {
-
-            const panel =
-                kngAccountPanel();
-
-            const sb =
-                kngSupabaseClient();
-
-            const user =
-                await kngGetCurrentUser();
-
-            if (!panel || !user) {
-                return;
-            }
-
-
-            let orders = [];
-
-
-            try {
-
-                const result =
-                    await sb
-                        .from("orders")
-                        .select("*")
-                        .eq("user_id", user.id)
-                        .order(
-                            "created_at",
-                            {
-                                ascending: false
-                            }
-                        );
-
-                if (!result.error) {
-                    orders =
-                        result.data || [];
-                }
-
-            } catch (error) {
-
-                console.warn(
-                    "KNG orders could not be loaded:",
-                    error
-                );
-            }
-
-
-            panel.innerHTML = `
-
-                <button
-                    class="account-close"
-                    type="button"
-                    onclick="kngRenderCustomerDashboard()"
-                >X</button>
-
-                <div class="kng-simple-page">
-
-                    <p class="account-kicker">
-                        KNG / ORDERS
-                    </p>
-
-                    <h2>
-                        MY<br>
-                        <span>ORDERS.</span>
-                    </h2>
-
-                    ${
-                        orders.length
-                        ? orders.map(function (order) {
-
-                            const date =
-                                order.created_at
-                                    ? new Date(
-                                        order.created_at
-                                    ).toLocaleDateString(
-                                        "en-NG"
-                                    )
-                                    : "";
-
-                            return `
-                                <div class="kng-order-card">
-
-                                    <div>
-                                        <strong>
-                                            KNG ORDER
-                                        </strong>
-
-                                        <small>
-                                            ${kngEscape(date)}
-                                        </small>
-                                    </div>
-
-                                    <div>
-                                        <strong>
-                                            ${typeof money === "function"
-                                                ? money(order.total_amount)
-                                                : "\u20A6" + Number(order.total_amount || 0).toLocaleString("en-NG")}
-                                        </strong>
-
-                                        <small>
-                                            ${kngEscape(
-                                                String(
-                                                    order.status ||
-                                                    "pending"
-                                                ).toUpperCase()
-                                            )}
-                                        </small>
-                                    </div>
-
-                                </div>
-                            `;
-
-                        }).join("")
-                        : `
-                            <div class="kng-empty-state">
-                                <strong>NO ORDERS YET.</strong>
-                                <p>
-                                    Your KNG orders will appear here after checkout.
-                                </p>
-                            </div>
-                        `
-                    }
-
-                    <button
-                        type="button"
-                        class="account-secondary"
-                        onclick="kngRenderCustomerDashboard()"
-                    >
-                        BACK TO PROFILE
-                    </button>
-
-                </div>
-            `;
-        };
-
-
-    /* =====================================================
-       MEASUREMENTS
-    ===================================================== */
-
-    window.kngShowMeasurements =
-        async function () {
-
-            const panel =
-                kngAccountPanel();
-
-            const user =
-                await kngGetCurrentUser();
-
-            if (!panel || !user) {
-                return;
-            }
-
-            const profile =
-                await kngLoadCustomerProfile(
-                    user
-                );
-
-            const measurements =
-                profile.measurements || {};
-
-            panel.innerHTML = `
-
-                <button
-                    class="account-close"
-                    type="button"
-                    onclick="kngRenderCustomerDashboard()"
-                >X</button>
-
-                <div class="kng-simple-page">
-
-                    <p class="account-kicker">
-                        KNG / MEASUREMENTS
-                    </p>
-
-                    <h2>
-                        MY<br>
-                        <span>MEASUREMENTS.</span>
-                    </h2>
-
-                    <p class="kng-muted">
-                        Your saved custom measurements will appear here.
-                    </p>
-
-
-                    <div class="kng-measurements-list">
-
-                        ${
-                            Object.keys(measurements).length
-                            ? Object.entries(measurements)
-                                .map(function (entry) {
-
-                                    return `
-                                        <div class="kng-measurement-row">
-                                            <span>
-                                                ${kngEscape(
-                                                    entry[0]
-                                                )}
-                                            </span>
-
-                                            <strong>
-                                                ${kngEscape(
-                                                    entry[1]
-                                                )}
-                                            </strong>
-                                        </div>
-                                    `;
-
-                                })
-                                .join("")
-                            : `
-                                <div class="kng-empty-state">
-                                    <strong>
-                                        NO SAVED MEASUREMENTS.
-                                    </strong>
-
-                                    <p>
-                                        Custom measurements can be saved here
-                                        when you use KNG custom sizing.
-                                    </p>
-                                </div>
-                            `
-                        }
-
-                    </div>
-
-
-                    <button
-                        type="button"
-                        class="account-secondary"
-                        onclick="kngRenderCustomerDashboard()"
-                    >
-                        BACK TO PROFILE
-                    </button>
-
-                </div>
-            `;
-        };
-
-
-    /* =====================================================
-       WISHLIST
-    ===================================================== */
-
-    window.kngShowWishlist =
-        function () {
-
-            const panel =
-                kngAccountPanel();
-
-            if (!panel) {
-                return;
-            }
-
-
-            let wishlist = [];
-
-            try {
-
-                wishlist =
-                    JSON.parse(
-                        localStorage.getItem(
-                            "kngWishlist"
-                        ) || "[]"
-                    );
-
-            } catch (error) {
-
-                wishlist = [];
-            }
-
-
-            panel.innerHTML = `
-
-                <button
-                    class="account-close"
-                    type="button"
-                    onclick="kngRenderCustomerDashboard()"
-                >X</button>
-
-                <div class="kng-simple-page">
-
-                    <p class="account-kicker">
-                        KNG / SAVED
-                    </p>
-
-                    <h2>
-                        MY<br>
-                        <span>WISHLIST.</span>
-                    </h2>
-
-
-                    ${
-                        wishlist.length
-                        ? `
-                            <div class="kng-wishlist-list">
-
-                                ${wishlist.map(function (id) {
-
-                                    const product =
-                                        Array.isArray(
-                                            window.products
-                                        )
-                                            ? window.products.find(
-                                                function (p) {
-                                                    return p.id === id;
-                                                }
-                                            )
-                                            : null;
-
-                                    if (!product) {
-                                        return "";
-                                    }
-
-                                    return `
-                                        <div class="kng-wishlist-row">
-
-                                            <div>
-                                                <strong>
-                                                    ${kngEscape(
-                                                        product.name
-                                                    )}
-                                                </strong>
-
-                                                <small>
-                                                    ${typeof money === "function"
-                                                        ? money(product.price)
-                                                        : "\u20A6" + Number(product.price || 0).toLocaleString("en-NG")}
-                                                </small>
-                                            </div>
-
-                                            <button
-                                                type="button"
-                                                onclick="openProductModal('${kngEscape(product.id)}')"
-                                            >
-                                                VIEW
-                                            </button>
-
-                                        </div>
-                                    `;
-
-                                }).join("")}
-
-                            </div>
-                        `
-                        : `
-                            <div class="kng-empty-state">
-
-                                <strong>
-                                    YOUR WISHLIST IS EMPTY.
-                                </strong>
-
-                                <p>
-                                    Save KNG pieces you want to come back to.
-                                </p>
-
-                            </div>
-                        `
-                    }
-
-
-                    <button
-                        type="button"
-                        class="account-secondary"
-                        onclick="kngRenderCustomerDashboard()"
-                    >
-                        BACK TO PROFILE
-                    </button>
-
-                </div>
-            `;
-        };
-
-
-    /* =====================================================
-       SIGN OUT
-    ===================================================== */
-
-    window.kngCustomerSignOut =
-        async function () {
-
-            const sb =
-                kngSupabaseClient();
-
-            if (!sb) {
-                return;
-            }
-
-            try {
-
-                await sb.auth.signOut();
-
-                showToast(
-                    "SIGNED OUT"
-                );
-
-                closeAccount();
-
-                if (
-                    typeof updateKngAccountState ===
-                    "function"
-                ) {
-                    await updateKngAccountState();
-                }
-
-            } catch (error) {
-
-                console.error(
-                    "KNG sign out error:",
-                    error
-                );
-
-                alert(
-                    error.message ||
-                    "Unable to sign out."
-                );
-            }
-        };
-
-
-    /* =====================================================
-       SAVE ORIGINAL ACCOUNT HOME
-    ===================================================== */
-
-    if (
-        typeof window.showAccountHome ===
-        "function" &&
-        !window.kngOriginalShowAccountHome
-    ) {
-
-        window.kngOriginalShowAccountHome =
-            window.showAccountHome;
-    }
-
-
-    /* =====================================================
-       OVERRIDE ACCOUNT HOME
-    ===================================================== */
-
-    window.showAccountHome =
-        async function () {
-
-            const user =
-                await kngGetCurrentUser();
-
-            if (user) {
-
-                await kngRenderCustomerDashboard();
-
-                return;
-            }
-
-
-            /*
-             * If the customer is signed out,
-             * use the existing KNG account screen.
-             */
-
-            if (
-                typeof window.kngOriginalShowAccountHome ===
-                "function"
-            ) {
-
-                window.kngOriginalShowAccountHome();
-
-            }
-
-        };
-
-
-    /*
-     * Some versions of the Store call panel()
-     * directly, so replace the global account state
-     * update with one that understands signed-in users.
-     */
-
-    window.updateKngAccountState =
-        async function () {
-
-            try {
-
-                const user =
-                    await kngGetCurrentUser();
-
-                console.log(
-                    "KNG account state:",
-                    user
-                        ? user.email
-                        : "SIGNED OUT"
-                );
-
-            } catch (error) {
-
-                console.error(
-                    "KNG account state error:",
-                    error
-                );
-            }
-        };
-
-
-    /* =====================================================
-       ACCOUNT CSS
-    ===================================================== */
-
-    const style =
-        document.createElement("style");
-
-    style.id =
-        "kng-customer-profile-styles";
-
-    style.textContent = `
-
-        .kng-customer-dashboard {
-            width:100%;
-            max-width:900px;
-            margin:0 auto;
-        }
-
-        .kng-profile-hero {
-            display:grid;
-            grid-template-columns:190px 1fr;
-            gap:35px;
-            align-items:center;
-            padding:15px 0 40px;
-        }
-
-        .kng-profile-photo-wrap {
-            display:flex;
-            flex-direction:column;
-            align-items:center;
-            gap:10px;
-        }
-
-        .kng-profile-photo {
-            width:145px;
-            height:145px;
-            border-radius:50%;
-            overflow:hidden;
-            border:1px solid rgba(255,255,255,.18);
-            background:#111;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-        }
-
-        .kng-profile-avatar-image {
-            width:100%;
-            height:100%;
-            object-fit:cover;
-            display:block;
-        }
-
-        .kng-profile-avatar-fallback {
-            width:100%;
-            height:100%;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            font-size:55px;
-            font-weight:900;
-            letter-spacing:-3px;
-            color:#fff;
-            background:#151515;
-        }
-
-        .kng-photo-button,
-        .kng-remove-photo {
-            border:1px solid rgba(255,255,255,.18);
-            background:#111;
-            color:#fff;
-            padding:10px 13px;
-            font-size:10px;
-            letter-spacing:1.5px;
-            font-weight:800;
-            cursor:pointer;
-            text-align:center;
-        }
-
-        .kng-photo-button:hover,
-        .kng-remove-photo:hover {
-            border-color:var(--gold);
-        }
-
-        .kng-remove-photo {
-            color:#999;
-            background:transparent;
-        }
-
-        .kng-profile-heading h2 {
-            margin:10px 0 15px;
-            font-size:38px;
-            line-height:1;
-            letter-spacing:-1.5px;
-        }
-
-        .kng-profile-heading h2 span {
-            color:var(--gold);
-        }
-
-        .kng-profile-heading p {
-            color:#888;
-            line-height:1.7;
-            font-size:13px;
-        }
-
-        .kng-profile-section {
-            border-top:1px solid rgba(255,255,255,.1);
-            padding:30px 0;
-        }
-
-        .kng-section-heading {
-            display:flex;
-            align-items:center;
-            gap:12px;
-            margin-bottom:22px;
-        }
-
-        .kng-section-heading span {
-            color:var(--gold);
-            font-size:10px;
-            font-weight:800;
-        }
-
-        .kng-section-heading h3 {
-            margin:0;
-            font-size:12px;
-            letter-spacing:2px;
-        }
-
-        .kng-profile-grid {
-            display:grid;
-            grid-template-columns:1fr 1fr;
-            gap:18px;
-            margin-bottom:28px;
-        }
-
-        .kng-profile-full {
-            grid-column:1/-1;
-        }
-
-        .kng-profile-form label {
-            display:block;
-            color:#777;
-            font-size:9px;
-            letter-spacing:1.5px;
-            margin-bottom:8px;
-            font-weight:800;
-        }
-
-        .kng-profile-form input {
-            width:100%;
-            box-sizing:border-box;
-            padding:15px;
-            background:#0c0c0c;
-            color:#fff;
-            border:1px solid rgba(255,255,255,.12);
-            outline:none;
-            border-radius:4px;
-            font-size:13px;
-        }
-
-        .kng-profile-form input:focus {
-            border-color:var(--gold);
-        }
-
-        .kng-profile-form input:disabled {
-            color:#666;
-            cursor:not-allowed;
-        }
-
-        .kng-account-actions {
-            display:grid;
-            grid-template-columns:repeat(3,1fr);
-            gap:12px;
-        }
-
-        .kng-account-actions button {
-            min-height:65px;
-            border:1px solid rgba(255,255,255,.12);
-            background:#0d0d0d;
-            color:#fff;
-            cursor:pointer;
-            font-size:10px;
-            font-weight:800;
-            letter-spacing:1.5px;
-        }
-
-        .kng-account-actions button:hover {
-            border-color:var(--gold);
-        }
-
-        .kng-profile-footer {
-            border-top:1px solid rgba(255,255,255,.1);
-            padding-top:25px;
-        }
-
-        .kng-signout-button {
-            border:0;
-            background:none;
-            color:#777;
-            cursor:pointer;
-            font-size:10px;
-            font-weight:800;
-            letter-spacing:1.5px;
-            padding:10px 0;
-        }
-
-        .kng-signout-button:hover {
-            color:#fff;
-        }
-
-        .kng-simple-page {
-            width:100%;
-            max-width:800px;
-            margin:0 auto;
-        }
-
-        .kng-simple-page h2 {
-            font-size:42px;
-            line-height:.95;
-            margin:15px 0 30px;
-        }
-
-        .kng-simple-page h2 span {
-            color:var(--gold);
-        }
-
-        .kng-muted {
-            color:#777;
-            line-height:1.7;
-            font-size:13px;
-        }
-
-        .kng-order-card,
-        .kng-wishlist-row,
-        .kng-measurement-row {
-            border:1px solid rgba(255,255,255,.1);
-            background:#0b0b0b;
-            padding:18px;
-            margin-bottom:10px;
-        }
-
-        .kng-order-card,
-        .kng-wishlist-row,
-        .kng-measurement-row {
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            gap:20px;
-        }
-
-        .kng-order-card small,
-        .kng-wishlist-row small {
-            display:block;
-            color:#777;
-            margin-top:6px;
-            font-size:10px;
-        }
-
-        .kng-wishlist-row button {
-            border:1px solid rgba(255,255,255,.15);
-            background:none;
-            color:#fff;
-            padding:9px 14px;
-            cursor:pointer;
-            font-size:10px;
-            font-weight:800;
-        }
-
-        .kng-empty-state {
-            border:1px dashed rgba(255,255,255,.12);
-            padding:35px 20px;
-            text-align:center;
-            margin-bottom:25px;
-        }
-
-        .kng-empty-state strong {
-            font-size:12px;
-            letter-spacing:1.5px;
-        }
-
-        .kng-empty-state p {
-            color:#666;
-            font-size:12px;
-            line-height:1.7;
-            margin:10px 0 0;
-        }
-
-        .kng-measurement-row span {
-            color:#888;
-            text-transform:capitalize;
-        }
-
-        .kng-measurement-row strong {
-            color:#fff;
-        }
-
-        @media(max-width:650px) {
-
-            .kng-profile-hero {
-                grid-template-columns:1fr;
-                text-align:center;
-            }
-
-            .kng-profile-photo-wrap {
-                margin:auto;
-            }
-
-            .kng-profile-grid {
-                grid-template-columns:1fr;
-            }
-
-            .kng-profile-full {
-                grid-column:auto;
-            }
-
-            .kng-account-actions {
-                grid-template-columns:1fr;
-            }
-
-            .kng-profile-heading h2 {
-                font-size:32px;
-            }
-
-            .kng-simple-page h2 {
-                font-size:35px;
-            }
-
-        }
-
-    `;
-
-    document.head.appendChild(style);
-
-
-    /* =====================================================
-       WHEN ACCOUNT ICON IS OPENED
-    ===================================================== */
-
-    document.addEventListener(
-        "click",
-        function (event) {
-
-            const accountButton =
-                event.target.closest(
-                    '[onclick*="openAccount"]'
-                );
-
-            if (!accountButton) {
-                return;
-            }
-
-            /*
-             * Give the existing openAccount()
-             * time to open the modal, then show
-             * the proper dashboard if already signed in.
-             */
-
-            setTimeout(
-                async function () {
-
-                    const user =
-                        await kngGetCurrentUser();
-
-                    if (user) {
-                        await kngRenderCustomerDashboard();
-                    }
-
-                },
-                80
-            );
-
-        }
-    );
-
-
-})();
+function openSearch(){document.getElementById("searchModal").classList.add("open");lockBody();setTimeout(()=>document.getElementById("globalSearch").focus(),100)}function closeSearch(){document.getElementById("searchModal").classList.remove("open");unlockBodyIfClear()}function closeSearchOnBackdrop(e){if(e.target.id==="searchModal")closeSearch()}function globalSearchProducts(){const q=document.getElementById("globalSearch").value.toLowerCase().trim(),r=document.getElementById("globalResults");if(!q)return r.innerHTML="";const m=PRODUCTS.filter(p=>(p.name+" "+p.category+" "+p.gender+" "+p.section).toLowerCase().includes(q));r.innerHTML=m.length?m.map(p=>`<div style="padding:15px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;gap:15px;align-items:center"><div><strong>${esc(p.name)}</strong><div style="color:#999;font-size:11px;margin-top:5px">${money(p.price)}</div></div><button class="btn" style="min-height:40px;padding:0 15px" onclick="closeSearch();openWardrobe('${p.gender}');setTimeout(()=>openProductModal('${p.id}'),100)">VIEW</button></div>`).join(""):'<p style="color:#777">No KNG pieces found.</p>'}
+
+/* ACCOUNT + OTP */
+function openAccount(){document.getElementById("accountModal").classList.add("active");lockBody();renderAccountHome()}function closeAccount(){document.getElementById("accountModal").classList.remove("active");unlockBodyIfClear()}function panel(){return document.getElementById("accountPanel")}
+async function renderAccountHome(){const {data}=await kngSupabase.auth.getUser();if(data?.user)return renderDashboard(data.user);panel().innerHTML=`<button class="account-close" onclick="closeAccount()">X</button><div class="account-logo">KNG<span>.</span></div><p class="account-kicker">THE INNER CIRCLE</p><h2>YOUR KNG<br><span>ACCOUNT.</span></h2><p class="account-description">Sign in to track orders, save your details and stay connected to every new standard.</p><div class="account-buttons"><button class="account-primary" onclick="showSignIn()">SIGN IN</button><button class="account-secondary" onclick="showCreateAccount()">CREATE ACCOUNT</button></div><p class="account-note">Your KNG account is completely free.</p>`}
+function togglePassword(id,b){const i=document.getElementById(id);i.type=i.type==="password"?"text":"password";b.textContent=i.type==="password"?"SHOW":"HIDE"}
+function showSignIn(){panel().innerHTML=`<button class="account-close" onclick="closeAccount()">X</button><div class="account-logo">KNG<span>.</span></div><p class="account-kicker">WELCOME BACK</p><h2>SIGN<br><span>IN.</span></h2><form class="account-form" onsubmit="handleSignIn(event)"><label>Email Address</label><input id="signInEmail" type="email" autocomplete="email" required><label>Password</label><div class="password-wrap"><input id="signInPassword" type="password" autocomplete="current-password" required><button type="button" class="password-toggle" onclick="togglePassword('signInPassword',this)">SHOW</button></div><button class="account-primary" type="submit">SIGN IN</button></form><button class="account-link" onclick="showCreateAccount()">Don't have an account? <span>CREATE ONE</span></button>`}
+async function handleSignIn(e){e.preventDefault();const b=e.submitter;b.disabled=true;b.textContent="SIGNING IN...";try{const {data,error}=await kngSupabase.auth.signInWithPassword({email:document.getElementById("signInEmail").value.trim(),password:document.getElementById("signInPassword").value});if(error)throw error;showToast("WELCOME BACK.");renderAccountHome()}catch(err){alert(err.message||"Unable to sign in.")}finally{b.disabled=false;b.textContent="SIGN IN"}}
+function showCreateAccount(){panel().innerHTML=`<button class="account-close" onclick="closeAccount()">X</button><div class="account-logo">KNG<span>.</span></div><p class="account-kicker">JOIN THE INNER CIRCLE</p><h2>CREATE<br><span>ACCOUNT.</span></h2><form class="account-form" onsubmit="handleCreateAccount(event)"><label>Full Name</label><input id="createName" required><label>Email Address</label><input id="createEmail" type="email" required><label>Phone Number</label><input id="createPhone" type="tel" required><label>WhatsApp Number</label><input id="createWhatsapp" type="tel" required><label>Password</label><div class="password-wrap"><input id="createPassword" type="password" minlength="8" required><button type="button" class="password-toggle" onclick="togglePassword('createPassword',this)">SHOW</button></div><button class="account-primary" type="submit">CREATE ACCOUNT</button></form><button class="account-link" onclick="showSignIn()">Already have an account? <span>SIGN IN</span></button>`}
+async function handleCreateAccount(e){e.preventDefault();const name=document.getElementById("createName").value.trim(),email=document.getElementById("createEmail").value.trim(),phone=document.getElementById("createPhone").value.trim(),whatsapp=document.getElementById("createWhatsapp").value.trim(),password=document.getElementById("createPassword").value;if(password.length<8)return void alert("Password must be at least 8 characters.");const b=e.submitter;b.disabled=true;b.textContent="CREATING ACCOUNT...";pendingOtpEmail=email;try{const {data,error}=await kngSupabase.auth.signUp({email,password,options:{data:{full_name:name,phone_number:phone,whatsapp_number:whatsapp}}});if(error)throw error;if(data?.session){showToast("ACCOUNT CREATED.");renderAccountHome()}else{showOtp(email)}}catch(err){alert(err.message||"Unable to create account.")}finally{b.disabled=false;b.textContent="CREATE ACCOUNT"}}
+function showOtp(email){panel().innerHTML=`<button class="account-close" onclick="showSignIn()">X</button><div class="account-logo">KNG<span>.</span></div><p class="account-kicker">SECURITY CHECK</p><h2>VERIFY<br><span>YOUR EMAIL.</span></h2><p class="otp-message">We sent a verification code to <strong>${esc(email)}</strong></p><label style="display:block;color:#999;font-size:10px;letter-spacing:2px;margin-bottom:7px">VERIFICATION CODE</label><input class="otp-input" id="otpCode" maxlength="6" inputmode="numeric" autocomplete="one-time-code" placeholder="000000"><div id="otpError" class="otp-error"></div><button class="account-primary" onclick="verifyOtp()">VERIFY CODE</button><button class="account-link" onclick="resendOtp()">Didn't receive it? <span>RESEND</span></button>`}
+async function verifyOtp(){const token=document.getElementById("otpCode").value.trim(),err=document.getElementById("otpError");if(!/^\d{6}$/.test(token))return void(err.textContent="Enter the 6-digit code.");try{const {data,error}=await kngSupabase.auth.verifyOtp({email:pendingOtpEmail,token,type:"signup"});if(error)throw error;showToast("EMAIL VERIFIED.");renderAccountHome()}catch(e){err.textContent=e.message||"Invalid verification code."}}
+async function resendOtp(){try{const {error}=await kngSupabase.auth.resend({type:"signup",email:pendingOtpEmail});if(error)throw error;showToast("NEW CODE SENT.")}catch(e){alert(e.message||"Unable to resend code.")}}
+async function renderDashboard(user){const m=user.user_metadata||{},name=m.full_name||user.email?.split("@")[0]||"KNG CUSTOMER",initial=(name.trim()[0]||"K").toUpperCase();panel().innerHTML=`<button class="account-close" onclick="closeAccount()">X</button><div class="dashboard-hero"><div class="avatar">${esc(initial)}</div><div><p class="account-kicker">THE INNER CIRCLE</p><h2>WELCOME, <span>${esc(name.split(" ")[0]).toUpperCase()}.</span></h2><p>Manage your KNG account, delivery information and saved measurements.</p></div></div><div class="dashboard-grid"><div class="dashboard-card"><button onclick="showProfile()">PROFILE</button></div><div class="dashboard-card"><button onclick="showMeasurements()">MEASUREMENTS</button></div><div class="dashboard-card"><button onclick="showOrders()">MY ORDERS</button></div><div class="dashboard-card"><button onclick="showWishlist()">WISHLIST</button></div><div class="dashboard-card"><button onclick="openCart();closeAccount()">CART</button></div><div class="dashboard-card"><button onclick="signOutKng()">SIGN OUT</button></div></div>`}
+async function showProfile(){const {data}=await kngSupabase.auth.getUser(),u=data?.user,m=u?.user_metadata||{};panel().innerHTML=`<button class="account-close" onclick="renderAccountHome()">X</button><p class="account-kicker">KNG / PROFILE</p><h2>YOUR<br><span>DETAILS.</span></h2><form class="profile-form" onsubmit="saveProfile(event)"><div class="full"><label>Full Name</label><input id="profileName" value="${esc(m.full_name||"")}" required></div><div><label>Email</label><input value="${esc(u?.email||"")}" disabled></div><div><label>Phone</label><input id="profilePhone" value="${esc(m.phone_number||"")}" required></div><div class="full"><label>WhatsApp</label><input id="profileWhatsapp" value="${esc(m.whatsapp_number||"")}" required></div><div class="full"><label>Delivery Address</label><textarea id="profileAddress" rows="3">${esc(m.address_line||"")}</textarea></div><div><label>City</label><input id="profileCity" value="${esc(m.city||"")}"></div><div><label>State</label><input id="profileState" value="${esc(m.state||"")}"></div><div class="full"><button class="account-primary" type="submit">SAVE CHANGES</button></div></form><button class="account-link" onclick="renderAccountHome()">BACK TO ACCOUNT</button>`}
+async function saveProfile(e){e.preventDefault();try{const {error}=await kngSupabase.auth.updateUser({data:{full_name:document.getElementById("profileName").value,phone_number:document.getElementById("profilePhone").value,whatsapp_number:document.getElementById("profileWhatsapp").value,address_line:document.getElementById("profileAddress").value,city:document.getElementById("profileCity").value,state:document.getElementById("profileState").value}});if(error)throw error;showToast("PROFILE SAVED.");renderAccountHome()}catch(err){alert(err.message||"Unable to save profile.")}}
+function showMeasurements(){panel().innerHTML=`<button class="account-close" onclick="renderAccountHome()">X</button><p class="account-kicker">KNG / MEASUREMENTS</p><h2>MY<br><span>MEASUREMENTS.</span></h2><p class="account-description">Open a KNG piece to view the complete upper-body and lower-body size guide or save a custom fit.</p><button class="account-primary" onclick="renderAccountHome();goToCollections()">BROWSE KNG PIECES</button><button class="account-link" onclick="renderAccountHome()">BACK TO ACCOUNT</button>`}
+function showOrders(){const o=JSON.parse(localStorage.getItem("kngLastOrder")||"null");panel().innerHTML=`<button class="account-close" onclick="renderAccountHome()">X</button><div class="simple-page"><p class="account-kicker">KNG / ORDERS</p><h2>MY<br><span>ORDERS.</span></h2>${o?`<div class="simple-card"><strong>LOCAL ORDER RECORD</strong><small>${new Date(o.createdAt).toLocaleString()}</small><small>Dispatch: ${esc(o.dispatchDisplay)}</small><small>Total: ${esc(o.totalDisplay||money(o.total||0))}</small></div>`:`<div class="simple-card" style="color:#777">No local order history yet.</div>`}<button class="account-secondary" onclick="renderAccountHome()">BACK TO PROFILE</button></div>`}
+function showWishlist(){panel().innerHTML=`<button class="account-close" onclick="renderAccountHome()">X</button><div class="simple-page"><p class="account-kicker">KNG / SAVED</p><h2>MY<br><span>WISHLIST.</span></h2><div class="simple-card" style="color:#777">Wishlist functionality can be connected to Supabase next.</div><button class="account-secondary" onclick="renderAccountHome()">BACK TO PROFILE</button></div>`}
+async function signOutKng(){kngStopInactivityTimer();await kngSupabase.auth.signOut();showToast("SIGNED OUT.");renderAccountHome()}
+
+/* MOBILE + INIT */
+function toggleMobileMenu(){const n=document.getElementById("navLinks");if(window.innerWidth>1050)return;const open=n.style.display==="flex";n.style.display=open?"":"flex";if(!open){n.style.position="absolute";n.style.top="88px";n.style.left="0";n.style.right="0";n.style.background="#050505";n.style.padding="22px";n.style.flexDirection="column";n.style.alignItems="flex-start";n.style.gap="22px"}}
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeProductModal();closeSearch();closeCart();closeAccount()}});
+updateCartUI();createFilters();renderProducts();
 </script>
 </body>
 </html>
