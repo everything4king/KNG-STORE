@@ -409,7 +409,46 @@
     .pill.active {
       color: #7ee787;
     }
+/* =========================
+   STAFF ONLINE STATUS
+========================= */
 
+.staff-online-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-left: 8px;
+  padding: 5px 9px;
+  border-radius: 20px;
+  background: #222;
+  font-size: 11px;
+}
+
+.staff-online-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #777;
+  display: inline-block;
+}
+
+.staff-online-status.online {
+  color: #7ee787;
+}
+
+.staff-online-status.online .staff-online-dot {
+  background: #2ecc71;
+  box-shadow: 0 0 8px rgba(46, 204, 113, .7);
+}
+
+.staff-online-status.offline {
+  color: #ff7777;
+}
+
+.staff-online-status.offline .staff-online-dot {
+  background: #ff4d4d;
+  box-shadow: 0 0 8px rgba(255, 77, 77, .45);
+}
     .empty {
       padding: 35px;
       text-align: center;
@@ -1028,6 +1067,62 @@ let currentUser = null;
 let currentStaff = null;
 let pendingLoginEmail = "";
 
+/* =========================
+   KNG REAL-TIME PRESENCE
+========================= */
+
+let kngPresenceChannel = null;
+let onlineStaffIds = new Set();
+
+function startStaffPresence() {
+  if (!currentUser) return;
+
+  stopStaffPresence();
+
+  kngPresenceChannel = kngSupabase.channel(
+    "kng-dashboard-presence",
+    {
+      config: {
+        presence: {
+          key: currentUser.id
+        }
+      }
+    }
+  );
+
+  kngPresenceChannel
+    .on(
+      "presence",
+      { event: "sync" },
+      function() {
+        const state = kngPresenceChannel.presenceState();
+
+        onlineStaffIds = new Set(
+          Object.keys(state)
+        );
+
+        loadStaff();
+      }
+    )
+    .subscribe(async function(status) {
+      if (status === "SUBSCRIBED") {
+        await kngPresenceChannel.track({
+          user_id: currentUser.id,
+          online_at: new Date().toISOString()
+        });
+      }
+    });
+}
+
+function stopStaffPresence() {
+  if (kngPresenceChannel) {
+    kngSupabase.removeChannel(kngPresenceChannel);
+    kngPresenceChannel = null;
+  }
+
+  onlineStaffIds = new Set();
+}
+
 
 /* ============================================================
    ELEMENTS
@@ -1339,6 +1434,7 @@ async function checkStaffAccess(options = {}) {
 
     currentStaff = data;
 
+    startStaffPresence();
     /*
        If the dashboard was already opened for speed, keep it open.
        Otherwise (for an existing session / page refresh), open it now.
@@ -1605,13 +1701,18 @@ async function loadStaff() {
 
             <p>${escapeHTML(member.user_id || "")}</p>
 
-            <span class="role">
-              ${escapeHTML(String(member.role || "staff").toLowerCase() === "admin" ? "OWNER / ADMIN" : String(member.role || "staff").toUpperCase())}
-            </span>
+        <span class="role">
+  ${escapeHTML(
+    String(member.role || "staff").toLowerCase() === "admin"
+      ? "OWNER / ADMIN"
+      : String(member.role || "staff").toUpperCase()
+  )}
+</span>
 
-            <span class="pill ${member.active ? "active" : ""}">
-              ${member.active ? "Active" : "Inactive"}
-            </span>
+<span class="staff-online-status ${onlineStaffIds.has(member.user_id) ? "online" : "offline"}">
+  <span class="staff-online-dot"></span>
+  ${onlineStaffIds.has(member.user_id) ? "Online" : "Offline"}
+</span>
           </div>
         `;
 
@@ -1639,9 +1740,10 @@ async function loadStaff() {
                 ${escapeHTML(String(member.role || "staff").toLowerCase() === "admin" ? "OWNER / ADMIN" : String(member.role || "staff").toUpperCase())}
               </span>
 
-              <span class="pill ${member.active ? "active" : ""}">
-                ${member.active ? "Active" : "Inactive"}
-              </span>
+              <span class="staff-online-status ${onlineStaffIds.has(member.user_id) ? "online" : "offline"}">
+  <span class="staff-online-dot"></span>
+  ${onlineStaffIds.has(member.user_id) ? "Online" : "Offline"}
+</span>
 
             </div>
           `;
@@ -2198,7 +2300,8 @@ document
 
     clearInactivityTimers();
     hideInactivityWarning();
-
+stopStaffPresence();
+    
     await kngSupabase.auth.signOut();
 
     currentUser = null;
