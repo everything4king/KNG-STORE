@@ -2257,6 +2257,7 @@ async function autoLogoutForInactivity() {
   dashboardOpening = false;
 
   try {
+    stopStaffPresence();
     await kngSupabase.auth.signOut();
   } catch (error) {
     console.error("KNG inactivity sign-out error:", error);
@@ -2272,7 +2273,10 @@ stayLoggedInBtn.addEventListener("click", function() {
   startInactivityTimer();
 });
 
-logoutNowBtn.addEventListener("click", autoLogoutForInactivity);
+llogoutNowBtn.addEventListener("click", async function() {
+    stopStaffPresence();
+    await autoLogoutForInactivity();
+});
 
 ["pointerdown", "keydown", "scroll", "touchstart"].forEach(function(eventName) {
   window.addEventListener(eventName, recordActivity, { passive: true });
