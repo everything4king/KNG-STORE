@@ -2265,16 +2265,19 @@ async function autoLogoutForInactivity() {
   }
 }
 
-stayLoggedInBtn.addEventListener("click", function() {
-  hideInactivityWarning();
-  startInactivityTimer();
-});
+if (stayLoggedInBtn) {
+    stayLoggedInBtn.addEventListener("click", function() {
+        hideInactivityWarning();
+        startInactivityTimer();
+    });
+}
 
-llogoutNowBtn.addEventListener("click", async function() {
-    stopStaffPresence();
-    await autoLogoutForInactivity();
-});
-
+if (logoutNowBtn) {
+    logoutNowBtn.addEventListener("click", async function() {
+        stopStaffPresence();
+        await autoLogoutForInactivity();
+    });
+}
 ["pointerdown", "keydown", "scroll", "touchstart"].forEach(function(eventName) {
   window.addEventListener(eventName, recordActivity, { passive: true });
 });
