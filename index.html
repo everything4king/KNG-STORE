@@ -327,6 +327,8 @@ footer{border-top:1px solid var(--border);padding:55px 35px;background:#060606}
   .product-art{height:260px}
 }
 </style>
+
+  <script src="https://js.paystack.co/v2/inline.js"></script>
 </head>
 
 <body>
@@ -1422,40 +1424,221 @@ async function fillCheckoutFromAccount(){
   }
 }
 
-$("checkoutForm").addEventListener("submit",e=>{
+$("checkoutForm").addEventListener("submit",async e=>{
   e.preventDefault();
+
+  if(!cart.length){
+    showToast("YOUR CART IS EMPTY.");
+    return;
+  }
 
   if(!selectedDispatch){
     showToast("PLEASE SELECT YOUR DELIVERY ZONE.");
     return;
   }
 
-  const order={
-    items:cart,
-    customer:{
-      firstName:$("firstName").value,
-      lastName:$("lastName").value,
-      email:$("email").value,
-      phone:$("phone").value,
-      address:$("address").value,
-      state:$("state").value
-    },
-    dispatch:selectedDispatch,
-    dispatchDisplay:getDispatchDisplay(),
-    subtotal:getCartSubtotal(),
-    totalDisplay:money(getCartSubtotal())+" + "+getDispatchDisplay(),
-    createdAt:new Date().toISOString()
-  };
+  const {data:{session}}=await kngSupabase.auth.getSession();
 
-  localStorage.setItem("kngLastOrder",JSON.stringify(order));
+  if(!session){
+    showToast("PLEASE SIGN IN AGAIN BEFORE PAYMENT.");
+    return;
+  }
 
-  alert(
-    "KNG ORDER\\n\\n"+
-    "Your order information has been collected successfully.\\n\\n"+
-    "Dispatch: "+$("checkoutDelivery").textContent+"\\n"+
-    "Total: "+$("checkoutTotal").textContent+"\\n\\n"+
-    "Payment gateway will be connected next."
-  );
+  const firstName=$("firstName").value.trim();
+  const lastName=$("lastName").value.trim();
+  const email=$("email").value.trim();
+  const phone=$("phone").value.trim();
+  const address=$("address").value.trim();
+  const state=$("state").value;
+  const paymentMethod=$("paymentMethod").value;
+
+  const subtotal=getCartSubtotal();
+  const delivery=getDispatchCharge();
+  const total=subtotal+delivery;
+
+  const button=document.querySelector("#checkoutForm .checkout-button");
+
+  if(button){
+    button.disabled=true;
+    button.textContent="CONNECTING TO PAYMENT...";
+  }
+
+  try{
+
+    const response=await fetch(
+      "https://fnpmsbjcfyhxxmuducba.supabase.co/functions/v1/kng-paystack",
+      {
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json",
+          "Authorization":`Bearer ${session.access_token}`,
+          "apikey":KNG_SUPABASE_PUBLISHABLE_KEY
+        },
+        body:JSON.stringify({
+          action:"initialize",
+          email:email,
+          amount:total,
+          paymentMethod:paymentMethod,
+          customer:{
+            firstName:firstName,
+            lastName:lastName,
+            phone:phone,
+            address:address,
+            state:state
+          },
+          items:cart
+        })
+      }
+    );
+
+    const data=await response.json();
+
+    if(!response.ok || !data.success){
+      throw new Error(
+        data.error ||
+        data.message ||
+        "Unable to initialize payment."
+      );
+    }
+
+    if(!data.access_code){
+      throw new Error("Paystack did not return an access code.");
+    }
+
+    const popup=new PaystackPop();
+
+    popup.resumeTransaction(
+      data.access_code,
+      {
+        onSuccess:async transaction=>{
+
+          showToast("PAYMENT RECEIVED. VERIFYING...");
+
+          try{
+
+            const verifyResponse=await fetch(
+              "https://fnpmsbjcfyhxxmuducba.supabase.co/functions/v1/kng-paystack",
+              {
+                method:"POST",
+                headers:{
+                  "Content-Type":"application/json",
+                  "Authorization":`Bearer ${session.access_token}`,
+                  "apikey":KNG_SUPABASE_PUBLISHABLE_KEY
+                },
+                body:JSON.stringify({
+                  action:"verify",
+                  reference:transaction.reference
+                })
+              }
+            );
+
+            const verifyData=await verifyResponse.json();
+
+            if(!verifyResponse.ok || !verifyData.success){
+              throw new Error(
+                verifyData.error ||
+                verifyData.message ||
+                "Payment verification failed."
+              );
+            }
+
+            localStorage.setItem(
+              "kngLastOrder",
+              JSON.stringify({
+                orderId:verifyData.order_id,
+                orderNumber:verifyData.order_number,
+                customer:{
+                  firstName,
+                  lastName,
+                  email,
+                  phone,
+                  address,
+                  state
+                },
+                dispatch:selectedDispatch,
+                subtotal:subtotal,
+                delivery:delivery,
+                total:total,
+                paymentStatus:"paid",
+                createdAt:new Date().toISOString()
+              })
+            );
+
+            cart=[];
+            saveCart();
+            updateCartUI();
+
+            selectedDispatch=null;
+
+            if(button){
+              button.disabled=false;
+              button.textContent="PROCEED TO PAYMENT";
+            }
+
+            alert(
+              "KNG ORDER CONFIRMED\n\n"+
+              "Payment successful.\n\n"+
+              "Order Number: "+
+              verifyData.order_number+
+              "\n\n"+
+              "Your order has been received by KNG."
+            );
+
+          }catch(error){
+
+            console.error("KNG PAYMENT VERIFICATION ERROR:",error);
+
+            if(button){
+              button.disabled=false;
+              button.textContent="PROCEED TO PAYMENT";
+            }
+
+            showToast(
+              "PAYMENT WAS RECEIVED BUT VERIFICATION FAILED. PLEASE CONTACT KNG."
+            );
+          }
+        },
+
+        onCancel:()=>{
+          if(button){
+            button.disabled=false;
+            button.textContent="PROCEED TO PAYMENT";
+          }
+
+          showToast("PAYMENT CANCELLED.");
+        },
+
+        onError:error=>{
+
+          console.error("PAYSTACK ERROR:",error);
+
+          if(button){
+            button.disabled=false;
+            button.textContent="PROCEED TO PAYMENT";
+          }
+
+          showToast(
+            error?.message ||
+            "PAYMENT COULD NOT BE COMPLETED."
+          );
+        }
+      }
+    );
+
+  }catch(error){
+
+    console.error("KNG PAYMENT ERROR:",error);
+
+    if(button){
+      button.disabled=false;
+      button.textContent="PROCEED TO PAYMENT";
+    }
+
+    showToast(
+      error.message ||
+      "PAYMENT COULD NOT BE STARTED."
+    );
+  }
 });
 
 /* SEARCH */
