@@ -1037,6 +1037,17 @@
 </div>
 
 
+<div id="inactivityWarning" aria-hidden="true">
+  <div class="inactivity-card">
+    <h2>Still there?</h2>
+    <p>You have been inactive. You will be logged out in <strong id="inactivityCountdown">60</strong> seconds.</p>
+    <div class="inactivity-actions">
+      <button type="button" class="primary-btn" id="stayLoggedInBtn">STAY LOGGED IN</button>
+      <button type="button" class="secondary-btn" id="logoutNowBtn">LOG OUT</button>
+    </div>
+  </div>
+</div>
+
 <script>
 
 /* ============================================================
@@ -1282,12 +1293,7 @@ async function verifyLoginOtp() {
        If the account is not an active admin/manager, the dashboard is
        closed and the user is signed out.
     */
-    dashboardOpening = true;
-    showDashboard();
-
-    checkStaffAccess({ dashboardAlreadyShown: true }).catch(function(error) {
-      console.error("KNG background staff access error:", error);
-    });
+    await checkStaffAccess({ dashboardAlreadyShown: false });
 
   } catch (error) {
     console.error("KNG OTP verification error:", error);
@@ -2349,13 +2355,9 @@ async function initializeDashboard() {
 
     currentUser = session.user;
 
-    /* Existing valid sessions should also open immediately. */
-    dashboardOpening = true;
-    showDashboard();
-
-    checkStaffAccess({ dashboardAlreadyShown: true }).catch(function(error) {
-      console.error("KNG initial staff access error:", error);
-    });
+    /* Existing sessions must still pass the staff authorization check
+       before the dashboard is shown. */
+    await checkStaffAccess({ dashboardAlreadyShown: false });
 
   } else {
 
@@ -2371,17 +2373,6 @@ initializeDashboard();
 </script>
 
 
-
-<div id="inactivityWarning" aria-hidden="true">
-  <div class="inactivity-card">
-    <h2>Still there?</h2>
-    <p>You have been inactive. You will be logged out in <strong id="inactivityCountdown">60</strong> seconds.</p>
-    <div class="inactivity-actions">
-      <button type="button" class="primary-btn" id="stayLoggedInBtn">STAY LOGGED IN</button>
-      <button type="button" class="secondary-btn" id="logoutNowBtn">LOG OUT</button>
-    </div>
-  </div>
-</div>
 
 </body>
 </html>
