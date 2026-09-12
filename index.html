@@ -2161,29 +2161,146 @@ async function kngCurrentUser(){
 }
 
 async function kngUploadProfilePicture(input){
-  const file=input?.files?.[0];
+
+  const file=input.files?.[0];
+
   if(!file)return;
-  if(!file.type.startsWith("image/")){alert("Please choose an image file.");input.value="";return;}
-  if(file.size>2*1024*1024){alert("Profile pictures must be 2 MB or smaller.");input.value="";return;}
-  const user=await kngCurrentUser();
-  if(!user){alert("Please sign in first.");return;}
+
+  if(!file.type.startsWith("image/")){
+    alert("Please choose an image file.");
+    input.value="";
+    return;
+  }
+
+  if(file.size>2*1024*1024){
+    alert("Profile pictures must be 2 MB or smaller.");
+    input.value="";
+    return;
+  }
+
   try{
-    const ext=(file.name.split(".").pop()||"jpg").toLowerCase();
-    const path=`${user.id}/avatar-${Date.now()}.${ext}`;
-    const old=await kngSupabase.storage.from(KNG_PROFILE_BUCKET).list(user.id);
-    if(old.data?.length){
-      await kngSupabase.storage.from(KNG_PROFILE_BUCKET).remove(old.data.filter(x=>x.name).map(x=>`${user.id}/${x.name}`));
+
+    const {data:{user},error:userError}=await kngSupabase.auth.getUser();
+
+    if(userError)throw userError;
+
+    if(!user){
+      alert("Please sign in first.");
+      return;
     }
-    const up=await kngSupabase.storage.from(KNG_PROFILE_BUCKET).upload(path,file,{cacheControl:"3600",upsert:false,contentType:file.type});
+
+    const ext=(file.name.split(".").pop()||"jpg").toLowerCase();
+
+    const path=`${user.id}/avatar-${Date.now()}.${ext}`;
+
+    // Remove previous profile pictures
+    const old=await kngSupabase
+      .storage
+      .from(KNG_PROFILE_BUCKET)
+      .list(user.id);
+
+    if(old.data?.length){
+
+      await kngSupabase
+        .storage
+        .from(KNG_PROFILE_BUCKET)
+        .remove(
+          old.data
+            .filter(x=>x.name)
+            .map(x=>`${user.id}/${x.name}`)
+        );
+
+    }
+
+    // Upload new picture
+    const up=await kngSupabase
+      .storage
+      .from(KNG_PROFILE_BUCKET)
+      .upload(
+        path,
+        file,
+        {
+          cacheControl:"3600",
+          upsert:false,
+          contentType:file.type
+        }
+      );
+
     if(up.error)throw up.error;
-    const {data:{publicUrl}}=kngSupabase.storage.from(KNG_PROFILE_BUCKET).getPublicUrl(path);
-    if(!publicUrl)throw new Error("Unable to create profile picture URL.");
-    const auth=await kngSupabase.auth.updateUser({data:{profile_picture_url:publicUrl}});
-    if(auth.error)throw auth.error;
+
+    // Get public URL
+    const {data:{publicUrl}}=kngSupabase
+      .storage
+      .from(KNG_PROFILE_BUCKET)
+      .getPublicUrl(path);
+
+    if(!publicUrl){
+      throw new Error("Unable to create profile picture URL.");
+    }
+
+    // Get existing customer profile
+    const {data:existingProfile,error:profileError}=await kngSupabase
+      .from("customer_profiles")
+      .select("id,full_name,phone,email,address,whatsapp_number")
+      .eq("id",user.id)
+      .maybeSingle();
+
+    if(profileError)throw profileError;
+
+    // If profile already exists, only update the picture URL
+    if(existingProfile){
+
+      const {error:updateError}=await kngSupabase
+        .from("customer_profiles")
+        .update({
+          profile_picture_url:publicUrl
+        })
+        .eq("id",user.id);
+
+      if(updateError)throw updateError;
+
+    }else{
+
+      // Create profile if one does not exist yet
+      const metadata=user.user_metadata||{};
+
+      const {error:insertError}=await kngSupabase
+        .from("customer_profiles")
+        .insert({
+          id:user.id,
+          full_name:metadata.full_name || user.email?.split("@")[0] || "KNG CUSTOMER",
+          phone:metadata.phone_number || null,
+          email:user.email || null,
+          address:metadata.address_line || null,
+          whatsapp_number:metadata.whatsapp_number || null,
+          profile_picture_url:publicUrl
+        });
+
+      if(insertError)throw insertError;
+    }
+
+    // Keep Auth metadata synchronized too
+    const {error:authError}=await kngSupabase.auth.updateUser({
+      data:{
+        profile_picture_url:publicUrl
+      }
+    });
+
+    if(authError)throw authError;
+
     showToast("PROFILE PICTURE UPDATED.");
     await renderAccountHome();
-  }catch(e){console.error(e);alert(e.message||"Unable to upload your profile picture.");}
-  finally{input.value="";}
+
+  }catch(e){
+
+    console.error(e);
+    alert(e.message || "Unable to upload your profile picture.");
+
+  }finally{
+
+    input.value="";
+
+  }
 }
 
 async function kngRemoveProfilePicture(){
@@ -2254,57 +2371,72 @@ async function showProfile(){
   e.preventDefault();
 
   try{
-    const { data: userData, error: userError } =
-      await kngSupabase.auth.getUser();
+    const {data:{user},error:userError}=await kngSupabase.auth.getUser();
 
     if(userError) throw userError;
-
-    const user = userData?.user;
-
     if(!user){
-      alert("Please sign in again.");
+      alert("Please sign in first.");
       return;
     }
 
-    const fullName = $("profileName").value.trim();
-    const phone = $("profilePhone").value.trim();
-    const whatsapp = $("profileWhatsapp").value.trim();
-    const address = $("profileAddress").value.trim();
+    const fullName=$("#profileName").value.trim();
+    const phone=$("#profilePhone").value.trim();
+    const whatsapp=$("#profileWhatsapp").value.trim();
+    const address=$("#profileAddress").value.trim();
 
-    /* SAVE TO SUPABASE AUTH METADATA */
-    const { error: authError } =
-      await kngSupabase.auth.updateUser({
-        data:{
-          full_name: fullName,
-          phone_number: phone,
-          whatsapp_number: whatsapp,
-          address_line: address
-        }
-      });
+    if(!fullName){
+      alert("Please enter your full name.");
+      return;
+    }
+
+    if(!phone){
+      alert("Please enter your phone number.");
+      return;
+    }
+
+    if(!whatsapp){
+      alert("Please enter your WhatsApp number.");
+      return;
+    }
+
+    if(!address){
+      alert("Please enter your delivery address.");
+      return;
+    }
+
+    const profileData={
+      id:user.id,
+      full_name:fullName,
+      phone:phone,
+      email:user.email || null,
+      address:address,
+      whatsapp_number:whatsapp
+    };
+
+    const {error}=await kngSupabase
+      .from("customer_profiles")
+      .upsert(profileData,{onConflict:"id"});
+
+    if(error) throw error;
+
+    // Also keep the information in Supabase Auth metadata
+    const {error:authError}=await kngSupabase.auth.updateUser({
+      data:{
+        full_name:fullName,
+        phone_number:phone,
+        whatsapp_number:whatsapp,
+        address_line:address
+      }
+    });
 
     if(authError) throw authError;
-
-    /* SAVE TO CUSTOMER PROFILES TABLE */
-    const { error: profileError } =
-      await kngSupabase
-        .from("customer_profiles")
-        .upsert({
-          id: user.id,
-          full_name: fullName,
-          email: user.email || "",
-          phone: phone,
-          whatsapp_number: whatsapp,
-          address: address
-        });
-
-    if(profileError) throw profileError;
 
     showToast("PROFILE SAVED.");
     renderAccountHome();
 
-  }catch(error){
-    console.error(error);
-    alert(error.message || "Unable to save profile.");
+  }catch(e){
+    console.error(e);
+    alert(e.message || "Unable to save profile.");
   }
 }
 
