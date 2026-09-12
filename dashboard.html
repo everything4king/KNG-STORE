@@ -1781,92 +1781,269 @@ async function loadStaff() {
 ============================================================ */
 
 async function editStaff(staffId) {
-    try {
-        const { data: staffMember, error: fetchError } = await kngSupabase
-            .from("staff")
-            .select("*")
-            .eq("id", staffId)
-            .single();
+  try {
+    const { data: staffMember, error: fetchError } = await kngSupabase
+      .from("staff")
+      .select("*")
+      .eq("id", staffId)
+      .single();
 
-        if (fetchError) throw fetchError;
+    if (fetchError) throw fetchError;
 
-        const newName = prompt("Staff full name:", staffMember.full_name || "");
-        if (newName === null) return;
+    const overlay = document.createElement("div");
 
-        const newPhone = prompt("Staff phone:", staffMember.phone || "");
-        if (newPhone === null) return;
+    overlay.style.cssText = `
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.78);
+      backdrop-filter:blur(8px);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:99999;
+      padding:20px;
+    `;
 
-        const currentRole = String(staffMember.role || "staff").toLowerCase();
+    overlay.innerHTML = `
+      <div style="
+        width:min(520px,100%);
+        background:#111;
+        border:1px solid rgba(255,255,255,.14);
+        border-radius:20px;
+        box-shadow:0 25px 80px rgba(0,0,0,.65);
+        overflow:hidden;
+        color:#fff;
+      ">
 
-        const newRole = prompt(
-            "Staff role (admin, manager, tailor, dispatcher):",
-            currentRole
-        );
+        <div style="
+          display:flex;
+          align-items:center;
+          justify-content:space-between;
+          padding:24px 26px;
+          border-bottom:1px solid rgba(255,255,255,.1);
+        ">
+          <div>
+            <div style="
+              font-size:11px;
+              letter-spacing:2px;
+              color:#888;
+              margin-bottom:6px;
+            ">KNG. STAFF</div>
 
-        if (newRole === null) return;
+            <h2 style="
+              margin:0;
+              font-size:24px;
+              font-weight:700;
+            ">Edit Staff</h2>
+          </div>
 
-        const role = newRole.trim().toLowerCase();
+          <button id="kngEditClose" type="button" style="
+            width:38px;
+            height:38px;
+            border-radius:50%;
+            border:1px solid rgba(255,255,255,.18);
+            background:#181818;
+            color:#fff;
+            font-size:22px;
+            cursor:pointer;
+          ">×</button>
+        </div>
 
-        if (!["admin", "manager", "tailor", "dispatcher"].includes(role)) {
-            alert("Invalid staff role.");
-            return;
-        }
+        <div style="padding:26px">
 
+          <label style="
+            display:block;
+            font-size:13px;
+            color:#aaa;
+            margin-bottom:8px;
+          ">Full Name</label>
+
+          <input
+            id="kngEditName"
+            type="text"
+            value="${String(staffMember.full_name || "").replace(/"/g, "&quot;")}"
+            style="
+              width:100%;
+              box-sizing:border-box;
+              padding:14px 15px;
+              margin-bottom:20px;
+              border-radius:10px;
+              border:1px solid rgba(255,255,255,.15);
+              background:#181818;
+              color:#fff;
+              outline:none;
+              font-size:15px;
+            "
+          >
+
+          <label style="
+            display:block;
+            font-size:13px;
+            color:#aaa;
+            margin-bottom:8px;
+          ">Phone Number</label>
+
+          <input
+            id="kngEditPhone"
+            type="text"
+            value="${String(staffMember.phone || "").replace(/"/g, "&quot;")}"
+            style="
+              width:100%;
+              box-sizing:border-box;
+              padding:14px 15px;
+              margin-bottom:20px;
+              border-radius:10px;
+              border:1px solid rgba(255,255,255,.15);
+              background:#181818;
+              color:#fff;
+              outline:none;
+              font-size:15px;
+            "
+          >
+
+          <label style="
+            display:block;
+            font-size:13px;
+            color:#aaa;
+            margin-bottom:8px;
+          ">Staff Role</label>
+
+          <select
+            id="kngEditRole"
+            style="
+              width:100%;
+              box-sizing:border-box;
+              padding:14px 15px;
+              margin-bottom:26px;
+              border-radius:10px;
+              border:1px solid rgba(255,255,255,.15);
+              background:#181818;
+              color:#fff;
+              outline:none;
+              font-size:15px;
+            "
+          >
+            <option value="admin">OWNER / ADMIN</option>
+            <option value="manager">MANAGER</option>
+            <option value="tailor">TAILOR</option>
+            <option value="dispatcher">DISPATCHER</option>
+          </select>
+
+          <div style="
+            display:flex;
+            justify-content:flex-end;
+            gap:10px;
+          ">
+
+            <button id="kngEditCancel" type="button" style="
+              padding:13px 20px;
+              border-radius:10px;
+              border:1px solid rgba(255,255,255,.15);
+              background:#181818;
+              color:#fff;
+              cursor:pointer;
+              font-size:14px;
+              font-weight:600;
+            ">
+              CANCEL
+            </button>
+
+            <button id="kngEditSave" type="button" style="
+              padding:13px 22px;
+              border-radius:10px;
+              border:1px solid rgba(255,255,255,.2);
+              background:#fff;
+              color:#000;
+              cursor:pointer;
+              font-size:14px;
+              font-weight:700;
+            ">
+              SAVE CHANGES
+            </button>
+
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+    const roleSelect = overlay.querySelector("#kngEditRole");
+    roleSelect.value = String(staffMember.role || "staff").toLowerCase();
+
+    const closeModal = () => {
+      overlay.remove();
+    };
+
+    overlay.querySelector("#kngEditClose").addEventListener("click", closeModal);
+    overlay.querySelector("#kngEditCancel").addEventListener("click", closeModal);
+
+    overlay.addEventListener("click", function(e) {
+      if (e.target === overlay) {
+        closeModal();
+      }
+    });
+
+    const saveButton = overlay.querySelector("#kngEditSave");
+
+    saveButton.addEventListener("click", async function() {
+      const newName = overlay.querySelector("#kngEditName").value.trim();
+      const newPhone = overlay.querySelector("#kngEditPhone").value.trim();
+      const newRole = overlay.querySelector("#kngEditRole").value.toLowerCase();
+
+      if (!newName) {
+        showToast("FULL NAME IS REQUIRED.");
+        return;
+      }
+
+      if (!["admin", "manager", "tailor", "dispatcher"].includes(newRole)) {
+        showToast("INVALID STAFF ROLE.");
+        return;
+      }
+
+      saveButton.disabled = true;
+      saveButton.textContent = "SAVING...";
+
+      try {
         const { error } = await kngSupabase
-            .from("staff")
-            .update({
-                full_name: newName.trim(),
-                phone: newPhone.trim() || null,
-                role: role
-            })
-            .eq("id", staffId);
+          .from("staff")
+          .update({
+            full_name: newName,
+            phone: newPhone || null,
+            role: newRole
+          })
+          .eq("id", staffId);
 
         if (error) throw error;
+
+        closeModal();
 
         showToast("STAFF UPDATED.");
 
         await loadStaff();
 
-    } catch (error) {
+      } catch (error) {
         console.error("Edit staff error:", error);
-        alert("Unable to update staff: " + (error.message || error));
-    }
-}
 
-
-async function toggleStaffStatus(staffId, currentlyActive) {
-    try {
-        const action = currentlyActive ? "deactivate" : "activate";
-
-        const confirmed = confirm(
-            `Are you sure you want to ${action} this staff member?`
-        );
-
-        if (!confirmed) return;
-
-        const { error } = await kngSupabase
-            .from("staff")
-            .update({
-                active: !currentlyActive
-            })
-            .eq("id", staffId);
-
-        if (error) throw error;
+        saveButton.disabled = false;
+        saveButton.textContent = "SAVE CHANGES";
 
         showToast(
-            currentlyActive
-                ? "STAFF DEACTIVATED."
-                : "STAFF ACTIVATED."
+          "UNABLE TO UPDATE STAFF: " +
+          (error.message || error)
         );
+      }
+    });
 
-        await loadStaff();
+  } catch (error) {
+    console.error("Edit staff error:", error);
 
-    } catch (error) {
-        console.error("Toggle staff status error:", error);
-        alert("Unable to change staff status: " + (error.message || error));
-    }
+    showToast(
+      "UNABLE TO LOAD STAFF: " +
+      (error.message || error)
+    );
+  }
 }
-
 /* ============================================================
    ORDERS
 ============================================================ */
