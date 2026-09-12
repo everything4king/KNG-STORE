@@ -100,6 +100,9 @@ header{position:sticky;top:0;z-index:1000;height:88px;background:rgba(5,5,5,.97)
 .product-art img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s ease}
 .product-card:hover .product-art img{transform:scale(1.025)}
 .product-art span{position:absolute;z-index:2;font-size:55px;font-weight:1000;letter-spacing:-5px;color:rgba(255,255,255,.10)}
+.product-art-placeholder{flex-direction:column;gap:10px;text-align:center}
+.product-art-placeholder small{position:relative;z-index:3;color:#777;font-size:9px;line-height:1.7;letter-spacing:2px;font-weight:900}
+
 .product-body{padding:19px}
 .product-body small{color:var(--gold);text-transform:uppercase;letter-spacing:2px;font-size:9px}
 .product-body h3{font-size:18px;margin-top:9px;line-height:1.25}
@@ -142,6 +145,8 @@ header{position:sticky;top:0;z-index:1000;height:88px;background:rgba(5,5,5,.97)
   border:1px solid var(--border);background:#111;color:#fff;font-size:18px;z-index:5
 }
 .product-modal-content{display:grid;grid-template-columns:.8fr 1.2fr}
+.modal-image-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:radial-gradient(circle at 50% 38%,rgba(229,185,47,.08),transparent 35%),#111}
+.modal-image-placeholder small{color:#777;font-size:9px;line-height:1.7;letter-spacing:2px;font-weight:900;text-align:center}
 .modal-image{min-height:600px;background:radial-gradient(circle,rgba(229,185,47,.09),transparent 38%),#101010;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
 .modal-image img{width:100%;height:100%;object-fit:cover;display:block}
 .modal-image::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(5,5,5,.5),transparent 55%);pointer-events:none}
@@ -427,7 +432,7 @@ footer{border-top:1px solid var(--border);padding:55px 35px;background:#060606}
       <div class="reviews-strip">
         <div class="reviews-strip-inner">
           <span class="reviews-strip-title">WHAT THE CROWN SAYS.</span>
-          <span class="review-stars" id="publicReviewStars">â˜…â˜…â˜…â˜…â˜…</span>
+          <span class="review-stars" id="publicReviewStars">*****</span>
           <span class="reviews-strip-copy" id="publicReviewSummary">Verified KNG customer reviews appear here after delivered orders.</span>
         </div>
       </div>
@@ -539,9 +544,9 @@ footer{border-top:1px solid var(--border);padding:55px 35px;background:#060606}
       <div class="eyebrow">YOUR ORDER</div>
       <h2>ORDER SUMMARY</h2>
       <div id="checkoutSummary"></div>
-      <div class="summary-line"><span>ITEMS</span><strong id="checkoutSubtotal">&#8358;0</strong></div>
+      <div class="summary-line"><span>ITEMS</span><strong id="checkoutSubtotal">NGN 0</strong></div>
       <div class="summary-line"><span>DELIVERY</span><strong id="checkoutDelivery">Select location</strong></div>
-      <div class="summary-total"><span>TOTAL</span><span id="checkoutTotal">&#8358;0</span></div>
+      <div class="summary-total"><span>TOTAL</span><span id="checkoutTotal">NGN 0</span></div>
     </aside>
   </div>
 </section>
@@ -554,7 +559,7 @@ footer{border-top:1px solid var(--border);padding:55px 35px;background:#060606}
     <button class="close-modal" onclick="closeProductModal()" aria-label="Close">X</button>
 
     <div class="product-modal-content">
-      <div class="modal-image"><img id="modalProductImage" src="" alt=""><span>KNG</span></div>
+      <div class="modal-image modal-image-placeholder"><span>KNG</span><small>PRODUCT IMAGE<br>COMING SOON</small></div>
 
       <div class="modal-details">
         <div class="product-category" id="modalCategory"></div>
@@ -627,7 +632,7 @@ footer{border-top:1px solid var(--border);padding:55px 35px;background:#060606}
   </div>
   <div class="cart-items" id="cartItems"></div>
   <div class="cart-footer">
-    <div class="cart-total"><span>TOTAL</span><span id="cartTotal">&#8358;0</span></div>
+    <div class="cart-total"><span>TOTAL</span><span id="cartTotal">NGN 0</span></div>
     <button class="btn" onclick="goToCheckout()">CHECKOUT</button>
   </div>
 </aside>
@@ -643,7 +648,7 @@ footer{border-top:1px solid var(--border);padding:55px 35px;background:#060606}
 <!-- KNG PUBLIC REVIEW TICKER -->
 <div class="review-ticker" id="reviewTicker">
   <div class="review-ticker-inner">
-    <span class="review-ticker-stars" id="reviewTickerStars">â˜…â˜…â˜…â˜…â˜…</span>
+    <span class="review-ticker-stars" id="reviewTickerStars">*****</span>
     <span class="review-ticker-text" id="reviewTickerText"></span>
     <span class="review-ticker-author" id="reviewTickerAuthor"></span>
   </div>
@@ -759,7 +764,7 @@ try{
   if(!Array.isArray(cart))cart=[];
 }catch(e){cart=[]}
 
-const money=n=>"&#8358;"+Number(n||0).toLocaleString("en-NG");
+const money=n=>"NGN "+Number(n||0).toLocaleString("en-NG");
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
 const $=id=>document.getElementById(id);
 
@@ -939,9 +944,9 @@ function renderProducts(){
 
   $("products").innerHTML=list.map(p=>`
     <article class="product-card">
-      <div class="product-art">
-        <img src="${getCollectionImage(p.gender)}" alt="${esc(p.name)}">
+      <div class="product-art product-art-placeholder">
         <span>KNG</span>
+        <small>PRODUCT IMAGE<br>COMING SOON</small>
       </div>
       <div class="product-body">
         <small>${esc(p.section)} / ${esc(p.category)}</small>
@@ -970,8 +975,6 @@ function openProductModal(id){
 
   $("modalName").textContent=p.name;
   $("modalPrice").innerHTML=money(p.price);
-  $("modalProductImage").src=getCollectionImage(p.gender);
-  $("modalProductImage").alt=p.name+" / KNG";
 
   $("sizeOptions").innerHTML=p.sizes.map((s,i)=>
     `<button type="button" class="option-btn ${i===0?"selected":""}" onclick="selectSize('${esc(s)}')">${esc(s)}</button>`
@@ -1369,7 +1372,7 @@ function updateDispatchOptions(){
     box.innerHTML=Object.entries(DISPATCH).filter(([key])=>key!=="covenant").map(([key,d])=>`
       <label class="dispatch-option" onclick="selectDispatch('${key}')">
         <input type="radio" name="dispatch" value="${key}">
-        <span><strong>${d.label}</strong><br>${d.areas.map(esc).join(" &#8226; ")}</span>
+        <span><strong>${d.label}</strong><br>${d.areas.map(esc).join("  /  ")}</span>
         <strong>${money(d.fee)}</strong>
       </label>`).join("");
   }else{
@@ -1646,7 +1649,7 @@ kngConfirmOverlay.innerHTML=`
           font-size:25px;
           cursor:pointer;
         "
-      >&times;</button>
+      >X</button>
 
       <div style="
         width:68px;
@@ -1661,7 +1664,7 @@ kngConfirmOverlay.innerHTML=`
         color:#35d477;
         font-size:34px;
         font-weight:700;
-      ">âœ“</div>
+      ">OK</div>
 
       <div style="
         font-size:13px;
@@ -1758,7 +1761,7 @@ kngConfirmOverlay.innerHTML=`
         font-size:12px;
         letter-spacing:1px;
       ">
-        KNG. â€” WEAR THE STANDARD.
+        KNG. - WEAR THE STANDARD.
       </p>
 
     </div>
@@ -2305,7 +2308,7 @@ function showOrders(){
       ?`<div class="simple-card">
           <strong>LOCAL ORDER RECORD</strong>
           <small>${new Date(order.createdAt).toLocaleString()}</small>
-          <small>Dispatch: ${order.dispatch ? esc(order.dispatch) : "â€”"}</small>
+          <small>Dispatch: ${order.dispatch ? esc(order.dispatch) : "-"}</small>
           <small>Total: ${money(order.total)}</small>
         </div>`
       :`<div class="simple-card"><small>No local order history yet.</small></div>`
@@ -2327,7 +2330,9 @@ let kngReviewIndex=0;
 
 function reviewStars(n){
   n=Math.max(0,Math.min(5,Number(n||0)));
-  return "â˜…â˜…â˜…â˜…â˜…".slice(0,n)+"â˜†â˜†â˜†â˜†â˜†".slice(0,5-n);
+  const filled="*";
+  const empty="-";
+  return filled.repeat(n)+empty.repeat(5-n);
 }
 function kngPublicName(name){
   const p=String(name||"").trim().split(/\s+/).filter(Boolean);
@@ -2344,7 +2349,7 @@ async function loadPublicReviews(){
     const avg=rows.length?rows.reduce((a,r)=>a+Number(r.rating||0),0)/rows.length:0;
 
     if($("publicReviewStars")){
-      $("publicReviewStars").textContent=rows.length?reviewStars(Math.round(avg)):"â˜…â˜…â˜…â˜…â˜…";
+      $("publicReviewStars").textContent=rows.length?reviewStars(Math.round(avg)):reviewStars(5);
     }
     if($("publicReviewSummary")){
       $("publicReviewSummary").textContent=rows.length
@@ -2371,7 +2376,7 @@ function startReviewTicker(rows){
     const r=rows[kngReviewIndex++%rows.length];
     $("reviewTickerStars").textContent=reviewStars(r.rating);
     $("reviewTickerText").textContent=r.comment||"";
-    $("reviewTickerAuthor").textContent="â€” "+(r.customer_name||"KNG CUSTOMER");
+    $("reviewTickerAuthor").textContent="- "+(r.customer_name||"KNG CUSTOMER");
     $("reviewTicker").classList.add("show");
   };
   show();
