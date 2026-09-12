@@ -2340,10 +2340,10 @@ async function showProfile(){
       return;
     }
 
-    const fullName=$("#profileName").value.trim();
-    const phone=$("#profilePhone").value.trim();
-    const whatsapp=$("#profileWhatsapp").value.trim();
-    const address=$("#profileAddress").value.trim();
+   const fullName=document.getElementById("profileName")?.value.trim() || "";
+const phone=document.getElementById("profilePhone")?.value.trim() || "";
+const whatsapp=document.getElementById("profileWhatsapp")?.value.trim() || "";
+const address=document.getElementById("profileAddress")?.value.trim() || "";
 
     if(!fullName){
       alert("Please enter your full name.");
