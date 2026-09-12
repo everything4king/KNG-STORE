@@ -2250,25 +2250,62 @@ async function showProfile(){
   `;
 }
 
-async function saveProfile(e){
+  async function saveProfile(e){
   e.preventDefault();
 
-  const {error}=await kngSupabase.auth.updateUser({
-    data:{
-      full_name:$("profileName").value.trim(),
-      phone_number:$("profilePhone").value.trim(),
-      whatsapp_number:$("profileWhatsapp").value.trim(),
-      address_line:$("profileAddress").value.trim()
+  try{
+    const { data: userData, error: userError } =
+      await kngSupabase.auth.getUser();
+
+    if(userError) throw userError;
+
+    const user = userData?.user;
+
+    if(!user){
+      alert("Please sign in again.");
+      return;
     }
-  });
 
-  if(error){
-    alert(error.message||"Unable to save profile.");
-    return;
+    const fullName = $("profileName").value.trim();
+    const phone = $("profilePhone").value.trim();
+    const whatsapp = $("profileWhatsapp").value.trim();
+    const address = $("profileAddress").value.trim();
+
+    /* SAVE TO SUPABASE AUTH METADATA */
+    const { error: authError } =
+      await kngSupabase.auth.updateUser({
+        data:{
+          full_name: fullName,
+          phone_number: phone,
+          whatsapp_number: whatsapp,
+          address_line: address
+        }
+      });
+
+    if(authError) throw authError;
+
+    /* SAVE TO CUSTOMER PROFILES TABLE */
+    const { error: profileError } =
+      await kngSupabase
+        .from("customer_profiles")
+        .upsert({
+          id: user.id,
+          full_name: fullName,
+          email: user.email || "",
+          phone: phone,
+          whatsapp_number: whatsapp,
+          address: address
+        });
+
+    if(profileError) throw profileError;
+
+    showToast("PROFILE SAVED.");
+    renderAccountHome();
+
+  }catch(error){
+    console.error(error);
+    alert(error.message || "Unable to save profile.");
   }
-
-  showToast("PROFILE SAVED.");
-  renderAccountHome();
 }
 
 function showMeasurements(){
