@@ -1747,7 +1747,12 @@ async function loadStaff() {
   <span class="staff-online-dot"></span>
   ${onlineStaffIds.has(member.user_id) ? "Online" : "Offline"}
 </span>
-
+<div class="staff-actions">
+    <button type="button" onclick="editStaff('${member.id}')">EDIT</button>
+    <button type="button" onclick="toggleStaffStatus('${member.id}', ${member.active !== false})">
+        ${member.active !== false ? "DEACTIVATE" : "ACTIVATE"}
+    </button>
+</div>
             </div>
           `;
 
@@ -1771,7 +1776,96 @@ async function loadStaff() {
   }
 
 }
+/* ============================================================
+   STAFF MANAGEMENT
+============================================================ */
 
+async function editStaff(staffId) {
+    try {
+        const { data: staffMember, error: fetchError } = await kngSupabase
+            .from("staff")
+            .select("*")
+            .eq("id", staffId)
+            .single();
+
+        if (fetchError) throw fetchError;
+
+        const newName = prompt("Staff full name:", staffMember.full_name || "");
+        if (newName === null) return;
+
+        const newPhone = prompt("Staff phone:", staffMember.phone || "");
+        if (newPhone === null) return;
+
+        const currentRole = String(staffMember.role || "staff").toLowerCase();
+
+        const newRole = prompt(
+            "Staff role (admin, manager, tailor, dispatcher):",
+            currentRole
+        );
+
+        if (newRole === null) return;
+
+        const role = newRole.trim().toLowerCase();
+
+        if (!["admin", "manager", "tailor", "dispatcher"].includes(role)) {
+            alert("Invalid staff role.");
+            return;
+        }
+
+        const { error } = await kngSupabase
+            .from("staff")
+            .update({
+                full_name: newName.trim(),
+                phone: newPhone.trim() || null,
+                role: role
+            })
+            .eq("id", staffId);
+
+        if (error) throw error;
+
+        showToast("STAFF UPDATED.");
+
+        await loadStaff();
+
+    } catch (error) {
+        console.error("Edit staff error:", error);
+        alert("Unable to update staff: " + (error.message || error));
+    }
+}
+
+
+async function toggleStaffStatus(staffId, currentlyActive) {
+    try {
+        const action = currentlyActive ? "deactivate" : "activate";
+
+        const confirmed = confirm(
+            `Are you sure you want to ${action} this staff member?`
+        );
+
+        if (!confirmed) return;
+
+        const { error } = await kngSupabase
+            .from("staff")
+            .update({
+                active: !currentlyActive
+            })
+            .eq("id", staffId);
+
+        if (error) throw error;
+
+        showToast(
+            currentlyActive
+                ? "STAFF DEACTIVATED."
+                : "STAFF ACTIVATED."
+        );
+
+        await loadStaff();
+
+    } catch (error) {
+        console.error("Toggle staff status error:", error);
+        alert("Unable to change staff status: " + (error.message || error));
+    }
+}
 
 /* ============================================================
    ORDERS
