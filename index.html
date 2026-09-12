@@ -2160,9 +2160,9 @@ async function kngCurrentUser(){
   return user||null;
 }
 
-async function kngUploadProfilePicture(input){
 
-  const file=input.files?.[0];
+  async function kngUploadProfilePicture(input){
+  const file=input?.files?.[0];
 
   if(!file)return;
 
@@ -2178,29 +2178,24 @@ async function kngUploadProfilePicture(input){
     return;
   }
 
+  const user=await kngCurrentUser();
+
+  if(!user){
+    alert("Please sign in first.");
+    return;
+  }
+
   try{
-
-    const {data:{user},error:userError}=await kngSupabase.auth.getUser();
-
-    if(userError)throw userError;
-
-    if(!user){
-      alert("Please sign in first.");
-      return;
-    }
-
     const ext=(file.name.split(".").pop()||"jpg").toLowerCase();
 
     const path=`${user.id}/avatar-${Date.now()}.${ext}`;
 
-    // Remove previous profile pictures
     const old=await kngSupabase
       .storage
       .from(KNG_PROFILE_BUCKET)
       .list(user.id);
 
     if(old.data?.length){
-
       await kngSupabase
         .storage
         .from(KNG_PROFILE_BUCKET)
@@ -2209,10 +2204,8 @@ async function kngUploadProfilePicture(input){
             .filter(x=>x.name)
             .map(x=>`${user.id}/${x.name}`)
         );
-
     }
 
-    // Upload new picture
     const up=await kngSupabase
       .storage
       .from(KNG_PROFILE_BUCKET)
@@ -2228,78 +2221,46 @@ async function kngUploadProfilePicture(input){
 
     if(up.error)throw up.error;
 
-    // Get public URL
-    const {data:{publicUrl}}=kngSupabase
-      .storage
-      .from(KNG_PROFILE_BUCKET)
-      .getPublicUrl(path);
+    const {data:{publicUrl}}=
+      kngSupabase
+        .storage
+        .from(KNG_PROFILE_BUCKET)
+        .getPublicUrl(path);
 
     if(!publicUrl){
       throw new Error("Unable to create profile picture URL.");
     }
 
-    // Get existing customer profile
-    const {data:existingProfile,error:profileError}=await kngSupabase
-      .from("customer_profiles")
-      .select("id,full_name,phone,email,address,whatsapp_number")
-      .eq("id",user.id)
-      .maybeSingle();
+    /* SAVE TO SUPABASE AUTH METADATA */
+    const auth=await kngSupabase.auth.updateUser({
+      data:{
+        profile_picture_url:publicUrl
+      }
+    });
 
-    if(profileError)throw profileError;
+    if(auth.error)throw auth.error;
 
-    // If profile already exists, only update the picture URL
-    if(existingProfile){
-
-      const {error:updateError}=await kngSupabase
+    /* SAVE TO CUSTOMER PROFILES TABLE */
+    const {error:profilePictureError}=
+      await kngSupabase
         .from("customer_profiles")
         .update({
           profile_picture_url:publicUrl
         })
         .eq("id",user.id);
 
-      if(updateError)throw updateError;
-
-    }else{
-
-      // Create profile if one does not exist yet
-      const metadata=user.user_metadata||{};
-
-      const {error:insertError}=await kngSupabase
-        .from("customer_profiles")
-        .insert({
-          id:user.id,
-          full_name:metadata.full_name || user.email?.split("@")[0] || "KNG CUSTOMER",
-          phone:metadata.phone_number || null,
-          email:user.email || null,
-          address:metadata.address_line || null,
-          whatsapp_number:metadata.whatsapp_number || null,
-          profile_picture_url:publicUrl
-        });
-
-      if(insertError)throw insertError;
-    }
-
-    // Keep Auth metadata synchronized too
-    const {error:authError}=await kngSupabase.auth.updateUser({
-      data:{
-        profile_picture_url:publicUrl
-      }
-    });
-
-    if(authError)throw authError;
+    if(profilePictureError)throw profilePictureError;
 
     showToast("PROFILE PICTURE UPDATED.");
+
     await renderAccountHome();
 
   }catch(e){
-
     console.error(e);
-    alert(e.message || "Unable to upload your profile picture.");
+    alert(e.message||"Unable to upload your profile picture.");
 
   }finally{
-
     input.value="";
-
   }
 }
 
