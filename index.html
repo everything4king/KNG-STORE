@@ -597,13 +597,11 @@ footer{border-top:1px solid var(--border);padding:55px 35px;background:#060606}
           </div>
         </div>
 
-        <div class="custom-fit" id="customFitBox">
-          <h4>Custom Fit</h4>
-          <p>Need a different fit? Enter the measurements relevant to this piece. No XS is offered in the standard KNG size selection.</p>
-          <div class="custom-grid" id="customGrid"></div>
-          <button class="custom-save" onclick="saveCustomFit()">SAVE CUSTOM FIT</button>
-        </div>
-
+        <!-- CUSTOM FIT — FUTURE FEATURE
+     Kept in the system for future KNG custom orders.
+     Hidden from customers for the current READY-MADE launch.
+-->
+<div class="custom-fit" id="customFitBox" style="display:none;"></div>
         <button class="btn modal-add" onclick="addCurrentProductToCart()">ADD TO CART</button>
       </div>
     </div>
@@ -2143,7 +2141,10 @@ async function renderDashboard(user){
 
     <div class="dashboard-grid">
       <div class="dashboard-card"><button onclick="showProfile()">PROFILE</button></div>
-      <div class="dashboard-card"><button onclick="showMeasurements()">MEASUREMENTS</button></div>
+     <!-- MEASUREMENTS — FUTURE FEATURE
+     Kept in the system for future KNG custom orders.
+     Hidden from customers for the current READY-MADE launch.
+-->
       <div class="dashboard-card"><button onclick="showOrders()">MY ORDERS</button></div>
       <div class="dashboard-card"><button onclick="showReviews()">REVIEWS</button></div>
       <div class="dashboard-card"><button onclick="openCart();closeAccount()">CART</button></div>
