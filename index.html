@@ -597,13 +597,16 @@ footer{border-top:1px solid var(--border);padding:55px 35px;background:#060606}
           </div>
         </div>
 
-        <!-- CUSTOM FIT — FUTURE FEATURE
+<!-- CUSTOM FIT — FUTURE FEATURE
      Kept in the system for future KNG custom orders.
      Hidden from customers for the current READY-MADE launch.
 -->
-<div class="custom-fit" id="customFitBox" style="display:none;"></div>
-        <button class="btn modal-add" onclick="addCurrentProductToCart()">ADD TO CART</button>
-      </div>
+<div class="custom-fit" id="customFitBox" style="display:none;">
+  <h4>Custom Fit</h4>
+  <p>Need a different fit? Enter the measurements relevant to this piece.</p>
+  <div class="custom-grid" id="customGrid"></div>
+  <button class="custom-save" onclick="saveCustomFit()">SAVE CUSTOM FIT</button>
+</div>
     </div>
   </div>
 </div>
@@ -1163,13 +1166,24 @@ function closeSizeGuide(){
 }
 
 /* CUSTOM FIT */
-function renderCustomFitFields(){
-  if(!currentProduct || currentProduct.gender==="accessories"){
-    $("customFitBox").style.display="none";
+  function renderCustomFitFields(){
+  const box=$("customFitBox");
+
+  if(!box || !currentProduct || currentProduct.gender==="accessories"){
+    if(box) box.style.display="none";
     return;
   }
 
-  $("customFitBox").style.display="block";
+  // CUSTOM MEASUREMENTS ARE DISABLED FOR THE CURRENT READY-MADE LAUNCH.
+  // The full custom-fit system is preserved for future activation.
+  const CUSTOM_MEASUREMENTS_ENABLED=false;
+
+  if(!CUSTOM_MEASUREMENTS_ENABLED){
+    box.style.display="none";
+    return;
+  }
+
+  box.style.display="block";
 
   if(currentProduct.section==="Upper Body"){
     $("customGrid").innerHTML=`
@@ -1187,7 +1201,6 @@ function renderCustomFitFields(){
     `;
   }
 }
-
 function saveCustomFit(){
   if(!currentProduct || currentProduct.gender==="accessories")return;
 
