@@ -1846,7 +1846,7 @@ async function editStaff(staffId) {
             color:#fff;
             font-size:22px;
             cursor:pointer;
-          ">×</button>
+          ">Ã—</button>
         </div>
 
         <div style="padding:26px">
@@ -2045,6 +2045,200 @@ async function editStaff(staffId) {
   }
 }
 /* ============================================================
+   STAFF STATUS
+============================================================ */
+
+async function toggleStaffStatus(staffId, currentlyActive) {
+  try {
+    if (currentStaff && currentStaff.id === staffId) {
+      showToast("YOU CANNOT DEACTIVATE YOUR OWN ACCOUNT.");
+      return;
+    }
+
+    const action = currentlyActive ? "DEACTIVATE" : "ACTIVATE";
+    const actionDescription = currentlyActive
+      ? "This staff member will no longer be active in KNG operations."
+      : "This staff member will be restored as an active KNG staff member.";
+
+    const overlay = document.createElement("div");
+
+    overlay.style.cssText = `
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.78);
+      backdrop-filter:blur(8px);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:99999;
+      padding:20px;
+    `;
+
+    overlay.innerHTML = `
+      <div style="
+        width:min(440px,100%);
+        background:#111;
+        border:1px solid rgba(255,255,255,.14);
+        border-radius:20px;
+        box-shadow:0 25px 80px rgba(0,0,0,.65);
+        overflow:hidden;
+        color:#fff;
+      ">
+
+        <div style="
+          padding:26px 26px 18px;
+          border-bottom:1px solid rgba(255,255,255,.1);
+        ">
+          <div style="
+            font-size:11px;
+            letter-spacing:2px;
+            color:#888;
+            margin-bottom:7px;
+          ">KNG. STAFF</div>
+
+          <h2 style="
+            margin:0;
+            font-size:23px;
+            font-weight:700;
+          ">${action} STAFF?</h2>
+        </div>
+
+        <div style="padding:26px;">
+
+          <p style="
+            margin:0 0 25px;
+            color:#aaa;
+            line-height:1.6;
+            font-size:14px;
+          ">
+            ${actionDescription}
+            <br><br>
+            Are you sure you want to continue?
+          </p>
+
+          <div style="
+            display:flex;
+            justify-content:flex-end;
+            gap:10px;
+          ">
+
+            <button
+              id="kngStaffStatusCancel"
+              type="button"
+              style="
+                padding:13px 20px;
+                border-radius:10px;
+                border:1px solid rgba(255,255,255,.15);
+                background:#181818;
+                color:#fff;
+                cursor:pointer;
+                font-size:14px;
+                font-weight:600;
+              "
+            >
+              CANCEL
+            </button>
+
+            <button
+              id="kngStaffStatusConfirm"
+              type="button"
+              style="
+                padding:13px 22px;
+                border-radius:10px;
+                border:1px solid rgba(255,255,255,.2);
+                background:#fff;
+                color:#000;
+                cursor:pointer;
+                font-size:14px;
+                font-weight:700;
+              "
+            >
+              ${action}
+            </button>
+
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+    const closeModal = () => {
+      overlay.remove();
+    };
+
+    overlay.querySelector("#kngStaffStatusCancel")
+      .addEventListener("click", closeModal);
+
+    overlay.addEventListener("click", function(event) {
+      if (event.target === overlay) {
+        closeModal();
+      }
+    });
+
+    overlay.querySelector("#kngStaffStatusConfirm")
+      .addEventListener("click", async function() {
+
+        const confirmButton =
+          overlay.querySelector("#kngStaffStatusConfirm");
+
+        confirmButton.disabled = true;
+        confirmButton.textContent =
+          currentlyActive ? "DEACTIVATING..." : "ACTIVATING...";
+
+        try {
+          const { error } = await kngSupabase
+            .from("staff")
+            .update({
+              active: !currentlyActive
+            })
+            .eq("id", staffId);
+
+          if (error) {
+            throw error;
+          }
+
+          closeModal();
+
+          showToast(
+            currentlyActive
+              ? "STAFF DEACTIVATED."
+              : "STAFF ACTIVATED."
+          );
+
+          await loadStaff();
+
+        } catch (error) {
+
+          console.error(
+            "Toggle staff status error:",
+            error
+          );
+
+          confirmButton.disabled = false;
+          confirmButton.textContent = action;
+
+          showToast(
+            "UNABLE TO CHANGE STAFF STATUS: " +
+            (error.message || error)
+          );
+        }
+      });
+
+  } catch (error) {
+
+    console.error(
+      "Toggle staff status modal error:",
+      error
+    );
+
+    showToast(
+      "UNABLE TO OPEN STAFF STATUS CONTROL."
+    );
+  }
+}
+
+/* ============================================================
    ORDERS
 ============================================================ */
 
@@ -2113,7 +2307,7 @@ async function loadOrders() {
     function money(value) {
       const amount = Number(value || 0);
 
-      return "₦" + amount.toLocaleString("en-NG", {
+      return "â‚¦" + amount.toLocaleString("en-NG", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
       });
@@ -2134,8 +2328,8 @@ async function loadOrders() {
         <div style="margin-bottom:6px;">
           <strong>${safe(item.product_name || "Product")}</strong>
           <div style="font-size:12px;opacity:.7;">
-            ${safe(item.size || "—")} ·
-            ${safe(item.color || "—")} ·
+            ${safe(item.size || "â€”")} Â·
+            ${safe(item.color || "â€”")} Â·
             Qty ${safe(item.quantity || 0)}
           </div>
         </div>
@@ -2264,7 +2458,7 @@ async function loadOrders() {
                 cursor:pointer;
               "
             >
-              ×
+              Ã—
             </button>
           </div>
 
@@ -2277,27 +2471,27 @@ async function loadOrders() {
 
             <div class="order-info-box">
               <small>Customer</small>
-              <strong>${safe(order.customer_name || "—")}</strong>
+              <strong>${safe(order.customer_name || "â€”")}</strong>
             </div>
 
             <div class="order-info-box">
               <small>Phone</small>
-              <strong>${safe(order.customer_phone || "—")}</strong>
+              <strong>${safe(order.customer_phone || "â€”")}</strong>
             </div>
 
             <div class="order-info-box">
               <small>Address</small>
-              <strong>${safe(order.delivery_address || "—")}</strong>
+              <strong>${safe(order.delivery_address || "â€”")}</strong>
             </div>
 
             <div class="order-info-box">
               <small>City</small>
-              <strong>${safe(order.city || "—")}</strong>
+              <strong>${safe(order.city || "â€”")}</strong>
             </div>
 
             <div class="order-info-box">
               <small>State</small>
-              <strong>${safe(order.state || "—")}</strong>
+              <strong>${safe(order.state || "â€”")}</strong>
             </div>
 
             <div class="order-info-box">
@@ -2348,15 +2542,15 @@ async function loadOrders() {
                     ? items.map(item => `
                       <tr>
                         <td style="padding:12px;border-bottom:1px solid #222;">
-                          ${safe(item.product_name || "—")}
+                          ${safe(item.product_name || "â€”")}
                         </td>
 
                         <td style="padding:12px;border-bottom:1px solid #222;">
-                          ${safe(item.size || "—")}
+                          ${safe(item.size || "â€”")}
                         </td>
 
                         <td style="padding:12px;border-bottom:1px solid #222;">
-                          ${safe(item.color || "—")}
+                          ${safe(item.color || "â€”")}
                         </td>
 
                         <td style="padding:12px;text-align:center;border-bottom:1px solid #222;">
@@ -2392,7 +2586,7 @@ async function loadOrders() {
 
             <div class="order-info-box">
               <small>Payment Reference</small>
-              <strong>${safe(order.payment_reference || "—")}</strong>
+              <strong>${safe(order.payment_reference || "â€”")}</strong>
             </div>
 
             <div class="order-info-box">
@@ -2411,7 +2605,7 @@ async function loadOrders() {
                 ${
                   order.created_at
                     ? new Date(order.created_at).toLocaleString("en-NG")
-                    : "—"
+                    : "â€”"
                 }
               </strong>
             </div>
@@ -2464,16 +2658,16 @@ async function loadOrders() {
 
                       <td>
                         <strong>
-                          ${safe(order.order_number || "—")}
+                          ${safe(order.order_number || "â€”")}
                         </strong>
                       </td>
 
                       <td>
-                        ${safe(order.customer_name || "—")}
+                        ${safe(order.customer_name || "â€”")}
                       </td>
 
                       <td>
-                        ${safe(order.customer_phone || "—")}
+                        ${safe(order.customer_phone || "â€”")}
                       </td>
 
                       <td style="min-width:210px;">
@@ -2562,7 +2756,7 @@ async function loadOrders() {
     const totalOrders = document.getElementById("totalOrders");
 
     if (totalOrders) {
-      totalOrders.textContent = "—";
+      totalOrders.textContent = "â€”";
     }
 
     if (recent) {
@@ -2970,6 +3164,57 @@ document.addEventListener("visibilitychange", function() {
   }
 });
 
+
+/* ============================================================
+   KNG TOAST
+============================================================ */
+
+function showToast(message) {
+  let toast = document.getElementById("kngToast");
+
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.id = "kngToast";
+
+    toast.style.cssText = `
+      position:fixed;
+      left:50%;
+      bottom:28px;
+      transform:translateX(-50%) translateY(20px);
+      z-index:100000;
+      max-width:min(520px,calc(100% - 32px));
+      padding:14px 18px;
+      border:1px solid rgba(255,255,255,.16);
+      border-radius:12px;
+      background:#171717;
+      color:#fff;
+      box-shadow:0 18px 50px rgba(0,0,0,.55);
+      font-size:13px;
+      font-weight:700;
+      letter-spacing:.3px;
+      text-align:center;
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .2s ease, transform .2s ease;
+    `;
+
+    document.body.appendChild(toast);
+  }
+
+  toast.textContent = String(message || "");
+
+  requestAnimationFrame(function() {
+    toast.style.opacity = "1";
+    toast.style.transform = "translateX(-50%) translateY(0)";
+  });
+
+  clearTimeout(window.kngToastTimer);
+
+  window.kngToastTimer = setTimeout(function() {
+    toast.style.opacity = "0";
+    toast.style.transform = "translateX(-50%) translateY(20px)";
+  }, 3000);
+}
 
 /* ============================================================
    LOGOUT
