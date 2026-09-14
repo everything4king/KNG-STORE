@@ -822,6 +822,11 @@
             <div class="stat-value" id="totalStaff">&#8212;</div>
           </div>
 
+          <div class="stat-card">
+            <div class="stat-title">Total Sales</div>
+            <div class="stat-value" id="totalSales">&#8212;</div>
+          </div>
+
         </div>
 
 
@@ -1846,7 +1851,7 @@ async function editStaff(staffId) {
             color:#fff;
             font-size:22px;
             cursor:pointer;
-          ">Ã—</button>
+          ">\u00D7</button>
         </div>
 
         <div style="padding:26px">
@@ -2290,6 +2295,34 @@ async function loadOrders() {
     }
 
     /* ============================================================
+       TOTAL SALES
+       Only PAID orders are included.
+    ============================================================ */
+
+    const totalSales = orderList.reduce(function(sum, order) {
+      const paymentStatus =
+        String(order.payment_status || "").toLowerCase();
+
+      if (paymentStatus !== "paid") {
+        return sum;
+      }
+
+      return sum + Number(order.total_amount || 0);
+    }, 0);
+
+    const totalSalesElement =
+      document.getElementById("totalSales");
+
+    if (totalSalesElement) {
+      totalSalesElement.textContent =
+        "\u20A6" +
+        totalSales.toLocaleString("en-NG", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        });
+    }
+
+    /* ============================================================
        HELPERS
     ============================================================ */
 
@@ -2307,7 +2340,7 @@ async function loadOrders() {
     function money(value) {
       const amount = Number(value || 0);
 
-      return "â‚¦" + amount.toLocaleString("en-NG", {
+      return "\u20A6" + amount.toLocaleString("en-NG", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
       });
@@ -2328,8 +2361,8 @@ async function loadOrders() {
         <div style="margin-bottom:6px;">
           <strong>${safe(item.product_name || "Product")}</strong>
           <div style="font-size:12px;opacity:.7;">
-            ${safe(item.size || "â€”")} Â·
-            ${safe(item.color || "â€”")} Â·
+            ${safe(item.size || "\u2014")} Â·
+            ${safe(item.color || "\u2014")} Â·
             Qty ${safe(item.quantity || 0)}
           </div>
         </div>
@@ -2361,6 +2394,13 @@ async function loadOrders() {
     ============================================================ */
 
     if (!orderList.length) {
+      const totalSalesElement =
+        document.getElementById("totalSales");
+
+      if (totalSalesElement) {
+        totalSalesElement.textContent = "\u20A60.00";
+      }
+
       if (recent) {
         recent.innerHTML = `
           <div class="empty">
@@ -2458,7 +2498,7 @@ async function loadOrders() {
                 cursor:pointer;
               "
             >
-              Ã—
+              \u00D7
             </button>
           </div>
 
@@ -2471,27 +2511,27 @@ async function loadOrders() {
 
             <div class="order-info-box">
               <small>Customer</small>
-              <strong>${safe(order.customer_name || "â€”")}</strong>
+              <strong>${safe(order.customer_name || "\u2014")}</strong>
             </div>
 
             <div class="order-info-box">
               <small>Phone</small>
-              <strong>${safe(order.customer_phone || "â€”")}</strong>
+              <strong>${safe(order.customer_phone || "\u2014")}</strong>
             </div>
 
             <div class="order-info-box">
               <small>Address</small>
-              <strong>${safe(order.delivery_address || "â€”")}</strong>
+              <strong>${safe(order.delivery_address || "\u2014")}</strong>
             </div>
 
             <div class="order-info-box">
               <small>City</small>
-              <strong>${safe(order.city || "â€”")}</strong>
+              <strong>${safe(order.city || "\u2014")}</strong>
             </div>
 
             <div class="order-info-box">
               <small>State</small>
-              <strong>${safe(order.state || "â€”")}</strong>
+              <strong>${safe(order.state || "\u2014")}</strong>
             </div>
 
             <div class="order-info-box">
@@ -2542,15 +2582,15 @@ async function loadOrders() {
                     ? items.map(item => `
                       <tr>
                         <td style="padding:12px;border-bottom:1px solid #222;">
-                          ${safe(item.product_name || "â€”")}
+                          ${safe(item.product_name || "\u2014")}
                         </td>
 
                         <td style="padding:12px;border-bottom:1px solid #222;">
-                          ${safe(item.size || "â€”")}
+                          ${safe(item.size || "\u2014")}
                         </td>
 
                         <td style="padding:12px;border-bottom:1px solid #222;">
-                          ${safe(item.color || "â€”")}
+                          ${safe(item.color || "\u2014")}
                         </td>
 
                         <td style="padding:12px;text-align:center;border-bottom:1px solid #222;">
@@ -2586,7 +2626,7 @@ async function loadOrders() {
 
             <div class="order-info-box">
               <small>Payment Reference</small>
-              <strong>${safe(order.payment_reference || "â€”")}</strong>
+              <strong>${safe(order.payment_reference || "\u2014")}</strong>
             </div>
 
             <div class="order-info-box">
@@ -2605,7 +2645,7 @@ async function loadOrders() {
                 ${
                   order.created_at
                     ? new Date(order.created_at).toLocaleString("en-NG")
-                    : "â€”"
+                    : "\u2014"
                 }
               </strong>
             </div>
@@ -2658,16 +2698,16 @@ async function loadOrders() {
 
                       <td>
                         <strong>
-                          ${safe(order.order_number || "â€”")}
+                          ${safe(order.order_number || "\u2014")}
                         </strong>
                       </td>
 
                       <td>
-                        ${safe(order.customer_name || "â€”")}
+                        ${safe(order.customer_name || "\u2014")}
                       </td>
 
                       <td>
-                        ${safe(order.customer_phone || "â€”")}
+                        ${safe(order.customer_phone || "\u2014")}
                       </td>
 
                       <td style="min-width:210px;">
@@ -2756,7 +2796,14 @@ async function loadOrders() {
     const totalOrders = document.getElementById("totalOrders");
 
     if (totalOrders) {
-      totalOrders.textContent = "â€”";
+      totalOrders.textContent = "\u2014";
+    }
+
+    const totalSalesElement =
+      document.getElementById("totalSales");
+
+    if (totalSalesElement) {
+      totalSalesElement.textContent = "\u2014";
     }
 
     if (recent) {
