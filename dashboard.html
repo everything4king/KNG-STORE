@@ -525,6 +525,41 @@
       text-align: right;
     }
 
+
+    /* =========================
+       ROLE / PERMISSION UI
+    ========================= */
+
+    .permission-notice {
+      padding: 14px 16px;
+      border: 1px solid #333;
+      border-radius: 10px;
+      background: #171717;
+      color: #aaa;
+      margin-bottom: 18px;
+      line-height: 1.5;
+      font-size: 13px;
+    }
+
+    .permission-notice strong {
+      color: #fff;
+    }
+
+    .owner-only-control {
+      display: none;
+    }
+
+    .readonly-label {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 20px;
+      background: #222;
+      color: #888;
+      font-size: 10px;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+    }
+
     /* =========================
        MOBILE
     ========================= */
@@ -761,6 +796,8 @@
         <span>Products</span>
       </button>
 
+      <!-- Finance / Savings / Notifications will be activated in their dedicated build phases. -->
+
       <button class="nav-btn" data-page="settings">
         <span class="nav-icon">&#9881;</span>
         <span>Settings</span>
@@ -911,6 +948,8 @@
 
           </div>
 
+          <div id="staffPermissionNotice"></div>
+
           <div id="staffList">
             <div class="empty">Loading staff...</div>
           </div>
@@ -1025,6 +1064,13 @@
           </div>
 
           <div class="settings-row">
+            <div class="settings-label">Access level</div>
+            <div class="settings-value">
+              OWNER / ADMIN = FULL CONTROL Â· MANAGER = OPERATIONAL ACCESS
+            </div>
+          </div>
+
+          <div class="settings-row">
             <div class="settings-label">Dashboard version</div>
             <div class="settings-value">
               KNG Management v1
@@ -1079,6 +1125,112 @@ const kngSupabase =
 let currentUser = null;
 let currentStaff = null;
 let pendingLoginEmail = "";
+
+/* ============================================================
+   KNG ROLE / PERMISSION SYSTEM
+   OWNER / ADMIN = full control
+   MANAGER = operational access, restricted sensitive controls
+============================================================ */
+
+const KNG_PERMISSIONS = {
+  admin: {
+    label: "OWNER / ADMIN",
+    canManageStaff: true,
+    canManageCustomers: true,
+    canDeleteCustomerAccounts: true,
+    canManageProducts: true,
+    canManageOrders: true,
+    canManageDeliveries: true,
+    canViewFinance: true,
+    canManageFinanceSettings: true,
+    canManageSavingsSettings: true,
+    canInitiateTransfers: true,
+    canManageNotifications: true,
+    canManageSystemSettings: true
+  },
+
+  manager: {
+    label: "MANAGER",
+    canManageStaff: false,
+    canManageCustomers: true,
+    canDeleteCustomerAccounts: false,
+    canManageProducts: true,
+    canManageOrders: true,
+    canManageDeliveries: true,
+    canViewFinance: true,
+    canManageFinanceSettings: false,
+    canManageSavingsSettings: false,
+    canInitiateTransfers: false,
+    canManageNotifications: false,
+    canManageSystemSettings: false
+  }
+};
+
+function getCurrentRole() {
+  return String(currentStaff?.role || "").toLowerCase();
+}
+
+function getCurrentPermissions() {
+  return KNG_PERMISSIONS[getCurrentRole()] || {};
+}
+
+function isOwnerAdmin() {
+  return getCurrentRole() === "admin";
+}
+
+function can(permission) {
+  return getCurrentPermissions()[permission] === true;
+}
+
+function requireOwnerAccess(message) {
+  if (isOwnerAdmin()) return true;
+
+  showToast(
+    message ||
+    "OWNER / ADMIN ACCESS IS REQUIRED FOR THIS ACTION."
+  );
+
+  return false;
+}
+
+function applyRolePermissions() {
+  const role = getCurrentRole();
+
+  if (!role) return;
+
+  document.body.dataset.kngRole = role;
+
+  const staffNotice = document.getElementById("staffPermissionNotice");
+
+  if (staffNotice) {
+    if (isOwnerAdmin()) {
+      staffNotice.innerHTML = `
+        <div class="permission-notice">
+          <strong>OWNER / ADMIN CONTROL:</strong>
+          You have full staff-management access.
+        </div>
+      `;
+    } else {
+      staffNotice.innerHTML = `
+        <div class="permission-notice">
+          <strong>MANAGER ACCESS:</strong>
+          Staff records are view-only. Staff roles, activation status,
+          and other staff-management controls are restricted to OWNER / ADMIN.
+        </div>
+      `;
+    }
+  }
+
+  document.querySelectorAll(".staff-actions").forEach(function(actions) {
+    actions.style.display = isOwnerAdmin() ? "flex" : "none";
+  });
+
+  const settingsStatus = document.getElementById("settingsStatus");
+  if (settingsStatus && currentStaff) {
+    settingsStatus.textContent =
+      currentStaff.active ? "Active" : "Inactive";
+  }
+}
 
 /* =========================
    KNG REAL-TIME PRESENCE
@@ -1442,6 +1594,8 @@ async function checkStaffAccess(options = {}) {
 
     currentStaff = data;
 
+    applyRolePermissions();
+
     startStaffPresence();
     /*
        If the dashboard was already opened for speed, keep it open.
@@ -1534,6 +1688,8 @@ function updateUserInterface() {
   document.getElementById("settingsName").textContent = currentStaff.full_name || "N/A";
   document.getElementById("settingsRole").textContent = roleLabel || "N/A";
   document.getElementById("settingsStatus").textContent = currentStaff.active ? "Active" : "Inactive";
+
+  applyRolePermissions();
 }
 
 
@@ -1752,18 +1908,26 @@ async function loadStaff() {
   <span class="staff-online-dot"></span>
   ${onlineStaffIds.has(member.user_id) ? "Online" : "Offline"}
 </span>
-<div class="staff-actions">
-    <button type="button" onclick="editStaff('${member.id}')">EDIT</button>
-    <button type="button" onclick="toggleStaffStatus('${member.id}', ${member.active !== false})">
-        ${member.active !== false ? "DEACTIVATE" : "ACTIVATE"}
-    </button>
-</div>
+${
+  isOwnerAdmin()
+    ? `<div class="staff-actions">
+        <button type="button" onclick="editStaff('${member.id}')">EDIT</button>
+        <button type="button" onclick="toggleStaffStatus('${member.id}', ${member.active !== false})">
+          ${member.active !== false ? "DEACTIVATE" : "ACTIVATE"}
+        </button>
+      </div>`
+    : `<div style="margin-top:12px;">
+        <span class="readonly-label">VIEW ONLY</span>
+      </div>`
+}
             </div>
           `;
 
         }).join("")}
       </div>
     `;
+
+    applyRolePermissions();
 
   } catch (error) {
 
@@ -1786,6 +1950,10 @@ async function loadStaff() {
 ============================================================ */
 
 async function editStaff(staffId) {
+  if (!requireOwnerAccess("ONLY OWNER / ADMIN CAN EDIT STAFF.")) {
+    return;
+  }
+
   try {
     const { data: staffMember, error: fetchError } = await kngSupabase
       .from("staff")
@@ -2054,6 +2222,10 @@ async function editStaff(staffId) {
 ============================================================ */
 
 async function toggleStaffStatus(staffId, currentlyActive) {
+  if (!requireOwnerAccess("ONLY OWNER / ADMIN CAN CHANGE STAFF STATUS.")) {
+    return;
+  }
+
   try {
     if (currentStaff && currentStaff.id === staffId) {
       showToast("YOU CANNOT DEACTIVATE YOUR OWN ACCOUNT.");
@@ -2361,8 +2533,8 @@ async function loadOrders() {
         <div style="margin-bottom:6px;">
           <strong>${safe(item.product_name || "Product")}</strong>
           <div style="font-size:12px;opacity:.7;">
-            ${safe(item.size || "\u2014")} Â·
-            ${safe(item.color || "\u2014")} Â·
+            ${safe(item.size || "\u2014")} Ã‚Â·
+            ${safe(item.color || "\u2014")} Ã‚Â·
             Qty ${safe(item.quantity || 0)}
           </div>
         </div>
