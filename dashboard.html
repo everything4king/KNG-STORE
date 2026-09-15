@@ -1073,7 +1073,7 @@
           <div class="settings-row">
             <div class="settings-label">Dashboard version</div>
             <div class="settings-value">
-              KNG Management v1
+              KNG Management v1.1
             </div>
           </div>
 
@@ -2533,8 +2533,8 @@ async function loadOrders() {
         <div style="margin-bottom:6px;">
           <strong>${safe(item.product_name || "Product")}</strong>
           <div style="font-size:12px;opacity:.7;">
-            ${safe(item.size || "\u2014")} Ã‚Â·
-            ${safe(item.color || "\u2014")} Ã‚Â·
+            ${safe(item.size || "\u2014")} Â·
+            ${safe(item.color || "\u2014")} Â·
             Qty ${safe(item.quantity || 0)}
           </div>
         </div>
@@ -3006,114 +3006,117 @@ async function loadCustomers() {
   const container =
     document.getElementById("customersTable");
 
+  if (!container) return;
+
   try {
 
     /*
-      We try the most likely KNG customer table names.
+      KNG customer accounts live in customer_profiles.
+      We intentionally use the real KNG table here instead of
+      guessing between "customers" and "profiles".
     */
-
-    let result =
+    const { data: customers, error: customersError } =
       await kngSupabase
-        .from("customers")
-        .select("*")
-        .limit(100);
+        .from("customer_profiles")
+        .select(`
+          id,
+          full_name,
+          phone,
+          email,
+          address,
+          city,
+          state,
+          country,
+          whatsapp_number,
+          profile_picture_url,
+          created_at,
+          updated_at
+        `)
+        .order("created_at", { ascending: false });
 
-    if (result.error) {
+    if (customersError) throw customersError;
 
-      result =
-        await kngSupabase
-          .from("profiles")
-          .select("*")
-          .limit(100);
+    const customerList = customers || [];
 
+    /* Load orders so the customer directory can show order count
+       and total paid sales per customer. */
+    const { data: orders, error: ordersError } =
+      await kngSupabase
+        .from("orders")
+        .select("customer_id,customer_name,total_amount,payment_status");
+
+    if (ordersError) throw ordersError;
+
+    const customerStats = {};
+
+    (orders || []).forEach(function(order) {
+      const id = order.customer_id;
+      if (!id) return;
+
+      if (!customerStats[id]) {
+        customerStats[id] = {
+          orders: 0,
+          paidTotal: 0
+        };
+      }
+
+      customerStats[id].orders += 1;
+
+      if (String(order.payment_status || "").toLowerCase() === "paid") {
+        customerStats[id].paidTotal += Number(order.total_amount || 0);
+      }
+    });
+
+    const totalCustomers = document.getElementById("totalCustomers");
+    if (totalCustomers) {
+      totalCustomers.textContent = customerList.length;
     }
 
-    if (result.error) {
-      throw result.error;
-    }
-
-    const customers =
-      result.data || [];
-
-    document.getElementById("totalCustomers")
-      .textContent = customers.length;
-
-
-    if (!customers.length) {
-
-      container.innerHTML =
-        '<div class="empty">No customers found.</div>';
-
+    if (!customerList.length) {
+      container.innerHTML = `
+        <div class="empty">
+          No KNG customer accounts found.
+        </div>
+      `;
       return;
-
     }
 
-
-    const headers =
-      Object.keys(customers[0])
-        .slice(0, 8);
-
+    window.kngCustomerDirectory = customerList;
 
     container.innerHTML = `
+      <div style="display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:18px;">
+        <div style="color:#777;font-size:12px;">
+          ${customerList.length} customer${customerList.length === 1 ? "" : "s"} connected to KNG.
+        </div>
+        <input
+          id="kngCustomerSearch"
+          type="search"
+          placeholder="Search name, email, phone..."
+          style="min-width:280px;max-width:100%;padding:12px 14px;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:#111;color:#fff;outline:none;"
+          oninput="filterKngCustomers()"
+        >
+      </div>
+
       <div class="table-wrap">
-
         <table>
-
           <thead>
-
             <tr>
-              ${headers.map(function(header) {
-
-                return `
-                  <th>
-                    ${escapeHTML(header)}
-                  </th>
-                `;
-
-              }).join("")}
+              <th>CUSTOMER</th>
+              <th>PHONE</th>
+              <th>WHATSAPP</th>
+              <th>LOCATION</th>
+              <th>ORDERS</th>
+              <th>PAID TOTAL</th>
+              <th>JOINED</th>
+              <th>ACTION</th>
             </tr>
-
           </thead>
-
-          <tbody>
-
-            ${customers.map(function(customer) {
-
-              return `
-                <tr>
-
-                  ${headers.map(function(header) {
-
-                    let value =
-                      customer[header];
-
-                    if (
-                      value !== null &&
-                      typeof value === "object"
-                    ) {
-                      value =
-                        JSON.stringify(value);
-                    }
-
-                    return `
-                      <td>
-                        ${escapeHTML(
-                          String(value ?? "")
-                        )}
-                      </td>
-                    `;
-
-                  }).join("")}
-
-                </tr>
-              `;
-
+          <tbody id="kngCustomerRows">
+            ${customerList.map(function(customer) {
+              return renderKngCustomerRow(customer, customerStats);
             }).join("")}
-
           </tbody>
-
         </table>
-
       </div>
     `;
 
@@ -3121,17 +3124,151 @@ async function loadCustomers() {
 
     console.error("Customer error:", error);
 
-    document.getElementById("totalCustomers")
-      .textContent = "\u2014";
+    const totalCustomers = document.getElementById("totalCustomers");
+    if (totalCustomers) totalCustomers.textContent = "â€”";
 
     container.innerHTML = `
       <div class="empty">
-        Customer table is not connected yet.
+        Unable to load KNG customer accounts.<br>
+        <span style="display:block;margin-top:8px;opacity:.65;font-size:12px;">
+          The customer_profiles table or its staff read permission still needs to be connected.
+        </span>
       </div>
     `;
+  }
+}
 
+function kngCustomerSearchText(customer) {
+  return [
+    customer.full_name,
+    customer.email,
+    customer.phone,
+    customer.whatsapp_number,
+    customer.address,
+    customer.city,
+    customer.state
+  ].filter(Boolean).join(" ").toLowerCase();
+}
+
+function renderKngCustomerRow(customer, customerStats) {
+  const stats = customerStats[customer.id] || { orders: 0, paidTotal: 0 };
+  const location = [customer.city, customer.state].filter(Boolean).join(", ") || "â€”";
+  const joined = customer.created_at
+    ? new Date(customer.created_at).toLocaleDateString("en-NG")
+    : "â€”";
+
+  return `
+    <tr data-kng-customer-search="${escapeHTML(kngCustomerSearchText(customer))}">
+      <td>
+        <strong>${escapeHTML(customer.full_name || "Unnamed Customer")}</strong>
+        <div style="font-size:12px;opacity:.6;margin-top:4px;">
+          ${escapeHTML(customer.email || "No email")}
+        </div>
+      </td>
+      <td>${escapeHTML(customer.phone || "â€”")}</td>
+      <td>${escapeHTML(customer.whatsapp_number || "â€”")}</td>
+      <td>${escapeHTML(location)}</td>
+      <td>${stats.orders}</td>
+      <td><strong>${money(stats.paidTotal)}</strong></td>
+      <td>${escapeHTML(joined)}</td>
+      <td>
+        <button
+          type="button"
+          class="refresh-btn"
+          style="white-space:nowrap;cursor:pointer;"
+          onclick="viewKngCustomer('${escapeHTML(customer.id)}')"
+        >
+          VIEW
+        </button>
+      </td>
+    </tr>
+  `;
+}
+
+function filterKngCustomers() {
+  const input = document.getElementById("kngCustomerSearch");
+  const query = String(input?.value || "").trim().toLowerCase();
+  const rows = document.querySelectorAll("#kngCustomerRows tr");
+
+  rows.forEach(function(row) {
+    const text = String(row.dataset.kngCustomerSearch || "");
+    row.style.display = !query || text.includes(query) ? "" : "none";
+  });
+}
+
+window.viewKngCustomer = function(customerId) {
+  const customer = (window.kngCustomerDirectory || [])
+    .find(function(item) { return item.id === customerId; });
+
+  if (!customer) return;
+
+  let modal = document.getElementById("kngCustomerDetailsModal");
+
+  if (!modal) {
+    modal = document.createElement("div");
+    modal.id = "kngCustomerDetailsModal";
+    modal.style.cssText = `
+      position:fixed;
+      inset:0;
+      z-index:99999;
+      background:rgba(0,0,0,.78);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+    `;
+    document.body.appendChild(modal);
   }
 
+  const location = [customer.address, customer.city, customer.state, customer.country]
+    .filter(Boolean).join(", ") || "Not provided";
+
+  modal.innerHTML = `
+    <div style="width:min(720px,100%);max-height:90vh;overflow:auto;background:#111;border:1px solid #333;border-radius:18px;padding:28px;color:#fff;box-shadow:0 25px 80px rgba(0,0,0,.6);">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:24px;">
+        <div>
+          <div style="font-size:10px;letter-spacing:3px;color:#888;text-transform:uppercase;">KNG / CUSTOMER</div>
+          <h2 style="margin:8px 0 0;font-size:30px;">${escapeHTML(customer.full_name || "Unnamed Customer")}</h2>
+        </div>
+        <button type="button" id="kngCustomerClose" style="border:1px solid #333;background:#181818;color:#fff;border-radius:9px;padding:10px 14px;cursor:pointer;">CLOSE</button>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;">
+        ${kngCustomerDetail("EMAIL", customer.email || "Not provided")}
+        ${kngCustomerDetail("PHONE", customer.phone || "Not provided")}
+        ${kngCustomerDetail("WHATSAPP", customer.whatsapp_number || "Not provided")}
+        ${kngCustomerDetail("LOCATION", location)}
+        ${kngCustomerDetail("CUSTOMER ID", customer.id || "Not available")}
+        ${kngCustomerDetail("JOINED", customer.created_at ? new Date(customer.created_at).toLocaleString("en-NG") : "Not available")}
+      </div>
+
+      <div style="margin-top:18px;padding:15px;border:1px solid #292929;border-radius:12px;background:#0b0b0b;">
+        <div style="font-size:10px;letter-spacing:2px;color:#888;text-transform:uppercase;margin-bottom:8px;">DELIVERY ADDRESS</div>
+        <div style="font-size:14px;line-height:1.6;">${escapeHTML(location)}</div>
+      </div>
+
+      <div style="margin-top:20px;padding-top:18px;border-top:1px solid #292929;color:#777;font-size:12px;line-height:1.6;">
+        Customer account is connected to the KNG customer_profiles database record. Account deletion and profile editing will be added through the secured owner/manager control layer rather than exposing privileged database access in this page.
+      </div>
+    </div>
+  `;
+
+  modal.querySelector("#kngCustomerClose").addEventListener("click", function() {
+    modal.remove();
+  });
+
+  modal.addEventListener("click", function(event) {
+    if (event.target === modal) modal.remove();
+  });
+};
+
+function kngCustomerDetail(label, value) {
+  return `
+    <div style="padding:15px;border:1px solid #292929;border-radius:12px;background:#0b0b0b;min-width:0;">
+      <div style="font-size:9px;letter-spacing:2px;color:#777;text-transform:uppercase;margin-bottom:7px;">${escapeHTML(label)}</div>
+      <div style="font-size:13px;word-break:break-word;line-height:1.5;">${escapeHTML(value)}</div>
+    </div>
+  `;
 }
 
 
