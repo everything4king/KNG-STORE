@@ -3130,7 +3130,7 @@ async function loadCustomers() {
     console.error("Customer error:", error);
 
     const totalCustomers = document.getElementById("totalCustomers");
-    if (totalCustomers) totalCustomers.textContent = "â€”";
+    if (totalCustomers) totalCustomers.textContent = "Not provided”";
 
     container.innerHTML = `
       <div class="empty">
@@ -3157,10 +3157,15 @@ function kngCustomerSearchText(customer) {
 
 function renderKngCustomerRow(customer, customerStats) {
   const stats = customerStats[customer.id] || { orders: 0, paidTotal: 0 };
-  const location = [customer.city, customer.state].filter(Boolean).join(", ") || "â€”";
+ const location = [
+  customer.address,
+  customer.city,
+  customer.state,
+  customer.country
+].filter(Boolean).join(", ") || "Not provided";
   const joined = customer.created_at
     ? new Date(customer.created_at).toLocaleDateString("en-NG")
-    : "â€”";
+    : "Not provided”";
 
   return `
     <tr data-kng-customer-search="${escapeHTML(kngCustomerSearchText(customer))}">
@@ -3170,8 +3175,8 @@ function renderKngCustomerRow(customer, customerStats) {
           ${escapeHTML(customer.email || "No email")}
         </div>
       </td>
-      <td>${escapeHTML(customer.phone || "â€”")}</td>
-      <td>${escapeHTML(customer.whatsapp_number || "â€”")}</td>
+      <td>${escapeHTML(customer.phone || "Not provided”")}</td>
+      <td>${escapeHTML(customer.whatsapp_number || "Not provided”")}</td>
       <td>${escapeHTML(location)}</td>
       <td>${stats.orders}</td>
       <td><strong>${money(stats.paidTotal)}</strong></td>
@@ -3208,7 +3213,7 @@ function renderKngCustomerRow(customer, customerStats) {
 }
 async function deleteKngCustomer(customerId) {
   if (!isOwnerAdmin()) {
-    showKngToast("Only the KNG Owner/Admin can delete customer accounts.", "error");
+    showToast("Only the KNG Owner/Admin can delete customer accounts.", "error");
     return;
   }
 
@@ -3218,7 +3223,7 @@ async function deleteKngCustomer(customerId) {
     });
 
   if (!customer) {
-    showKngToast("Customer account could not be found.", "error");
+    showToast("Customer account could not be found.", "error");
     return;
   }
 
@@ -3390,7 +3395,7 @@ async function deleteKngCustomer(customerId) {
 
         closeModal();
 
-        showKngToast(
+        showToast(
           "Customer account deleted successfully.",
           "success"
         );
@@ -3404,7 +3409,7 @@ async function deleteKngCustomer(customerId) {
         deleteButton.disabled = false;
         deleteButton.textContent = "DELETE ACCOUNT";
 
-        showKngToast(
+        showToast(
           error.message || "Unable to delete customer account.",
           "error"
         );
