@@ -957,7 +957,14 @@
         </div>
 
       </section>
+function money(value) {
+  const amount = Number(value || 0);
 
+  return "₦" + amount.toLocaleString("en-NG", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+}
 
       <!-- =========================
            CUSTOMERS
