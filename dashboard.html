@@ -957,14 +957,7 @@
         </div>
 
       </section>
-function money(value) {
-  const amount = Number(value || 0);
 
-  return "₦" + amount.toLocaleString("en-NG", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  });
-}
 
       <!-- =========================
            CUSTOMERS
@@ -2516,14 +2509,7 @@ async function loadOrders() {
             .replace(/'/g, "&#039;");
     }
 
-    function money(value) {
-      const amount = Number(value || 0);
-
-      return "\u20A6" + amount.toLocaleString("en-NG", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      });
-    }
+   
 
     function getItems(orderId) {
       return orderItems.filter(item => item.order_id === orderId);
@@ -3003,7 +2989,19 @@ async function loadOrders() {
   }
 }
 
+function money(value) {
+  const amount = Number(value || 0);
 
+  return "\u20A6" + amount.toLocaleString("en-NG", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+}
+
+
+/* ============================================================
+   CUSTOMERS
+============================================================ */
 /* ============================================================
    CUSTOMERS
 ============================================================ */
