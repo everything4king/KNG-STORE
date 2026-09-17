@@ -3130,7 +3130,7 @@ async function loadCustomers() {
     console.error("Customer error:", error);
 
     const totalCustomers = document.getElementById("totalCustomers");
-    if (totalCustomers) totalCustomers.textContent = "Not provided;
+    if (totalCustomers) totalCustomers.textContent = "\u2014";
 
     container.innerHTML = `
       <div class="empty">
@@ -3165,7 +3165,7 @@ function renderKngCustomerRow(customer, customerStats) {
 ].filter(Boolean).join(", ") || "Not provided";
   const joined = customer.created_at
     ? new Date(customer.created_at).toLocaleDateString("en-NG")
-    : "Not provided;
+    : "Not provided";
 
   return `
     <tr data-kng-customer-search="${escapeHTML(kngCustomerSearchText(customer))}">
@@ -3175,8 +3175,8 @@ function renderKngCustomerRow(customer, customerStats) {
           ${escapeHTML(customer.email || "No email")}
         </div>
       </td>
-      <td>${escapeHTML(customer.phone || "Not provided)}</td>
-      <td>${escapeHTML(customer.whatsapp_number || "Not provided)}</td>
+      <td>${escapeHTML(customer.phone || "Not provided")}</td>
+      <td>${escapeHTML(customer.whatsapp_number || "Not provided")}</td>
       <td>${escapeHTML(location)}</td>
       <td>${stats.orders}</td>
       <td><strong>${money(stats.paidTotal)}</strong></td>
