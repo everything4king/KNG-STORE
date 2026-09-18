@@ -1004,11 +1004,177 @@
 
           </div>
 
-          <div id="productsTable">
-            <div class="empty">
-              Products will appear here when the products table is connected.
-            </div>
-          </div>
+    <div id="productsTable">
+  <div class="empty">
+    Loading products...
+  </div>
+</div>
+
+<div id="productModal" class="kng-modal" style="display:none;">
+  <div class="kng-modal-card">
+    <div class="kng-modal-header">
+      <div>
+        <div class="kng-modal-title" id="productModalTitle">
+          ADD PRODUCT
+        </div>
+        <div class="kng-modal-subtitle">
+          Create and manage a KNG product
+        </div>
+      </div>
+
+      <button
+        type="button"
+        class="kng-modal-close"
+        onclick="closeProductModal()"
+        aria-label="Close"
+      >
+        ×
+      </button>
+    </div>
+
+    <form id="productForm">
+      <input type="hidden" id="productId">
+
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label>PRODUCT NAME</label>
+          <input
+            type="text"
+            id="productName"
+            placeholder="e.g. KNG Essential Tee"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label>PRICE (₦)</label>
+          <input
+            type="number"
+            id="productPrice"
+            min="0"
+            step="1"
+            placeholder="25000"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label>GENDER</label>
+          <select id="productGender" required>
+            <option value="">Select gender</option>
+            <option value="male">Kings</option>
+            <option value="female">Queens</option>
+            <option value="unisex">Unisex</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>SECTION</label>
+          <select id="productSection" required>
+            <option value="">Select section</option>
+            <option value="upper-body">Upper Body</option>
+            <option value="lower-body">Lower Body</option>
+            <option value="accessories">Accessories</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>CATEGORY</label>
+          <input
+            type="text"
+            id="productCategory"
+            placeholder="e.g. Hoodies"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label>STOCK QUANTITY</label>
+          <input
+            type="number"
+            id="productStock"
+            min="0"
+            step="1"
+            placeholder="0"
+            required
+          >
+        </div>
+
+        <div class="form-group form-group-full">
+          <label>COLORS</label>
+          <input
+            type="text"
+            id="productColors"
+            placeholder="Obsidian Black, Bone, Deep Olive"
+          >
+          <small>Separate each color with a comma.</small>
+        </div>
+
+        <div class="form-group form-group-full">
+          <label>SIZES</label>
+          <input
+            type="text"
+            id="productSizes"
+            placeholder="S, M, L, XL"
+          >
+          <small>Separate each size with a comma.</small>
+        </div>
+
+        <div class="form-group form-group-full">
+          <label>STYLES</label>
+          <input
+            type="text"
+            id="productStyles"
+            placeholder="Regular, Oversized"
+          >
+          <small>Separate each style with a comma.</small>
+        </div>
+
+        <div class="form-group form-group-full">
+          <label>IMAGE URL</label>
+          <input
+            type="url"
+            id="productImageUrl"
+            placeholder="https://..."
+          >
+        </div>
+
+        <div class="form-check">
+          <label>
+            <input type="checkbox" id="productActive" checked>
+            <span>ACTIVE PRODUCT</span>
+          </label>
+        </div>
+
+        <div class="form-check">
+          <label>
+            <input type="checkbox" id="productFeatured">
+            <span>FEATURED PRODUCT</span>
+          </label>
+        </div>
+
+      </div>
+
+      <div class="kng-modal-actions">
+        <button
+          type="button"
+          class="secondary-btn"
+          onclick="closeProductModal()"
+        >
+          CANCEL
+        </button>
+
+        <button
+          type="submit"
+          class="primary-btn"
+        >
+          SAVE PRODUCT
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
 
         </div>
 
@@ -1154,7 +1320,7 @@ const KNG_PERMISSIONS = {
     canManageStaff: false,
     canManageCustomers: true,
     canDeleteCustomerAccounts: false,
-    canManageProducts: true,
+ canManageProducts: false,
     canManageOrders: true,
     canManageDeliveries: true,
     canViewFinance: true,
@@ -3512,118 +3678,1172 @@ async function loadProducts() {
   const container =
     document.getElementById("productsTable");
 
+  if (!container) return;
+
   try {
 
     const { data, error } =
       await kngSupabase
         .from("products")
         .select("*")
+        .order("created_at", { ascending: false })
         .limit(100);
 
     if (error) {
       throw error;
     }
 
-    const products =
-      data || [];
+    const products = data || [];
 
-    document.getElementById("totalProducts")
-      .textContent = products.length;
+    const totalProducts =
+      document.getElementById("totalProducts");
 
-
-    if (!products.length) {
-
-      container.innerHTML =
-        '<div class="empty">No products found.</div>';
-
-      return;
-
+    if (totalProducts) {
+      totalProducts.textContent = products.length;
     }
 
+    window.kngProducts = products;
 
-    const headers =
-      Object.keys(products[0])
-        .slice(0, 8);
-
+    const canManage =
+      isOwnerAdmin();
 
     container.innerHTML = `
-      <div class="table-wrap">
+      <div style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap:12px;
+        flex-wrap:wrap;
+        margin-bottom:18px;
+      ">
 
-        <table>
+        <div style="
+          color:#777;
+          font-size:12px;
+        ">
+          ${products.length}
+          product${products.length === 1 ? "" : "s"}
+          connected to KNG.
+        </div>
 
-          <thead>
+        ${
+          canManage
+            ? `
+              <button
+                type="button"
+                class="primary-btn"
+                style="
+                  width:auto;
+                  margin:0;
+                  padding:10px 16px;
+                  cursor:pointer;
+                "
+                onclick="openProductModal()"
+              >
+                + ADD PRODUCT
+              </button>
+            `
+            : `
+              <span class="readonly-label">
+                VIEW ONLY
+              </span>
+            `
+        }
 
-            <tr>
-              ${headers.map(function(header) {
+      </div>
 
-                return `
-                  <th>
-                    ${escapeHTML(header)}
-                  </th>
-                `;
+      ${
+        products.length
+          ? `
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>PRODUCT</th>
+                    <th>PRICE</th>
+                    <th>GENDER</th>
+                    <th>CATEGORY</th>
+                    <th>STOCK</th>
+                    <th>STATUS</th>
+                    <th>FEATURED</th>
+                    <th>ACTION</th>
+                  </tr>
+                </thead>
 
-              }).join("")}
-            </tr>
+                <tbody>
 
-          </thead>
+                  ${products.map(function(product) {
 
-          <tbody>
+                    const colors =
+                      Array.isArray(product.colors)
+                        ? product.colors.join(", ")
+                        : "";
 
-            ${products.map(function(product) {
+                    const sizes =
+                      Array.isArray(product.sizes)
+                        ? product.sizes.join(", ")
+                        : "";
 
-              return `
-                <tr>
-
-                  ${headers.map(function(header) {
-
-                    let value =
-                      product[header];
-
-                    if (
-                      value !== null &&
-                      typeof value === "object"
-                    ) {
-                      value =
-                        JSON.stringify(value);
-                    }
+                    const image =
+                      product.image_url || "";
 
                     return `
-                      <td>
-                        ${escapeHTML(
-                          String(value ?? "")
-                        )}
-                      </td>
+                      <tr>
+
+                        <td>
+                          <div style="
+                            display:flex;
+                            align-items:center;
+                            gap:10px;
+                            min-width:200px;
+                          ">
+
+                            ${
+                              image
+                                ? `
+                                  <img
+                                    src="${escapeHTML(image)}"
+                                    alt="${escapeHTML(product.name || "Product")}"
+                                    style="
+                                      width:46px;
+                                      height:46px;
+                                      object-fit:cover;
+                                      border-radius:8px;
+                                      border:1px solid #333;
+                                      background:#080808;
+                                    "
+                                    onerror="this.style.display='none'"
+                                  >
+                                `
+                                : `
+                                  <div style="
+                                    width:46px;
+                                    height:46px;
+                                    display:flex;
+                                    align-items:center;
+                                    justify-content:center;
+                                    border-radius:8px;
+                                    border:1px solid #333;
+                                    background:#080808;
+                                    color:#555;
+                                    font-size:10px;
+                                  ">
+                                    KNG
+                                  </div>
+                                `
+                            }
+
+                            <div>
+                              <strong>
+                                ${escapeHTML(
+                                  product.name || "Unnamed Product"
+                                )}
+                              </strong>
+
+                              <div style="
+                                margin-top:4px;
+                                color:#666;
+                                font-size:11px;
+                              ">
+                                ${escapeHTML(
+                                  product.section || "No section"
+                                )}
+                              </div>
+                            </div>
+
+                          </div>
+                        </td>
+
+                        <td>
+                          <strong>
+                            ${money(product.price)}
+                          </strong>
+                        </td>
+
+                        <td>
+                          <span class="pill">
+                            ${escapeHTML(
+                              String(product.gender || "—").toUpperCase()
+                            )}
+                          </span>
+                        </td>
+
+                        <td>
+                          ${escapeHTML(
+                            product.category || "Not provided"
+                          )}
+                        </td>
+
+                        <td>
+                          <strong>
+                            ${Number(product.stock_quantity || 0)}
+                          </strong>
+
+                          ${
+                            Number(product.stock_quantity || 0) <= 0
+                              ? `
+                                <div style="
+                                  color:#ff7777;
+                                  font-size:10px;
+                                  margin-top:4px;
+                                ">
+                                  OUT OF STOCK
+                                </div>
+                              `
+                              : ""
+                          }
+                        </td>
+
+                        <td>
+                          ${
+                            product.active
+                              ? `
+                                <span class="pill active">
+                                  ACTIVE
+                                </span>
+                              `
+                              : `
+                                <span class="pill">
+                                  INACTIVE
+                                </span>
+                              `
+                          }
+                        </td>
+
+                        <td>
+                          ${
+                            product.featured
+                              ? `
+                                <span class="pill active">
+                                  YES
+                                </span>
+                              `
+                              : `
+                                <span class="pill">
+                                  NO
+                                </span>
+                              `
+                          }
+                        </td>
+
+                        <td>
+                          ${
+                            canManage
+                              ? `
+                                <div style="
+                                  display:flex;
+                                  gap:7px;
+                                  flex-wrap:wrap;
+                                ">
+
+                                  <button
+                                    type="button"
+                                    class="refresh-btn"
+                                    style="
+                                      cursor:pointer;
+                                      white-space:nowrap;
+                                    "
+                                    onclick="editProduct('${escapeHTML(product.id)}')"
+                                  >
+                                    EDIT
+                                  </button>
+
+                                  <button
+                                    type="button"
+                                    class="refresh-btn"
+                                    style="
+                                      cursor:pointer;
+                                      white-space:nowrap;
+                                      color:${
+                                        product.active
+                                          ? "#ffb3b3"
+                                          : "#7ee787"
+                                      };
+                                    "
+                                    onclick="toggleProductActive('${escapeHTML(product.id)}')"
+                                  >
+                                    ${
+                                      product.active
+                                        ? "DEACTIVATE"
+                                        : "ACTIVATE"
+                                    }
+                                  </button>
+
+                                  <button
+                                    type="button"
+                                    class="refresh-btn"
+                                    style="
+                                      cursor:pointer;
+                                      white-space:nowrap;
+                                      border-color:#5a2020;
+                                      color:#ff7777;
+                                    "
+                                    onclick="deleteProduct('${escapeHTML(product.id)}')"
+                                  >
+                                    DELETE
+                                  </button>
+
+                                </div>
+                              `
+                              : `
+                                <span class="readonly-label">
+                                  VIEW ONLY
+                                </span>
+                              `
+                          }
+                        </td>
+
+                      </tr>
                     `;
 
                   }).join("")}
 
-                </tr>
-              `;
+                </tbody>
+              </table>
+            </div>
+          `
+          : `
+            <div class="empty">
 
-            }).join("")}
+              <div style="
+                font-size:15px;
+                color:#aaa;
+                margin-bottom:8px;
+              ">
+                No KNG products found.
+              </div>
 
-          </tbody>
+              ${
+                canManage
+                  ? `
+                    <div style="
+                      font-size:12px;
+                      color:#666;
+                    ">
+                      Use ADD PRODUCT to create your first product.
+                    </div>
+                  `
+                  : `
+                    <div style="
+                      font-size:12px;
+                      color:#666;
+                    ">
+                      No products have been added yet.
+                    </div>
+                  `
+              }
 
-        </table>
-
-      </div>
+            </div>
+          `
+      }
     `;
 
   } catch (error) {
 
     console.error("Product error:", error);
 
-    document.getElementById("totalProducts")
-      .textContent = "\u2014";
+    const totalProducts =
+      document.getElementById("totalProducts");
+
+    if (totalProducts) {
+      totalProducts.textContent = "\u2014";
+    }
 
     container.innerHTML = `
       <div class="empty">
-        Products table is not connected yet.
+        Unable to load KNG products.
+        <div style="
+          margin-top:8px;
+          font-size:12px;
+          opacity:.6;
+        ">
+          Please check the products table connection.
+        </div>
       </div>
     `;
+  }
+}
 
+
+/* ============================================================
+   PRODUCT MANAGEMENT
+============================================================ */
+
+function ensureProductModalStyles() {
+
+  if (document.getElementById("kngProductModalStyles")) {
+    return;
   }
 
+  const style =
+    document.createElement("style");
+
+  style.id =
+    "kngProductModalStyles";
+
+  style.textContent = `
+    #productModal {
+      position:fixed;
+      inset:0;
+      z-index:999999;
+      background:rgba(0,0,0,.82);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      overflow:auto;
+    }
+
+    #productModal .kng-modal-card {
+      width:min(760px,100%);
+      max-height:92vh;
+      overflow:auto;
+      background:#111;
+      border:1px solid #333;
+      border-radius:18px;
+      padding:28px;
+      color:#fff;
+      box-shadow:0 30px 90px rgba(0,0,0,.7);
+    }
+
+    #productModal .kng-modal-header {
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:20px;
+      margin-bottom:24px;
+    }
+
+    #productModal .kng-modal-title {
+      font-size:20px;
+      font-weight:800;
+      letter-spacing:1px;
+    }
+
+    #productModal .kng-modal-subtitle {
+      margin-top:5px;
+      color:#777;
+      font-size:12px;
+    }
+
+    #productModal .kng-modal-close {
+      width:40px;
+      height:40px;
+      border-radius:50%;
+      border:1px solid #333;
+      background:#181818;
+      color:#fff;
+      font-size:22px;
+      cursor:pointer;
+    }
+
+    #productModal .form-grid {
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:15px;
+    }
+
+    #productModal .form-group {
+      min-width:0;
+    }
+
+    #productModal .form-group-full {
+      grid-column:1 / -1;
+    }
+
+    #productModal .form-group label {
+      display:block;
+      margin-bottom:7px;
+      color:#aaa;
+      font-size:10px;
+      letter-spacing:1px;
+    }
+
+    #productModal .form-group input,
+    #productModal .form-group select {
+      width:100%;
+      padding:12px 13px;
+      border-radius:9px;
+      border:1px solid #333;
+      background:#080808;
+      color:#fff;
+      outline:none;
+    }
+
+    #productModal .form-group input:focus,
+    #productModal .form-group select:focus {
+      border-color:#666;
+    }
+
+    #productModal .form-group small {
+      display:block;
+      margin-top:6px;
+      color:#666;
+      font-size:10px;
+    }
+
+    #productModal .form-check {
+      padding:12px;
+      border:1px solid #292929;
+      border-radius:9px;
+      background:#0b0b0b;
+    }
+
+    #productModal .form-check label {
+      display:flex;
+      align-items:center;
+      gap:9px;
+      cursor:pointer;
+      color:#aaa;
+      font-size:11px;
+    }
+
+    #productModal .form-check input {
+      width:16px;
+      height:16px;
+      accent-color:#fff;
+    }
+
+    #productModal .kng-modal-actions {
+      display:flex;
+      justify-content:flex-end;
+      gap:10px;
+      margin-top:24px;
+    }
+
+    #productModal .kng-modal-actions button {
+      width:auto;
+      margin:0;
+      cursor:pointer;
+      padding:11px 18px;
+    }
+
+    @media (max-width:650px) {
+      #productModal .form-grid {
+        grid-template-columns:1fr;
+      }
+
+      #productModal .form-group-full {
+        grid-column:auto;
+      }
+
+      #productModal .kng-modal-card {
+        padding:20px;
+      }
+    }
+  `;
+
+  document.head.appendChild(style);
+}
+
+
+function openProductModal(productId) {
+
+  if (!isOwnerAdmin()) {
+    showToast(
+      "Only the KNG Owner/Admin can manage products.",
+      "error"
+    );
+    return;
+  }
+
+  ensureProductModalStyles();
+
+  const modal =
+    document.getElementById("productModal");
+
+  if (!modal) {
+    showToast(
+      "Product form could not be opened.",
+      "error"
+    );
+    return;
+  }
+
+  const product =
+    productId
+      ? (window.kngProducts || [])
+          .find(function(item) {
+            return item.id === productId;
+          })
+      : null;
+
+  document.getElementById("productModalTitle")
+    .textContent =
+      product
+        ? "EDIT PRODUCT"
+        : "ADD PRODUCT";
+
+  document.getElementById("productId")
+    .value =
+      product?.id || "";
+
+  document.getElementById("productName")
+    .value =
+      product?.name || "";
+
+  document.getElementById("productPrice")
+    .value =
+      product?.price ?? "";
+
+  document.getElementById("productGender")
+    .value =
+      product?.gender || "";
+
+  document.getElementById("productSection")
+    .value =
+      product?.section || "";
+
+  document.getElementById("productCategory")
+    .value =
+      product?.category || "";
+
+  document.getElementById("productStock")
+    .value =
+      product?.stock_quantity ?? 0;
+
+  document.getElementById("productColors")
+    .value =
+      Array.isArray(product?.colors)
+        ? product.colors.join(", ")
+        : "";
+
+  document.getElementById("productSizes")
+    .value =
+      Array.isArray(product?.sizes)
+        ? product.sizes.join(", ")
+        : "";
+
+  document.getElementById("productStyles")
+    .value =
+      Array.isArray(product?.styles)
+        ? product.styles.join(", ")
+        : "";
+
+  document.getElementById("productImageUrl")
+    .value =
+      product?.image_url || "";
+
+  document.getElementById("productActive")
+    .checked =
+      product
+        ? product.active === true
+        : true;
+
+  document.getElementById("productFeatured")
+    .checked =
+      product?.featured === true;
+
+  modal.style.display = "flex";
+
+  document.body.style.overflow = "hidden";
+}
+
+
+function closeProductModal() {
+
+  const modal =
+    document.getElementById("productModal");
+
+  if (modal) {
+    modal.style.display = "none";
+  }
+
+  document.body.style.overflow = "";
+
+  const form =
+    document.getElementById("productForm");
+
+  if (form) {
+    form.reset();
+  }
+
+  const productId =
+    document.getElementById("productId");
+
+  if (productId) {
+    productId.value = "";
+  }
+
+  const active =
+    document.getElementById("productActive");
+
+  if (active) {
+    active.checked = true;
+  }
+}
+
+
+function editProduct(productId) {
+  openProductModal(productId);
+}
+
+
+function csvToArray(value) {
+
+  return String(value || "")
+    .split(",")
+    .map(function(item) {
+      return item.trim();
+    })
+    .filter(Boolean);
+}
+
+
+async function saveProduct(event) {
+
+  event.preventDefault();
+
+  if (!isOwnerAdmin()) {
+    showToast(
+      "Only the KNG Owner/Admin can save products.",
+      "error"
+    );
+    return;
+  }
+
+  const productId =
+    document.getElementById("productId")?.value.trim();
+
+  const payload = {
+    name:
+      document.getElementById("productName")?.value.trim(),
+
+    price:
+      Number(
+        document.getElementById("productPrice")?.value || 0
+      ),
+
+    gender:
+      document.getElementById("productGender")?.value || null,
+
+    section:
+      document.getElementById("productSection")?.value || null,
+
+    category:
+      document.getElementById("productCategory")?.value.trim() || null,
+
+    colors:
+      csvToArray(
+        document.getElementById("productColors")?.value
+      ),
+
+    sizes:
+      csvToArray(
+        document.getElementById("productSizes")?.value
+      ),
+
+    styles:
+      csvToArray(
+        document.getElementById("productStyles")?.value
+      ),
+
+    stock_quantity:
+      Math.max(
+        0,
+        Number(
+          document.getElementById("productStock")?.value || 0
+        )
+      ),
+
+    active:
+      document.getElementById("productActive")?.checked === true,
+
+    featured:
+      document.getElementById("productFeatured")?.checked === true,
+
+    image_url:
+      document.getElementById("productImageUrl")?.value.trim() || null,
+
+    updated_at:
+      new Date().toISOString()
+  };
+
+  if (!payload.name) {
+    showToast(
+      "Product name is required.",
+      "error"
+    );
+    return;
+  }
+
+  if (payload.price < 0) {
+    showToast(
+      "Product price cannot be negative.",
+      "error"
+    );
+    return;
+  }
+
+  const saveButton =
+    document.querySelector(
+      '#productForm button[type="submit"]'
+    );
+
+  if (saveButton) {
+    saveButton.disabled = true;
+    saveButton.textContent = "SAVING...";
+  }
+
+  try {
+
+    let result;
+
+    if (productId) {
+
+      result =
+        await kngSupabase
+          .from("products")
+          .update(payload)
+          .eq("id", productId);
+
+    } else {
+
+      payload.id =
+        crypto.randomUUID();
+
+      result =
+        await kngSupabase
+          .from("products")
+          .insert(payload);
+
+    }
+
+    if (result.error) {
+      throw result.error;
+    }
+
+    closeProductModal();
+
+    showToast(
+      productId
+        ? "Product updated successfully."
+        : "Product added successfully.",
+      "success"
+    );
+
+    await loadProducts();
+
+  } catch (error) {
+
+    console.error(
+      "Product save error:",
+      error
+    );
+
+    showToast(
+      error.message ||
+      "Unable to save product.",
+      "error"
+    );
+
+  } finally {
+
+    if (saveButton) {
+      saveButton.disabled = false;
+      saveButton.textContent = "SAVE PRODUCT";
+    }
+  }
+}
+
+
+async function toggleProductActive(productId) {
+
+  if (!isOwnerAdmin()) {
+    showToast(
+      "Only the KNG Owner/Admin can change product status.",
+      "error"
+    );
+    return;
+  }
+
+  const product =
+    (window.kngProducts || [])
+      .find(function(item) {
+        return item.id === productId;
+      });
+
+  if (!product) {
+    showToast(
+      "Product could not be found.",
+      "error"
+    );
+    return;
+  }
+
+  try {
+
+    const { error } =
+      await kngSupabase
+        .from("products")
+        .update({
+          active: !product.active,
+          updated_at: new Date().toISOString()
+        })
+        .eq("id", productId);
+
+    if (error) {
+      throw error;
+    }
+
+    showToast(
+      product.active
+        ? "Product deactivated."
+        : "Product activated.",
+      "success"
+    );
+
+    await loadProducts();
+
+  } catch (error) {
+
+    console.error(
+      "Product status error:",
+      error
+    );
+
+    showToast(
+      error.message ||
+      "Unable to change product status.",
+      "error"
+    );
+  }
+}
+
+
+async function deleteProduct(productId) {
+
+  if (!isOwnerAdmin()) {
+    showToast(
+      "Only the KNG Owner/Admin can delete products.",
+      "error"
+    );
+    return;
+  }
+
+  const product =
+    (window.kngProducts || [])
+      .find(function(item) {
+        return item.id === productId;
+      });
+
+  if (!product) {
+    showToast(
+      "Product could not be found.",
+      "error"
+    );
+    return;
+  }
+
+  const modal =
+    document.createElement("div");
+
+  modal.id =
+    "kngDeleteProductModal";
+
+  modal.style.cssText = `
+    position:fixed;
+    inset:0;
+    z-index:999999;
+    background:rgba(0,0,0,.82);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+  `;
+
+  modal.innerHTML = `
+    <div style="
+      width:min(500px,100%);
+      background:#111;
+      border:1px solid #333;
+      border-radius:18px;
+      padding:28px;
+      color:#fff;
+      box-shadow:0 30px 80px rgba(0,0,0,.7);
+    ">
+
+      <div style="
+        font-size:10px;
+        letter-spacing:3px;
+        color:#888;
+        text-transform:uppercase;
+        margin-bottom:10px;
+      ">
+        KNG / PRODUCT MANAGEMENT
+      </div>
+
+      <h2 style="
+        margin:0 0 12px;
+        font-size:25px;
+      ">
+        Delete Product
+      </h2>
+
+      <div style="
+        padding:15px;
+        border:1px solid #292929;
+        border-radius:12px;
+        background:#0b0b0b;
+        margin-bottom:18px;
+      ">
+
+        <div style="
+          font-size:16px;
+          font-weight:700;
+          margin-bottom:5px;
+        ">
+          ${escapeHTML(
+            product.name || "Unnamed Product"
+          )}
+        </div>
+
+        <div style="
+          color:#777;
+          font-size:12px;
+        ">
+          ${money(product.price)}
+        </div>
+
+      </div>
+
+      <p style="
+        color:#aaa;
+        font-size:13px;
+        line-height:1.7;
+        margin-bottom:22px;
+      ">
+        This will permanently remove this product
+        from the KNG product catalogue.
+      </p>
+
+      <div style="
+        display:flex;
+        justify-content:flex-end;
+        gap:10px;
+        flex-wrap:wrap;
+      ">
+
+        <button
+          type="button"
+          id="cancelDeleteProduct"
+          class="refresh-btn"
+          style="
+            cursor:pointer;
+            min-width:110px;
+          "
+        >
+          CANCEL
+        </button>
+
+        <button
+          type="button"
+          id="confirmDeleteProduct"
+          class="refresh-btn"
+          style="
+            cursor:pointer;
+            min-width:140px;
+            border-color:#5a2020;
+            color:#ff7777;
+          "
+        >
+          DELETE PRODUCT
+        </button>
+
+      </div>
+
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  const closeModal =
+    function() {
+      modal.remove();
+    };
+
+  modal
+    .querySelector("#cancelDeleteProduct")
+    .addEventListener(
+      "click",
+      closeModal
+    );
+
+  modal.addEventListener(
+    "click",
+    function(event) {
+      if (event.target === modal) {
+        closeModal();
+      }
+    }
+  );
+
+  modal
+    .querySelector("#confirmDeleteProduct")
+    .addEventListener(
+      "click",
+      async function() {
+
+        const deleteButton =
+          modal.querySelector(
+            "#confirmDeleteProduct"
+          );
+
+        deleteButton.disabled = true;
+        deleteButton.textContent =
+          "DELETING...";
+
+        try {
+
+          const { error } =
+            await kngSupabase
+              .from("products")
+              .delete()
+              .eq("id", productId);
+
+          if (error) {
+            throw error;
+          }
+
+          closeModal();
+
+          showToast(
+            "Product deleted successfully.",
+            "success"
+          );
+
+          await loadProducts();
+
+        } catch (error) {
+
+          console.error(
+            "Product deletion error:",
+            error
+          );
+
+          deleteButton.disabled = false;
+          deleteButton.textContent =
+            "DELETE PRODUCT";
+
+          showToast(
+            error.message ||
+            "Unable to delete product.",
+            "error"
+          );
+        }
+      }
+    );
+}
+
+
+const productForm =
+  document.getElementById("productForm");
+
+if (productForm) {
+  productForm.addEventListener(
+    "submit",
+    saveProduct
+  );
 }
 
 
