@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  version="1.2"
+  baseProfile="tiny"
+  viewBox="0 0 1000 1000"
+  width="1000"
+  height="1000">
+  <title>KNG Crown Logo</title>
+  <desc>KNG luxury crown and wordmark logo</desc>
+
+  <!-- Solid background for reliable BIMI rendering -->
+  <rect x="0" y="0" width="1000" height="1000" fill="#000000"/>
+
+  <!-- Crown -->
+  <path
+    d="M270 285
+       L335 170
+       L405 250
+       L500 115
+       L595 250
+       L665 170
+       L730 285
+       L690 390
+       L310 390 Z"
+    fill="#D9A441"/>
+
+  <!-- Crown inner cut / highlight -->
+  <path
+    d="M310 315
+       L355 225
+       L415 295
+       L500 175
+       L585 295
+       L645 225
+       L690 315
+       L665 350
+       L335 350 Z"
+    fill="#000000"/>
+
+  <!-- Crown band -->
+  <path d="M315 365 L685 365 L675 405 L325 405 Z" fill="#D9A441"/>
+
+  <!-- KNG wordmark -->
+  <text
+    x="500"
+    y="680"
+    text-anchor="middle"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="285"
+    font-weight="700"
+    letter-spacing="-22"
+    fill="#D9A441">KNG</text>
+</svg>
