@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg version="1.2" baseProfile="tiny-ps" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000">
+<title>KNG Email Sender Logo</title>
+<desc>KNG black and gold email sender emblem with envelope, crown, KNG wordmark and Wear the Standard tagline.</desc>
+<rect width="1000" height="1000" fill="#050505"/>
+<circle cx="500" cy="500" r="455" fill="#050505" stroke="#D4AF37" stroke-width="24"/>
+<circle cx="500" cy="500" r="420" fill="none" stroke="#D4AF37" stroke-width="3"/>
+<path d="M300 245 Q300 220 325 220 H675 Q700 220 700 245 V655 Q700 680 675 680 H325 Q300 680 300 655 Z" fill="#F3E9D2" stroke="#D4AF37" stroke-width="10"/>
+<path d="M300 250 L500 405 L700 250" fill="none" stroke="#D4AF37" stroke-width="10"/>
+<path d="M300 655 L445 500 M700 655 L555 500" fill="none" stroke="#D4AF37" stroke-width="7"/>
+<path d="M425 305 L455 345 L500 295 L545 345 L575 305 L560 375 H440 Z" fill="#D4AF37" stroke="#8E7420" stroke-width="5"/>
+<circle cx="425" cy="305" r="8" fill="#D4AF37"/><circle cx="500" cy="295" r="8" fill="#D4AF37"/><circle cx="575" cy="305" r="8" fill="#D4AF37"/>
+<text x="500" y="470" text-anchor="middle" font-family="Georgia,Times New Roman,serif" font-size="118" font-weight="700" letter-spacing="10" fill="#111111">KNG</text>
+<text x="500" y="525" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="27" font-weight="700" letter-spacing="5" fill="#111111">WEAR THE STANDARD.</text>
+<path d="M245 455 Q245 430 270 430 H730 Q755 430 755 455 V690 Q755 715 730 715 H270 Q245 715 245 690 Z" fill="#080808" stroke="#D4AF37" stroke-width="12"/>
+<path d="M255 450 L500 625 L745 450" fill="none" stroke="#D4AF37" stroke-width="12"/>
+<path d="M255 700 L430 555 M745 700 L570 555" fill="none" stroke="#D4AF37" stroke-width="9"/>
+<path d="M445 655 L465 680 L500 645 L535 680 L555 655 L545 700 H455 Z" fill="#D4AF37"/>
+<circle cx="445" cy="655" r="5" fill="#D4AF37"/><circle cx="500" cy="645" r="5" fill="#D4AF37"/><circle cx="555" cy="655" r="5" fill="#D4AF37"/>
+<circle cx="730" cy="285" r="64" fill="#D4AF37" stroke="#050505" stroke-width="10"/>
+<rect x="695" y="264" width="70" height="45" rx="5" fill="#050505"/>
+<path d="M700 270 L730 293 L760 270" fill="none" stroke="#D4AF37" stroke-width="5"/>
+<circle cx="770" cy="250" r="13" fill="#D4AF37"/>
+</svg>
