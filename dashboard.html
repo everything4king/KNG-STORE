@@ -2750,7 +2750,7 @@ async function loadOrders() {
 
       return;
     }
-async function saveOrderStatus(orderId, newStatus) {
+window.saveOrderStatus = async function(orderId, newStatus) {
   const button = document.getElementById("saveOrderStatusBtn");
 
   if (button) {
