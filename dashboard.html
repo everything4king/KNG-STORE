@@ -2750,7 +2750,44 @@ async function loadOrders() {
 
       return;
     }
+async function saveOrderStatus(orderId, newStatus) {
+  const button = document.getElementById("saveOrderStatusBtn");
 
+  if (button) {
+    button.disabled = true;
+    button.textContent = "SAVING...";
+  }
+
+  try {
+    const { error } = await kngSupabase
+      .from("orders")
+      .update({
+        order_status: newStatus
+      })
+      .eq("id", orderId);
+
+    if (error) throw error;
+
+    alert("Order status updated successfully.");
+
+    const modal = document.getElementById("orderDetailsModal");
+    if (modal) modal.remove();
+
+    await loadOrders();
+
+  } catch (error) {
+    console.error("Order status update error:", error);
+
+    alert(
+      "Unable to update order status. Please check your permissions and try again."
+    );
+
+    if (button) {
+      button.disabled = false;
+      button.textContent = "SAVE STATUS";
+    }
+  }
+}
     /* ============================================================
        ORDER DETAILS POPUP
     ============================================================ */
@@ -2870,10 +2907,72 @@ async function loadOrders() {
               <strong>${paymentBadge(order.payment_status)}</strong>
             </div>
 
-            <div class="order-info-box">
-              <small>Order Status</small>
-              <strong>${statusBadge(order.order_status)}</strong>
-            </div>
+         <div class="order-info-box">
+  <small>Order Status</small>
+
+  <div style="margin-top:8px;">
+    <select
+      id="orderStatusSelect"
+      style="
+        width:100%;
+        padding:12px 14px;
+        border-radius:10px;
+        border:1px solid #333;
+        background:#0b0b0b;
+        color:#fff;
+        font-size:14px;
+        outline:none;
+      "
+    >
+      <option value="PENDING" ${String(order.order_status).toUpperCase() === "PENDING" ? "selected" : ""}>
+        PENDING
+      </option>
+
+      <option value="CONFIRMED" ${String(order.order_status).toUpperCase() === "CONFIRMED" ? "selected" : ""}>
+        CONFIRMED
+      </option>
+
+      <option value="IN PRODUCTION" ${String(order.order_status).toUpperCase() === "IN PRODUCTION" ? "selected" : ""}>
+        IN PRODUCTION
+      </option>
+
+      <option value="READY" ${String(order.order_status).toUpperCase() === "READY" ? "selected" : ""}>
+        READY
+      </option>
+
+      <option value="DISPATCHED" ${String(order.order_status).toUpperCase() === "DISPATCHED" ? "selected" : ""}>
+        DISPATCHED
+      </option>
+
+      <option value="DELIVERED" ${String(order.order_status).toUpperCase() === "DELIVERED" ? "selected" : ""}>
+        DELIVERED
+      </option>
+
+      <option value="CANCELLED" ${String(order.order_status).toUpperCase() === "CANCELLED" ? "selected" : ""}>
+        CANCELLED
+      </option>
+    </select>
+
+    <button
+      id="saveOrderStatusBtn"
+      type="button"
+      onclick="saveOrderStatus('${safe(order.id)}', document.getElementById('orderStatusSelect').value)"
+      style="
+        width:100%;
+        margin-top:10px;
+        padding:12px 16px;
+        border:1px solid #444;
+        border-radius:10px;
+        background:#fff;
+        color:#000;
+        font-weight:700;
+        cursor:pointer;
+      "
+    >
+      SAVE STATUS
+    </button>
+  </div>
+</div>
 
             <div class="order-info-box">
               <small>Total</small>
