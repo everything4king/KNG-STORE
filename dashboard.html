@@ -1266,7 +1266,47 @@
 </div>
 
 <script>
+function showKNGToast(message) {
+  let toast = document.getElementById("kngToast");
 
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.id = "kngToast";
+
+    toast.style.position = "fixed";
+    toast.style.top = "24px";
+    toast.style.right = "24px";
+    toast.style.zIndex = "99999";
+    toast.style.background = "#111";
+    toast.style.color = "#fff";
+    toast.style.border = "1px solid #444";
+    toast.style.borderRadius = "12px";
+    toast.style.padding = "14px 18px";
+    toast.style.fontSize = "14px";
+    toast.style.fontWeight = "600";
+    toast.style.boxShadow = "0 10px 30px rgba(0,0,0,0.35)";
+    toast.style.opacity = "0";
+    toast.style.transform = "translateY(-10px)";
+    toast.style.transition = "all 0.25s ease";
+    toast.style.pointerEvents = "none";
+
+    document.body.appendChild(toast);
+  }
+
+  toast.textContent = "✓  " + message;
+
+  requestAnimationFrame(() => {
+    toast.style.opacity = "1";
+    toast.style.transform = "translateY(0)";
+  });
+
+  clearTimeout(window.kngToastTimer);
+
+  window.kngToastTimer = setTimeout(() => {
+    toast.style.opacity = "0";
+    toast.style.transform = "translateY(-10px)";
+  }, 3000);
+}
 /* ============================================================
    KNG SUPABASE CONNECTION
 ============================================================ */
@@ -2768,7 +2808,7 @@ window.saveOrderStatus = async function(orderId, newStatus) {
 
     if (error) throw error;
 
-    alert("Order status updated successfully.");
+showKNGToast("Order status updated successfully.");
 
     const modal = document.getElementById("orderDetailsModal");
     if (modal) modal.remove();
