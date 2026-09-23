@@ -2441,30 +2441,104 @@ function showMeasurements(){
   `;
 }
 
-function showOrders(){
-  const order=JSON.parse(localStorage.getItem("kngLastOrder")||"null");
+async function showOrders(){
+  try{
+    const {data:{session}}=await kngSupabase.auth.getSession();
 
-  panel().innerHTML=`
-    <button class="account-close" onclick="renderAccountHome()">X</button>
-    <div class="account-logo">KNG<span>.</span></div>
-    <p class="account-kicker">KNG / ORDERS</p>
-    <h2>MY<br><span>ORDERS.</span></h2>
-
-    ${
-      order
-      ?`<div class="simple-card">
-          <strong>LOCAL ORDER RECORD</strong>
-          <small>${new Date(order.createdAt).toLocaleString()}</small>
-          <small>Dispatch: ${order.dispatch ? esc(order.dispatch) : "-"}</small>
-          <small>Total: ${money(order.total)}</small>
-        </div>`
-      :`<div class="simple-card"><small>No local order history yet.</small></div>`
+    if(!session){
+      showToast("PLEASE SIGN IN AGAIN.");
+      return;
     }
 
-    <button class="account-secondary" style="width:100%;margin-top:15px" onclick="renderAccountHome()">BACK TO ACCOUNT</button>
-  `;
-}
+    panel().innerHTML=`
+      <button class="account-close" onclick="renderAccountHome()">X</button>
+      <div class="account-logo">KNG<span>.</span></div>
+      <p class="account-kicker">KNG / ORDERS</p>
+      <h2>MY<br><span>ORDERS.</span></h2>
 
+      <div id="customerOrdersList">
+        <div class="simple-card">
+          <small>LOADING YOUR ORDERS...</small>
+        </div>
+      </div>
+
+      <button
+        class="account-secondary"
+        style="width:100%;margin-top:15px"
+        onclick="renderAccountHome()"
+      >
+        BACK TO ACCOUNT
+      </button>
+    `;
+
+    const {data:orders,error}=await kngSupabase
+      .rpc("kng_customer_orders");
+
+    if(error) throw error;
+
+    const ordersList=document.getElementById("customerOrdersList");
+
+    if(!orders || !orders.length){
+      ordersList.innerHTML=`
+        <div class="simple-card">
+          <small>NO ORDERS FOUND YET.</small>
+        </div>
+      `;
+      return;
+    }
+
+    ordersList.innerHTML=orders.map(order=>{
+      const status=String(order.order_status || "PENDING").toUpperCase();
+
+      const statusText={
+        "PENDING":"ORDER RECEIVED",
+        "CONFIRMED":"ORDER CONFIRMED",
+        "IN PRODUCTION":"YOUR PIECE IS BEING MADE",
+        "READY":"ORDER READY",
+        "DISPATCHED":"HANDED TO DELIVERY",
+        "DELIVERED":"DELIVERED",
+        "CANCELLED":"ORDER CANCELLED"
+      }[status] || status;
+
+      const date=order.created_at
+        ? new Date(order.created_at).toLocaleString()
+        : "-";
+
+      return `
+        <div class="simple-card" style="margin-bottom:12px">
+          <strong>${esc(order.order_number || "KNG ORDER")}</strong>
+
+          <small>
+            ${esc(date)}
+          </small>
+
+          <small>
+            Status: ${esc(statusText)}
+          </small>
+
+          <small>
+            Total: ${money(order.total_amount || 0)}
+          </small>
+        </div>
+      `;
+    }).join("");
+
+  }catch(error){
+    console.error("CUSTOMER ORDERS ERROR:",error);
+
+    const ordersList=document.getElementById("customerOrdersList");
+
+    if(ordersList){
+      ordersList.innerHTML=`
+        <div class="simple-card">
+          <small>UNABLE TO LOAD YOUR ORDERS RIGHT NOW.</small>
+        </div>
+      `;
+    }else{
+      showToast("UNABLE TO LOAD YOUR ORDERS.");
+    }
+  }
+}
 
 /* =========================================================
    KNG CUSTOMER REVIEWS
