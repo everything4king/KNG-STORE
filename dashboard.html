@@ -1045,7 +1045,7 @@
         onclick="closeProductModal()"
         aria-label="Close"
       >
-        Ã—
+        &times;
       </button>
     </div>
 
@@ -1065,7 +1065,7 @@
         </div>
 
         <div class="form-group">
-          <label>PRICE (â‚¦)</label>
+          <label>PRICE (&#8358;)</label>
           <input
             type="number"
             id="productPrice"
@@ -1226,10 +1226,10 @@
             gap:12px;
             margin-bottom:18px;
           ">
-            <div class="stat-card"><div class="stat-title">Variants</div><div class="stat-value" id="inventoryVariantCount">â€”</div></div>
-            <div class="stat-card"><div class="stat-title">Units In Stock</div><div class="stat-value" id="inventoryStockCount">â€”</div></div>
-            <div class="stat-card"><div class="stat-title">Reserved</div><div class="stat-value" id="inventoryReservedCount">â€”</div></div>
-            <div class="stat-card"><div class="stat-title">Available</div><div class="stat-value" id="inventoryAvailableCount">â€”</div></div>
+            <div class="stat-card"><div class="stat-title">Variants</div><div class="stat-value" id="inventoryVariantCount">&mdash;</div></div>
+            <div class="stat-card"><div class="stat-title">Units In Stock</div><div class="stat-value" id="inventoryStockCount">&mdash;</div></div>
+            <div class="stat-card"><div class="stat-title">Reserved</div><div class="stat-value" id="inventoryReservedCount">&mdash;</div></div>
+            <div class="stat-card"><div class="stat-title">Available</div><div class="stat-value" id="inventoryAvailableCount">&mdash;</div></div>
           </div>
 
           <div id="inventoryTable">
@@ -1353,7 +1353,7 @@ function showKNGToast(message) {
     document.body.appendChild(toast);
   }
 
-  toast.textContent = "âœ“  " + message;
+  toast.textContent = "\u2713  " + message;
 
   requestAnimationFrame(() => {
     toast.style.opacity = "1";
@@ -3941,7 +3941,7 @@ async function loadProducts() {
     container.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px;">
         <div style="color:#777;font-size:12px;">
-          ${productList.length} product${productList.length === 1 ? "" : "s"} Â· ${variantList.length} variant${variantList.length === 1 ? "" : "s"}
+          ${productList.length} product${productList.length === 1 ? "" : "s"} &middot; ${variantList.length} variant${variantList.length === 1 ? "" : "s"}
         </div>
         ${canManage ? `
           <button type="button" class="primary-btn" style="width:auto;margin:0;padding:10px 16px;cursor:pointer;" onclick="openProductModal()">
@@ -3990,7 +3990,7 @@ async function loadProducts() {
                       </div>
                     </td>
                     <td><strong>${money(product.price ?? product.base_price ?? 0)}</strong></td>
-                    <td><span class="pill">${escapeHTML(String(product.gender || "â€”").toUpperCase())}</span></td>
+                    <td><span class="pill">${escapeHTML(String(product.gender || "\u2014").toUpperCase())}</span></td>
                     <td>${escapeHTML(product.category || "Not provided")}</td>
                     <td>
                       <strong>${variantCount}</strong>
@@ -4029,7 +4029,7 @@ async function loadProducts() {
   } catch (error) {
     console.error("Product error:", error);
     const totalProducts = document.getElementById("totalProducts");
-    if (totalProducts) totalProducts.textContent = "â€”";
+    if (totalProducts) totalProducts.textContent = "\u2014";
     container.innerHTML = `
       <div class="empty">
         Unable to load KNG products.
@@ -4129,10 +4129,10 @@ async function loadInventory() {
                       <div><strong>${escapeHTML(product.name || "Unknown product")}</strong><div style="margin-top:4px;color:#666;font-size:10px;">${escapeHTML(variant.product_id || "")}</div></div>
                     </div>
                   </td>
-                  <td><code style="color:#aaa;font-size:11px;">${escapeHTML(variant.sku || "â€”")}</code></td>
-                  <td>${escapeHTML(variant.color || "â€”")}</td>
-                  <td>${escapeHTML(variant.size || "â€”")}</td>
-                  <td>${escapeHTML(variant.style || "â€”")}</td>
+                  <td><code style="color:#aaa;font-size:11px;">${escapeHTML(variant.sku || "\u2014")}</code></td>
+                  <td>${escapeHTML(variant.color || "\u2014")}</td>
+                  <td>${escapeHTML(variant.size || "\u2014")}</td>
+                  <td>${escapeHTML(variant.style || "\u2014")}</td>
                   <td><strong>${stock}</strong></td>
                   <td>${reserved}</td>
                   <td>
@@ -4143,8 +4143,9 @@ async function loadInventory() {
                   <td>
                     ${canManageInventory ? `
                       <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                        <button type="button" class="refresh-btn" style="cursor:pointer;color:#fff;" onclick="openVariantEditModal('${escapeHTML(variant.id)}')">EDIT</button>
                         <button type="button" class="refresh-btn" style="cursor:pointer;color:#7ee787;" onclick="openInventoryAdjustModal('${escapeHTML(variant.id)}', 'add')">+ STOCK</button>
-                        <button type="button" class="refresh-btn" style="cursor:pointer;color:#ffb3b3;" onclick="openInventoryAdjustModal('${escapeHTML(variant.id)}', 'remove')">âˆ’ STOCK</button>
+                        <button type="button" class="refresh-btn" style="cursor:pointer;color:#ffb3b3;" onclick="openInventoryAdjustModal('${escapeHTML(variant.id)}', 'remove')">- STOCK</button>
                       </div>
                     ` : `<span class="readonly-label">VIEW ONLY</span>`}
                   </td>
@@ -4159,11 +4160,196 @@ async function loadInventory() {
     console.error("Inventory error:", error);
     ["inventoryVariantCount","inventoryStockCount","inventoryReservedCount","inventoryAvailableCount"].forEach(function(id) {
       const element = document.getElementById(id);
-      if (element) element.textContent = "â€”";
+      if (element) element.textContent = "\u2014";
     });
     container.innerHTML = `<div class="empty">Unable to load inventory.<div style="margin-top:8px;font-size:12px;opacity:.6;">${escapeHTML(error.message || "Please check the product variants table connection.")}</div></div>`;
   }
 }
+
+function openVariantEditModal(variantId) {
+  if (!can("canManageInventory")) {
+    showToast("You do not have permission to manage variants.", "error");
+    return;
+  }
+
+  const variant = (window.kngInventoryVariants || []).find(function(item) {
+    return item.id === variantId;
+  });
+
+  if (!variant) {
+    showToast("Variant could not be found. Refresh and try again.", "error");
+    return;
+  }
+
+  const existing = document.getElementById("variantEditModal");
+  if (existing) existing.remove();
+
+  const product = (window.kngProducts || []).find(function(item) {
+    return String(item.id) === String(variant.product_id);
+  }) || {};
+
+  const modal = document.createElement("div");
+  modal.id = "variantEditModal";
+  modal.style.cssText = "position:fixed;inset:0;z-index:10001;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.82);backdrop-filter:blur(8px);";
+
+  modal.innerHTML = `
+    <div style="width:min(620px,100%);max-height:92vh;overflow:auto;background:#111;border:1px solid #333;border-radius:18px;box-shadow:0 30px 90px rgba(0,0,0,.75);color:#fff;">
+      <div style="padding:24px 25px 18px;border-bottom:1px solid #292929;display:flex;justify-content:space-between;align-items:flex-start;gap:15px;">
+        <div>
+          <div style="font-size:10px;letter-spacing:2px;color:#777;margin-bottom:7px;">KNG VARIANT</div>
+          <h2 style="margin:0;font-size:23px;">EDIT VARIANT</h2>
+          <div style="margin-top:7px;color:#888;font-size:12px;">${escapeHTML(product.name || "Unknown product")}</div>
+        </div>
+        <button type="button" id="closeVariantEdit" style="width:38px;height:38px;border-radius:50%;border:1px solid #333;background:#181818;color:#fff;font-size:20px;cursor:pointer;">&times;</button>
+      </div>
+
+      <div style="padding:25px;">
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;">
+          <div class="field" style="margin:0;">
+            <label style="display:block;margin-bottom:7px;color:#aaa;font-size:11px;">COLOR</label>
+            <input id="variantEditColor" type="text" value="${escapeHTML(variant.color || "")}" style="width:100%;padding:13px;border-radius:9px;border:1px solid #333;background:#080808;color:#fff;outline:none;">
+          </div>
+
+          <div class="field" style="margin:0;">
+            <label style="display:block;margin-bottom:7px;color:#aaa;font-size:11px;">SIZE</label>
+            <input id="variantEditSize" type="text" value="${escapeHTML(variant.size || "")}" style="width:100%;padding:13px;border-radius:9px;border:1px solid #333;background:#080808;color:#fff;outline:none;">
+          </div>
+
+          <div class="field" style="margin:0;">
+            <label style="display:block;margin-bottom:7px;color:#aaa;font-size:11px;">STYLE</label>
+            <input id="variantEditStyle" type="text" value="${escapeHTML(variant.style || "")}" style="width:100%;padding:13px;border-radius:9px;border:1px solid #333;background:#080808;color:#fff;outline:none;">
+          </div>
+
+          <div class="field" style="margin:0;">
+            <label style="display:block;margin-bottom:7px;color:#aaa;font-size:11px;">SKU</label>
+            <input id="variantEditSku" type="text" value="${escapeHTML(variant.sku || "")}" maxlength="100" style="width:100%;padding:13px;border-radius:9px;border:1px solid #333;background:#080808;color:#fff;outline:none;">
+          </div>
+
+          <div class="field" style="margin:0;">
+            <label style="display:block;margin-bottom:7px;color:#aaa;font-size:11px;">VARIANT PRICE</label>
+            <input id="variantEditPrice" type="number" min="0" step="1" value="${Number(variant.price ?? product.price ?? 0)}" style="width:100%;padding:13px;border-radius:9px;border:1px solid #333;background:#080808;color:#fff;outline:none;">
+          </div>
+
+          <div class="field" style="margin:0;">
+            <label style="display:block;margin-bottom:7px;color:#aaa;font-size:11px;">LOW STOCK THRESHOLD</label>
+            <input id="variantEditThreshold" type="number" min="0" step="1" value="${Number(variant.low_stock_threshold ?? 2)}" style="width:100%;padding:13px;border-radius:9px;border:1px solid #333;background:#080808;color:#fff;outline:none;">
+          </div>
+        </div>
+
+        <div style="margin-top:18px;padding:15px;border:1px solid #292929;border-radius:11px;background:#0b0b0b;">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:15px;">
+            <div>
+              <div style="font-size:13px;font-weight:700;">Variant status</div>
+              <div style="margin-top:4px;color:#777;font-size:11px;line-height:1.5;">Inactive variants stay in your records but cannot be sold.</div>
+            </div>
+            <label style="display:flex;align-items:center;gap:8px;color:#ddd;font-size:12px;cursor:pointer;white-space:nowrap;">
+              <input id="variantEditActive" type="checkbox" ${variant.active !== false && variant.is_active !== false ? "checked" : ""} style="width:17px;height:17px;accent-color:#fff;">
+              ACTIVE
+            </label>
+          </div>
+        </div>
+
+        <div style="margin-top:15px;padding:13px 15px;border:1px solid #292929;border-radius:11px;background:#0b0b0b;color:#888;font-size:11px;line-height:1.6;">
+          Current stock: <strong style="color:#fff;">${Number(variant.stock_quantity || 0)}</strong>
+          &nbsp;&middot;&nbsp; Reserved: <strong style="color:#fff;">${Number(variant.reserved_quantity || 0)}</strong>
+          &nbsp;&middot;&nbsp; Available: <strong style="color:#fff;">${Math.max(0, Number(variant.stock_quantity || 0) - Number(variant.reserved_quantity || 0))}</strong>
+          <br>
+          Use the stock buttons in the Inventory table to change quantities. This edit screen does not change stock.
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:22px;">
+          <button type="button" class="secondary-btn" id="cancelVariantEdit" style="width:auto;margin:0;cursor:pointer;padding:11px 18px;">CANCEL</button>
+          <button type="button" class="primary-btn" id="saveVariantEdit" style="width:auto;margin:0;cursor:pointer;padding:11px 20px;">SAVE VARIANT</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+  document.body.style.overflow = "hidden";
+
+  const close = function() {
+    modal.remove();
+    document.body.style.overflow = "";
+  };
+
+  modal.querySelector("#closeVariantEdit").addEventListener("click", close);
+  modal.querySelector("#cancelVariantEdit").addEventListener("click", close);
+  modal.addEventListener("click", function(event) {
+    if (event.target === modal) close();
+  });
+
+  modal.querySelector("#saveVariantEdit").addEventListener("click", async function() {
+    const button = this;
+    const color = modal.querySelector("#variantEditColor").value.trim();
+    const size = modal.querySelector("#variantEditSize").value.trim();
+    const style = modal.querySelector("#variantEditStyle").value.trim();
+    const sku = modal.querySelector("#variantEditSku").value.trim() || null;
+    const price = Number(modal.querySelector("#variantEditPrice").value || 0);
+    const threshold = Math.floor(Number(modal.querySelector("#variantEditThreshold").value || 0));
+    const active = modal.querySelector("#variantEditActive").checked;
+
+    if (!color || !size || !style) {
+      showToast("Color, size, and style are required.", "error");
+      return;
+    }
+
+    if (!Number.isFinite(price) || price < 0) {
+      showToast("Variant price must be zero or greater.", "error");
+      return;
+    }
+
+    if (!Number.isInteger(threshold) || threshold < 0) {
+      showToast("Low stock threshold must be a whole number zero or greater.", "error");
+      return;
+    }
+
+    const duplicate = (window.kngInventoryVariants || []).find(function(item) {
+      return item.id !== variantId &&
+        String(item.product_id) === String(variant.product_id) &&
+        String(item.color || "").trim().toLowerCase() === color.toLowerCase() &&
+        String(item.size || "").trim().toLowerCase() === size.toLowerCase() &&
+        String(item.style || "").trim().toLowerCase() === style.toLowerCase();
+    });
+
+    if (duplicate) {
+      showToast("That color, size, and style combination already exists for this product.", "error");
+      return;
+    }
+
+    button.disabled = true;
+    button.textContent = "SAVING...";
+
+    try {
+      const { error } = await kngSupabase
+        .from("product_variants")
+        .update({
+          color: color,
+          size: size,
+          style: style,
+          sku: sku,
+          price: price,
+          low_stock_threshold: threshold,
+          active: active,
+          is_active: active,
+          updated_at: new Date().toISOString()
+        })
+        .eq("id", variantId);
+
+      if (error) throw error;
+
+      close();
+      showToast("Variant updated successfully.", "success");
+      await Promise.all([loadInventory(), loadProducts()]);
+    } catch (error) {
+      console.error("Variant update error:", error);
+      button.disabled = false;
+      button.textContent = "SAVE VARIANT";
+      showToast(error.message || "Unable to update variant. Check your inventory permissions.", "error");
+    }
+  });
+}
+
 
 function openInventoryAdjustModal(variantId, type) {
   if (!can("canManageInventory")) {
@@ -4197,13 +4383,13 @@ function openInventoryAdjustModal(variantId, type) {
           <div style="font-size:18px;font-weight:800;letter-spacing:1px;">${title}</div>
           <div style="margin-top:5px;color:#777;font-size:12px;">${escapeHTML(product?.name || "Unknown product")}</div>
         </div>
-        <button type="button" id="closeInventoryAdjust" style="width:38px;height:38px;border-radius:50%;border:1px solid #333;background:#181818;color:#fff;font-size:20px;cursor:pointer;">Ã—</button>
+        <button type="button" id="closeInventoryAdjust" style="width:38px;height:38px;border-radius:50%;border:1px solid #333;background:#181818;color:#fff;font-size:20px;cursor:pointer;">&times;</button>
       </div>
 
       <div style="padding:14px;border:1px solid #292929;border-radius:10px;background:#0b0b0b;margin-bottom:18px;">
-        <div style="font-size:12px;color:#aaa;">${escapeHTML(variant.color || "No color")} Â· ${escapeHTML(variant.size || "No size")} Â· ${escapeHTML(variant.style || "No style")}</div>
-        <div style="margin-top:7px;color:#666;font-size:11px;">SKU: ${escapeHTML(variant.sku || "â€”")}</div>
-        <div style="margin-top:10px;font-size:12px;color:#aaa;">Current stock: <strong style="color:#fff;">${Number(variant.stock_quantity || 0)}</strong> Â· Reserved: <strong style="color:#fff;">${Number(variant.reserved_quantity || 0)}</strong> Â· Available: <strong style="color:#fff;">${available}</strong></div>
+        <div style="font-size:12px;color:#aaa;">${escapeHTML(variant.color || "No color")} &middot; ${escapeHTML(variant.size || "No size")} &middot; ${escapeHTML(variant.style || "No style")}</div>
+        <div style="margin-top:7px;color:#666;font-size:11px;">SKU: ${escapeHTML(variant.sku || "\u2014")}</div>
+        <div style="margin-top:10px;font-size:12px;color:#aaa;">Current stock: <strong style="color:#fff;">${Number(variant.stock_quantity || 0)}</strong> &middot; Reserved: <strong style="color:#fff;">${Number(variant.reserved_quantity || 0)}</strong> &middot; Available: <strong style="color:#fff;">${available}</strong></div>
       </div>
 
       <div class="field" style="margin-bottom:14px;">
@@ -4513,9 +4699,19 @@ function openProductModal(productId) {
     .value =
       product?.gender || "";
 
-  document.getElementById("productSection")
-    .value =
-      product?.section || "";
+  const sectionSelect = document.getElementById("productSection");
+  if (sectionSelect) {
+    const rawSection = String(product?.section || "").trim();
+    const normalizedSection = rawSection.toLowerCase().replace(/[_\s]+/g, "-");
+    const sectionMap = {
+      "upper-body": "upper-body",
+      "upperbody": "upper-body",
+      "lower-body": "lower-body",
+      "lowerbody": "lower-body",
+      "accessories": "accessories"
+    };
+    sectionSelect.value = sectionMap[normalizedSection] || rawSection;
+  }
 
   document.getElementById("productCategory")
     .value =
