@@ -662,6 +662,18 @@
       flex: 1;
     }
 
+
+    @media (max-width: 800px) {
+      #inventorySummary {
+        grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+      }
+    }
+
+    @media (max-width: 520px) {
+      #inventorySummary {
+        grid-template-columns:1fr !important;
+      }
+    }
 </style>
 </head>
 
@@ -794,6 +806,11 @@
       <button class="nav-btn" data-page="products">
         <span class="nav-icon">&#9671;</span>
         <span>Products</span>
+      </button>
+
+      <button class="nav-btn" data-page="inventory">
+        <span class="nav-icon">&#9638;</span>
+        <span>Inventory</span>
       </button>
 
       <!-- Finance / Savings / Notifications will be activated in their dedicated build phases. -->
@@ -1028,7 +1045,7 @@
         onclick="closeProductModal()"
         aria-label="Close"
       >
-        ×
+        Ã—
       </button>
     </div>
 
@@ -1048,7 +1065,7 @@
         </div>
 
         <div class="form-group">
-          <label>PRICE (₦)</label>
+          <label>PRICE (â‚¦)</label>
           <input
             type="number"
             id="productPrice"
@@ -1097,8 +1114,9 @@
             min="0"
             step="1"
             placeholder="0"
-            required
+            readonly
           >
+          <small>Variant stock is controlled from Inventory. This value is the total of the product's variants.</small>
         </div>
 
         <div class="form-group form-group-full">
@@ -1175,6 +1193,48 @@
     </form>
   </div>
 </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =========================
+           INVENTORY
+      ========================= -->
+
+      <section class="page" id="inventoryPage">
+
+        <div class="section">
+
+          <div class="section-header">
+            <div>
+              <h2>Inventory</h2>
+              <div style="margin-top:5px;color:#666;font-size:11px;">
+                Variant-level stock control. Every color / size / style combination has its own stock.
+              </div>
+            </div>
+
+            <button class="refresh-btn" onclick="loadInventory()">
+              Refresh
+            </button>
+          </div>
+
+          <div id="inventorySummary" style="
+            display:grid;
+            grid-template-columns:repeat(4,minmax(0,1fr));
+            gap:12px;
+            margin-bottom:18px;
+          ">
+            <div class="stat-card"><div class="stat-title">Variants</div><div class="stat-value" id="inventoryVariantCount">â€”</div></div>
+            <div class="stat-card"><div class="stat-title">Units In Stock</div><div class="stat-value" id="inventoryStockCount">â€”</div></div>
+            <div class="stat-card"><div class="stat-title">Reserved</div><div class="stat-value" id="inventoryReservedCount">â€”</div></div>
+            <div class="stat-card"><div class="stat-title">Available</div><div class="stat-value" id="inventoryAvailableCount">â€”</div></div>
+          </div>
+
+          <div id="inventoryTable">
+            <div class="empty">Loading inventory...</div>
+          </div>
 
         </div>
 
@@ -1293,7 +1353,7 @@ function showKNGToast(message) {
     document.body.appendChild(toast);
   }
 
-  toast.textContent = "✓  " + message;
+  toast.textContent = "âœ“  " + message;
 
   requestAnimationFrame(() => {
     toast.style.opacity = "1";
@@ -1345,6 +1405,7 @@ const KNG_PERMISSIONS = {
     canManageCustomers: true,
     canDeleteCustomerAccounts: true,
     canManageProducts: true,
+    canManageInventory: true,
     canManageOrders: true,
     canManageDeliveries: true,
     canViewFinance: true,
@@ -1360,7 +1421,8 @@ const KNG_PERMISSIONS = {
     canManageStaff: false,
     canManageCustomers: true,
     canDeleteCustomerAccounts: false,
- canManageProducts: false,
+    canManageProducts: false,
+    canManageInventory: true,
     canManageOrders: true,
     canManageDeliveries: true,
     canViewFinance: true,
@@ -1817,7 +1879,8 @@ async function checkStaffAccess(options = {}) {
       loadStaff(),
       loadOrders(),
       loadCustomers(),
-      loadProducts()
+      loadProducts(),
+      loadInventory()
     ]).catch(function(error) {
       console.error("KNG dashboard data load error:", error);
     });
@@ -1960,6 +2023,11 @@ document
           "KNG product management"
         ],
 
+        inventory: [
+          "Inventory",
+          "Variant-level KNG stock management"
+        ],
+
         settings: [
           "Settings",
           "Dashboard and account settings"
@@ -1993,6 +2061,10 @@ document
         loadProducts();
       }
 
+      if (page === "inventory") {
+        loadInventory();
+      }
+
     });
 
   });
@@ -2011,6 +2083,8 @@ async function loadDashboard() {
   await loadCustomers();
 
   await loadProducts();
+
+  await loadInventory();
 
 }
 
@@ -3814,393 +3888,403 @@ function kngCustomerDetail(label, value) {
 
 async function loadProducts() {
 
-  const container =
-    document.getElementById("productsTable");
-
+  const container = document.getElementById("productsTable");
   if (!container) return;
 
   try {
-
-    const { data, error } =
-      await kngSupabase
+    const [{ data: products, error: productError }, { data: variants, error: variantError }] = await Promise.all([
+      kngSupabase
         .from("products")
         .select("*")
         .order("created_at", { ascending: false })
-        .limit(100);
+        .limit(100),
+      kngSupabase
+        .from("product_variants")
+        .select("id,product_id,color,size,style,stock_quantity,reserved_quantity,active,is_active,sku,price,image_url,low_stock_threshold")
+        .order("created_at", { ascending: true })
+        .limit(1000)
+    ]);
 
-    if (error) {
-      throw error;
-    }
+    if (productError) throw productError;
+    if (variantError) throw variantError;
 
-    const products = data || [];
+    const productList = products || [];
+    const variantList = variants || [];
 
-    const totalProducts =
-      document.getElementById("totalProducts");
+    const variantMap = {};
+    variantList.forEach(function(variant) {
+      if (!variantMap[variant.product_id]) variantMap[variant.product_id] = [];
+      variantMap[variant.product_id].push(variant);
+    });
 
-    if (totalProducts) {
-      totalProducts.textContent = products.length;
-    }
+    productList.forEach(function(product) {
+      product.kng_variants = variantMap[product.id] || [];
+      product.kng_variant_count = product.kng_variants.length;
+      product.kng_stock_total = product.kng_variants.reduce(function(total, variant) {
+        return total + Number(variant.stock_quantity || 0);
+      }, 0);
+      product.kng_reserved_total = product.kng_variants.reduce(function(total, variant) {
+        return total + Number(variant.reserved_quantity || 0);
+      }, 0);
+      product.kng_available_total = product.kng_variants.reduce(function(total, variant) {
+        return total + Math.max(0, Number(variant.stock_quantity || 0) - Number(variant.reserved_quantity || 0));
+      }, 0);
+    });
 
-    window.kngProducts = products;
+    const totalProducts = document.getElementById("totalProducts");
+    if (totalProducts) totalProducts.textContent = productList.length;
 
-    const canManage =
-      isOwnerAdmin();
+    window.kngProducts = productList;
+
+    const canManage = can("canManageProducts");
 
     container.innerHTML = `
-      <div style="
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-        gap:12px;
-        flex-wrap:wrap;
-        margin-bottom:18px;
-      ">
-
-        <div style="
-          color:#777;
-          font-size:12px;
-        ">
-          ${products.length}
-          product${products.length === 1 ? "" : "s"}
-          connected to KNG.
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px;">
+        <div style="color:#777;font-size:12px;">
+          ${productList.length} product${productList.length === 1 ? "" : "s"} Â· ${variantList.length} variant${variantList.length === 1 ? "" : "s"}
         </div>
-
-        ${
-          canManage
-            ? `
-              <button
-                type="button"
-                class="primary-btn"
-                style="
-                  width:auto;
-                  margin:0;
-                  padding:10px 16px;
-                  cursor:pointer;
-                "
-                onclick="openProductModal()"
-              >
-                + ADD PRODUCT
-              </button>
-            `
-            : `
-              <span class="readonly-label">
-                VIEW ONLY
-              </span>
-            `
-        }
-
+        ${canManage ? `
+          <button type="button" class="primary-btn" style="width:auto;margin:0;padding:10px 16px;cursor:pointer;" onclick="openProductModal()">
+            + ADD PRODUCT
+          </button>
+        ` : `<span class="readonly-label">VIEW ONLY</span>`}
       </div>
 
-      ${
-        products.length
-          ? `
-            <div class="table-wrap">
-              <table>
-                <thead>
+      ${productList.length ? `
+        <div class="table-wrap">
+          <table style="min-width:1050px;">
+            <thead>
+              <tr>
+                <th>PRODUCT</th>
+                <th>PRICE</th>
+                <th>GENDER</th>
+                <th>CATEGORY</th>
+                <th>VARIANTS</th>
+                <th>STOCK</th>
+                <th>AVAILABLE</th>
+                <th>STATUS</th>
+                <th>FEATURED</th>
+                <th>ACTION</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${productList.map(function(product) {
+                const image = product.image_url || "";
+                const variantCount = Number(product.kng_variant_count || 0);
+                const stock = Number(product.kng_stock_total || 0);
+                const available = Number(product.kng_available_total || 0);
+
+                return `
                   <tr>
-                    <th>PRODUCT</th>
-                    <th>PRICE</th>
-                    <th>GENDER</th>
-                    <th>CATEGORY</th>
-                    <th>STOCK</th>
-                    <th>STATUS</th>
-                    <th>FEATURED</th>
-                    <th>ACTION</th>
+                    <td>
+                      <div style="display:flex;align-items:center;gap:10px;min-width:210px;">
+                        ${image ? `
+                          <img src="${escapeHTML(image)}" alt="${escapeHTML(product.name || "Product")}" style="width:46px;height:46px;object-fit:cover;border-radius:8px;border:1px solid #333;background:#080808;" onerror="this.style.display='none'">
+                        ` : `
+                          <div style="width:46px;height:46px;display:flex;align-items:center;justify-content:center;border-radius:8px;border:1px solid #333;background:#080808;color:#555;font-size:10px;">KNG</div>
+                        `}
+                        <div>
+                          <strong>${escapeHTML(product.name || "Unnamed Product")}</strong>
+                          <div style="margin-top:4px;color:#666;font-size:11px;">${escapeHTML(product.section || "No section")}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td><strong>${money(product.price ?? product.base_price ?? 0)}</strong></td>
+                    <td><span class="pill">${escapeHTML(String(product.gender || "â€”").toUpperCase())}</span></td>
+                    <td>${escapeHTML(product.category || "Not provided")}</td>
+                    <td>
+                      <strong>${variantCount}</strong>
+                      ${variantCount === 0 ? `<div style="color:#ffb3b3;font-size:10px;margin-top:4px;">NO VARIANTS</div>` : ""}
+                    </td>
+                    <td>
+                      <strong>${stock}</strong>
+                      ${stock <= 0 ? `<div style="color:#ff7777;font-size:10px;margin-top:4px;">OUT OF STOCK</div>` : ""}
+                    </td>
+                    <td><strong>${available}</strong></td>
+                    <td>${product.active ? `<span class="pill active">ACTIVE</span>` : `<span class="pill">INACTIVE</span>`}</td>
+                    <td>${product.featured ? `<span class="pill active">YES</span>` : `<span class="pill">NO</span>`}</td>
+                    <td>
+                      ${canManage ? `
+                        <div style="display:flex;gap:7px;flex-wrap:wrap;">
+                          <button type="button" class="refresh-btn" style="cursor:pointer;white-space:nowrap;" onclick="editProduct('${escapeHTML(product.id)}')">EDIT</button>
+                          <button type="button" class="refresh-btn" style="cursor:pointer;white-space:nowrap;color:${product.active ? "#ffb3b3" : "#7ee787"};" onclick="toggleProductActive('${escapeHTML(product.id)}')">${product.active ? "DEACTIVATE" : "ACTIVATE"}</button>
+                          <button type="button" class="refresh-btn" style="cursor:pointer;white-space:nowrap;border-color:#5a2020;color:#ff7777;" onclick="deleteProduct('${escapeHTML(product.id)}')">DELETE</button>
+                        </div>
+                      ` : `<span class="readonly-label">VIEW ONLY</span>`}
+                    </td>
                   </tr>
-                </thead>
-
-                <tbody>
-
-                  ${products.map(function(product) {
-
-                    const colors =
-                      Array.isArray(product.colors)
-                        ? product.colors.join(", ")
-                        : "";
-
-                    const sizes =
-                      Array.isArray(product.sizes)
-                        ? product.sizes.join(", ")
-                        : "";
-
-                    const image =
-                      product.image_url || "";
-
-                    return `
-                      <tr>
-
-                        <td>
-                          <div style="
-                            display:flex;
-                            align-items:center;
-                            gap:10px;
-                            min-width:200px;
-                          ">
-
-                            ${
-                              image
-                                ? `
-                                  <img
-                                    src="${escapeHTML(image)}"
-                                    alt="${escapeHTML(product.name || "Product")}"
-                                    style="
-                                      width:46px;
-                                      height:46px;
-                                      object-fit:cover;
-                                      border-radius:8px;
-                                      border:1px solid #333;
-                                      background:#080808;
-                                    "
-                                    onerror="this.style.display='none'"
-                                  >
-                                `
-                                : `
-                                  <div style="
-                                    width:46px;
-                                    height:46px;
-                                    display:flex;
-                                    align-items:center;
-                                    justify-content:center;
-                                    border-radius:8px;
-                                    border:1px solid #333;
-                                    background:#080808;
-                                    color:#555;
-                                    font-size:10px;
-                                  ">
-                                    KNG
-                                  </div>
-                                `
-                            }
-
-                            <div>
-                              <strong>
-                                ${escapeHTML(
-                                  product.name || "Unnamed Product"
-                                )}
-                              </strong>
-
-                              <div style="
-                                margin-top:4px;
-                                color:#666;
-                                font-size:11px;
-                              ">
-                                ${escapeHTML(
-                                  product.section || "No section"
-                                )}
-                              </div>
-                            </div>
-
-                          </div>
-                        </td>
-
-                        <td>
-                          <strong>
-                            ${money(product.price)}
-                          </strong>
-                        </td>
-
-                        <td>
-                          <span class="pill">
-                            ${escapeHTML(
-                              String(product.gender || "—").toUpperCase()
-                            )}
-                          </span>
-                        </td>
-
-                        <td>
-                          ${escapeHTML(
-                            product.category || "Not provided"
-                          )}
-                        </td>
-
-                        <td>
-                          <strong>
-                            ${Number(product.stock_quantity || 0)}
-                          </strong>
-
-                          ${
-                            Number(product.stock_quantity || 0) <= 0
-                              ? `
-                                <div style="
-                                  color:#ff7777;
-                                  font-size:10px;
-                                  margin-top:4px;
-                                ">
-                                  OUT OF STOCK
-                                </div>
-                              `
-                              : ""
-                          }
-                        </td>
-
-                        <td>
-                          ${
-                            product.active
-                              ? `
-                                <span class="pill active">
-                                  ACTIVE
-                                </span>
-                              `
-                              : `
-                                <span class="pill">
-                                  INACTIVE
-                                </span>
-                              `
-                          }
-                        </td>
-
-                        <td>
-                          ${
-                            product.featured
-                              ? `
-                                <span class="pill active">
-                                  YES
-                                </span>
-                              `
-                              : `
-                                <span class="pill">
-                                  NO
-                                </span>
-                              `
-                          }
-                        </td>
-
-                        <td>
-                          ${
-                            canManage
-                              ? `
-                                <div style="
-                                  display:flex;
-                                  gap:7px;
-                                  flex-wrap:wrap;
-                                ">
-
-                                  <button
-                                    type="button"
-                                    class="refresh-btn"
-                                    style="
-                                      cursor:pointer;
-                                      white-space:nowrap;
-                                    "
-                                    onclick="editProduct('${escapeHTML(product.id)}')"
-                                  >
-                                    EDIT
-                                  </button>
-
-                                  <button
-                                    type="button"
-                                    class="refresh-btn"
-                                    style="
-                                      cursor:pointer;
-                                      white-space:nowrap;
-                                      color:${
-                                        product.active
-                                          ? "#ffb3b3"
-                                          : "#7ee787"
-                                      };
-                                    "
-                                    onclick="toggleProductActive('${escapeHTML(product.id)}')"
-                                  >
-                                    ${
-                                      product.active
-                                        ? "DEACTIVATE"
-                                        : "ACTIVATE"
-                                    }
-                                  </button>
-
-                                  <button
-                                    type="button"
-                                    class="refresh-btn"
-                                    style="
-                                      cursor:pointer;
-                                      white-space:nowrap;
-                                      border-color:#5a2020;
-                                      color:#ff7777;
-                                    "
-                                    onclick="deleteProduct('${escapeHTML(product.id)}')"
-                                  >
-                                    DELETE
-                                  </button>
-
-                                </div>
-                              `
-                              : `
-                                <span class="readonly-label">
-                                  VIEW ONLY
-                                </span>
-                              `
-                          }
-                        </td>
-
-                      </tr>
-                    `;
-
-                  }).join("")}
-
-                </tbody>
-              </table>
-            </div>
-          `
-          : `
-            <div class="empty">
-
-              <div style="
-                font-size:15px;
-                color:#aaa;
-                margin-bottom:8px;
-              ">
-                No KNG products found.
-              </div>
-
-              ${
-                canManage
-                  ? `
-                    <div style="
-                      font-size:12px;
-                      color:#666;
-                    ">
-                      Use ADD PRODUCT to create your first product.
-                    </div>
-                  `
-                  : `
-                    <div style="
-                      font-size:12px;
-                      color:#666;
-                    ">
-                      No products have been added yet.
-                    </div>
-                  `
-              }
-
-            </div>
-          `
-      }
+                `;
+              }).join("")}
+            </tbody>
+          </table>
+        </div>
+      ` : `
+        <div class="empty">
+          <div style="font-size:15px;color:#aaa;margin-bottom:8px;">No KNG products found.</div>
+          <div style="font-size:12px;color:#666;">${canManage ? "Use ADD PRODUCT to create your first product." : "No products have been added yet."}</div>
+        </div>
+      `}
     `;
 
   } catch (error) {
-
     console.error("Product error:", error);
-
-    const totalProducts =
-      document.getElementById("totalProducts");
-
-    if (totalProducts) {
-      totalProducts.textContent = "\u2014";
-    }
-
+    const totalProducts = document.getElementById("totalProducts");
+    if (totalProducts) totalProducts.textContent = "â€”";
     container.innerHTML = `
       <div class="empty">
         Unable to load KNG products.
-        <div style="
-          margin-top:8px;
-          font-size:12px;
-          opacity:.6;
-        ">
-          Please check the products table connection.
-        </div>
+        <div style="margin-top:8px;font-size:12px;opacity:.6;">${escapeHTML(error.message || "Please check the products and product variants tables.")}</div>
       </div>
     `;
   }
+}
+
+
+/* ============================================================
+   INVENTORY
+============================================================ */
+
+async function loadInventory() {
+  const container = document.getElementById("inventoryTable");
+  if (!container) return;
+
+  try {
+    const [productsResult, variantsResult] = await Promise.all([
+      kngSupabase.from("products").select("id,name,image_url,active").order("name", { ascending: true }).limit(500),
+      kngSupabase.from("product_variants").select("id,product_id,color,size,style,stock_quantity,reserved_quantity,active,is_active,sku,price,image_url,low_stock_threshold,created_at").order("created_at", { ascending: true }).limit(2000)
+    ]);
+
+    if (productsResult.error) throw productsResult.error;
+    if (variantsResult.error) throw variantsResult.error;
+
+    const products = productsResult.data || [];
+    const variants = variantsResult.data || [];
+    const productMap = {};
+    products.forEach(function(product) { productMap[product.id] = product; });
+
+    let totalStock = 0;
+    let totalReserved = 0;
+    let totalAvailable = 0;
+
+    variants.forEach(function(variant) {
+      const stock = Number(variant.stock_quantity || 0);
+      const reserved = Number(variant.reserved_quantity || 0);
+      totalStock += stock;
+      totalReserved += reserved;
+      totalAvailable += Math.max(0, stock - reserved);
+    });
+
+    document.getElementById("inventoryVariantCount").textContent = variants.length;
+    document.getElementById("inventoryStockCount").textContent = totalStock;
+    document.getElementById("inventoryReservedCount").textContent = totalReserved;
+    document.getElementById("inventoryAvailableCount").textContent = totalAvailable;
+
+    window.kngInventoryVariants = variants;
+
+    const canManageInventory = can("canManageInventory");
+
+    if (!variants.length) {
+      container.innerHTML = `
+        <div class="empty">
+          <div style="font-size:15px;color:#aaa;margin-bottom:8px;">No product variants found.</div>
+          <div style="font-size:12px;color:#666;">Create a product with colors, sizes, or styles. Variants are generated automatically when the product is saved.</div>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = `
+      <div class="table-wrap">
+        <table style="min-width:1150px;">
+          <thead>
+            <tr>
+              <th>PRODUCT</th>
+              <th>SKU</th>
+              <th>COLOR</th>
+              <th>SIZE</th>
+              <th>STYLE</th>
+              <th>STOCK</th>
+              <th>RESERVED</th>
+              <th>AVAILABLE</th>
+              <th>STATUS</th>
+              <th>ACTION</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${variants.map(function(variant) {
+              const product = productMap[variant.product_id] || {};
+              const stock = Number(variant.stock_quantity || 0);
+              const reserved = Number(variant.reserved_quantity || 0);
+              const available = Math.max(0, stock - reserved);
+              const threshold = Number(variant.low_stock_threshold ?? 2);
+              const active = variant.active !== false && variant.is_active !== false && product.active !== false;
+              const low = active && available > 0 && available <= threshold;
+              const out = active && available <= 0;
+
+              return `
+                <tr>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:10px;min-width:210px;">
+                      ${product.image_url ? `<img src="${escapeHTML(product.image_url)}" alt="${escapeHTML(product.name || "Product")}" style="width:42px;height:42px;object-fit:cover;border-radius:7px;border:1px solid #333;background:#080808;" onerror="this.style.display='none'">` : `<div style="width:42px;height:42px;display:flex;align-items:center;justify-content:center;border:1px solid #333;border-radius:7px;color:#555;font-size:9px;">KNG</div>`}
+                      <div><strong>${escapeHTML(product.name || "Unknown product")}</strong><div style="margin-top:4px;color:#666;font-size:10px;">${escapeHTML(variant.product_id || "")}</div></div>
+                    </div>
+                  </td>
+                  <td><code style="color:#aaa;font-size:11px;">${escapeHTML(variant.sku || "â€”")}</code></td>
+                  <td>${escapeHTML(variant.color || "â€”")}</td>
+                  <td>${escapeHTML(variant.size || "â€”")}</td>
+                  <td>${escapeHTML(variant.style || "â€”")}</td>
+                  <td><strong>${stock}</strong></td>
+                  <td>${reserved}</td>
+                  <td>
+                    <strong>${available}</strong>
+                    ${out ? `<div style="color:#ff7777;font-size:10px;margin-top:4px;">OUT OF STOCK</div>` : low ? `<div style="color:#ffd166;font-size:10px;margin-top:4px;">LOW STOCK</div>` : ""}
+                  </td>
+                  <td>${!active ? `<span class="pill">INACTIVE</span>` : out ? `<span class="pill" style="color:#ff7777;">OUT</span>` : low ? `<span class="pill" style="color:#ffd166;">LOW</span>` : `<span class="pill active">IN STOCK</span>`}</td>
+                  <td>
+                    ${canManageInventory ? `
+                      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                        <button type="button" class="refresh-btn" style="cursor:pointer;color:#7ee787;" onclick="openInventoryAdjustModal('${escapeHTML(variant.id)}', 'add')">+ STOCK</button>
+                        <button type="button" class="refresh-btn" style="cursor:pointer;color:#ffb3b3;" onclick="openInventoryAdjustModal('${escapeHTML(variant.id)}', 'remove')">âˆ’ STOCK</button>
+                      </div>
+                    ` : `<span class="readonly-label">VIEW ONLY</span>`}
+                  </td>
+                </tr>
+              `;
+            }).join("")}
+          </tbody>
+        </table>
+      </div>
+    `;
+  } catch (error) {
+    console.error("Inventory error:", error);
+    ["inventoryVariantCount","inventoryStockCount","inventoryReservedCount","inventoryAvailableCount"].forEach(function(id) {
+      const element = document.getElementById(id);
+      if (element) element.textContent = "â€”";
+    });
+    container.innerHTML = `<div class="empty">Unable to load inventory.<div style="margin-top:8px;font-size:12px;opacity:.6;">${escapeHTML(error.message || "Please check the product variants table connection.")}</div></div>`;
+  }
+}
+
+function openInventoryAdjustModal(variantId, type) {
+  if (!can("canManageInventory")) {
+    showToast("You do not have permission to manage inventory.", "error");
+    return;
+  }
+
+  const variant = (window.kngInventoryVariants || []).find(function(item) {
+    return item.id === variantId;
+  });
+
+  if (!variant) {
+    showToast("Inventory variant could not be found. Refresh and try again.", "error");
+    return;
+  }
+
+  const existing = document.getElementById("inventoryAdjustModal");
+  if (existing) existing.remove();
+
+  const product = (window.kngProducts || []).find(function(item) { return item.id === variant.product_id; });
+  const available = Math.max(0, Number(variant.stock_quantity || 0) - Number(variant.reserved_quantity || 0));
+  const title = type === "remove" ? "REMOVE STOCK" : "ADD STOCK";
+
+  const modal = document.createElement("div");
+  modal.id = "inventoryAdjustModal";
+  modal.style.cssText = "position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.78);backdrop-filter:blur(8px);";
+  modal.innerHTML = `
+    <div style="width:min(520px,100%);background:#111;border:1px solid #333;border-radius:18px;padding:25px;box-shadow:0 30px 90px rgba(0,0,0,.7);">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:15px;margin-bottom:20px;">
+        <div>
+          <div style="font-size:18px;font-weight:800;letter-spacing:1px;">${title}</div>
+          <div style="margin-top:5px;color:#777;font-size:12px;">${escapeHTML(product?.name || "Unknown product")}</div>
+        </div>
+        <button type="button" id="closeInventoryAdjust" style="width:38px;height:38px;border-radius:50%;border:1px solid #333;background:#181818;color:#fff;font-size:20px;cursor:pointer;">Ã—</button>
+      </div>
+
+      <div style="padding:14px;border:1px solid #292929;border-radius:10px;background:#0b0b0b;margin-bottom:18px;">
+        <div style="font-size:12px;color:#aaa;">${escapeHTML(variant.color || "No color")} Â· ${escapeHTML(variant.size || "No size")} Â· ${escapeHTML(variant.style || "No style")}</div>
+        <div style="margin-top:7px;color:#666;font-size:11px;">SKU: ${escapeHTML(variant.sku || "â€”")}</div>
+        <div style="margin-top:10px;font-size:12px;color:#aaa;">Current stock: <strong style="color:#fff;">${Number(variant.stock_quantity || 0)}</strong> Â· Reserved: <strong style="color:#fff;">${Number(variant.reserved_quantity || 0)}</strong> Â· Available: <strong style="color:#fff;">${available}</strong></div>
+      </div>
+
+      <div class="field" style="margin-bottom:14px;">
+        <label style="display:block;margin-bottom:7px;color:#aaa;font-size:11px;">QUANTITY</label>
+        <input id="inventoryAdjustQuantity" type="number" min="1" step="1" value="1" style="width:100%;padding:13px;border-radius:9px;border:1px solid #333;background:#080808;color:#fff;outline:none;">
+      </div>
+
+      <div class="field" style="margin-bottom:14px;">
+        <label style="display:block;margin-bottom:7px;color:#aaa;font-size:11px;">REASON</label>
+        <select id="inventoryAdjustReason" style="width:100%;padding:13px;border-radius:9px;border:1px solid #333;background:#080808;color:#fff;outline:none;">
+          <option value="restock">Restock</option>
+          <option value="production">Production</option>
+          <option value="correction">Stock correction</option>
+          <option value="damaged">Damaged / missing</option>
+          <option value="return">Customer return</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+
+      <div class="field" style="margin-bottom:20px;">
+        <label style="display:block;margin-bottom:7px;color:#aaa;font-size:11px;">NOTE</label>
+        <input id="inventoryAdjustNote" type="text" maxlength="250" placeholder="Optional note" style="width:100%;padding:13px;border-radius:9px;border:1px solid #333;background:#080808;color:#fff;outline:none;">
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;gap:10px;">
+        <button type="button" class="secondary-btn" id="cancelInventoryAdjust" style="width:auto;margin:0;cursor:pointer;padding:11px 18px;">CANCEL</button>
+        <button type="button" class="primary-btn" id="confirmInventoryAdjust" style="width:auto;margin:0;cursor:pointer;padding:11px 18px;">${title}</button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+  document.body.style.overflow = "hidden";
+
+  const close = function() {
+    modal.remove();
+    document.body.style.overflow = "";
+  };
+
+  modal.querySelector("#closeInventoryAdjust").addEventListener("click", close);
+  modal.querySelector("#cancelInventoryAdjust").addEventListener("click", close);
+  modal.addEventListener("click", function(event) {
+    if (event.target === modal) close();
+  });
+
+  modal.querySelector("#confirmInventoryAdjust").addEventListener("click", async function() {
+    const button = this;
+    const quantity = Math.floor(Number(modal.querySelector("#inventoryAdjustQuantity").value || 0));
+    const reason = modal.querySelector("#inventoryAdjustReason").value;
+    const note = modal.querySelector("#inventoryAdjustNote").value.trim() || null;
+    const signedQuantity = type === "remove" ? -quantity : quantity;
+
+    if (!Number.isInteger(quantity) || quantity <= 0) {
+      showToast("Enter a valid quantity greater than zero.", "error");
+      return;
+    }
+
+    button.disabled = true;
+    button.textContent = "SAVING...";
+
+    try {
+      const { data, error } = await kngSupabase.rpc("kng_adjust_variant_stock", {
+        p_variant_id: variantId,
+        p_adjustment_quantity: signedQuantity,
+        p_reason: reason,
+        p_note: note,
+        p_actor_id: currentUser?.id || null
+      });
+
+      if (error) throw error;
+
+      close();
+      showToast(type === "remove" ? "Stock removed successfully." : "Stock added successfully.", "success");
+      await Promise.all([loadInventory(), loadProducts()]);
+    } catch (error) {
+      console.error("Inventory adjustment error:", error);
+      button.disabled = false;
+      button.textContent = title;
+      showToast(error.message || "Unable to update inventory.", "error");
+    }
+  });
 }
 
 
@@ -4577,14 +4661,6 @@ async function saveProduct(event) {
         document.getElementById("productStyles")?.value
       ),
 
-    stock_quantity:
-      Math.max(
-        0,
-        Number(
-          document.getElementById("productStock")?.value || 0
-        )
-      ),
-
     active:
       document.getElementById("productActive")?.checked === true,
 
@@ -4650,6 +4726,22 @@ async function saveProduct(event) {
 
     if (result.error) {
       throw result.error;
+    }
+
+    const savedProductId = productId || payload.id;
+
+    if (savedProductId) {
+      const { error: variantBuildError } = await kngSupabase.rpc(
+        "kng_build_product_variants",
+        {
+          p_product_id: savedProductId,
+          p_default_stock: 0
+        }
+      );
+
+      if (variantBuildError) {
+        throw variantBuildError;
+      }
     }
 
     closeProductModal();
