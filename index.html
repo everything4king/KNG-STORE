@@ -722,7 +722,20 @@ let liveCatalogReady=false;
 
 function normalizeArray(value){return Array.isArray(value)?value.filter(Boolean).map(String):[];}
 function getProductVariants(productId){return VARIANTS_BY_PRODUCT.get(String(productId))||[];}
-function getVariant(productId,size,color,style){return getProductVariants(productId).find(v=>String(v.size||"")===String(size||"")&&String(v.color||"")===String(color||"")&&String(v.style||"")===String(style||""))||null;}
+function productUsesStyle(product){
+  const category=String(product?.category||"").toLowerCase();
+  const name=String(product?.name||"").toLowerCase();
+  return category.includes("pin") || name.includes("lapel pin");
+}
+function getVariant(productId,size,color,style){
+  const product=PRODUCTS.find(p=>String(p.id)===String(productId));
+  const useStyle=productUsesStyle(product);
+  return getProductVariants(productId).find(v=>
+    String(v.size||"")===String(size||"") &&
+    String(v.color||"")===String(color||"") &&
+    (!useStyle || String(v.style||"")===String(style||""))
+  )||null;
+}
 function getVariantAvailable(variant){return variant?Math.max(0,Number(variant.stock_quantity||0)-Number(variant.reserved_quantity||0)):0;}
 function getProductDisplayPrice(product){return Number(product?.base_price??product?.price??0);}
 
@@ -739,7 +752,7 @@ async function loadLiveCatalog(){
       const pv=getProductVariants(p.id);
       const colors=normalizeArray(p.colors),sizes=normalizeArray(p.sizes),styles=normalizeArray(p.styles);
       const vc=[...new Set(pv.map(v=>v.color).filter(Boolean))],vs=[...new Set(pv.map(v=>v.size).filter(Boolean))],vst=[...new Set(pv.map(v=>v.style).filter(Boolean))];
-      return {...p,id:String(p.id),price:getProductDisplayPrice(p),colors:vc.length?vc:colors,sizes:vs.length?vs:sizes,styles:vst.length?vst:styles};
+      return {...p,id:String(p.id),price:getProductDisplayPrice(p),colors:vc.length?vc:colors,sizes:vs.length?vs:sizes,styles:vst};
     });
     let cartChanged=false;
     cart=cart.filter(item=>{
@@ -967,39 +980,76 @@ function renderProducts(){
 function openProductModal(id){
   const p=PRODUCTS.find(x=>String(x.id)===String(id)); if(!p)return; currentProduct=p;
   const variants=getProductVariants(p.id),firstAvailable=variants.find(v=>getVariantAvailable(v)>0)||variants[0]||null;
-  selectedSize=firstAvailable?.size||p.sizes?.[0]||""; selectedColor=firstAvailable?.color||p.colors?.[0]||""; selectedStyle=firstAvailable?.style||p.styles?.[0]||""; modalQuantity=1;
+  selectedSize=firstAvailable?.size||p.sizes?.[0]||""; selectedColor=firstAvailable?.color||p.colors?.[0]||""; selectedStyle=firstAvailable?.style||""; modalQuantity=1;
   $("modalCategory").textContent=p.gender==="men"?"KINGS / "+p.section+" / "+p.category:p.gender==="women"?"QUEENS / "+p.section+" / "+p.category:"ACCESSORIES / "+p.section+" / "+p.category;
   $("modalName").textContent=p.name; renderVariantOptions(); renderCustomFitFields(); updateModalQuantity(); closeSizeGuide(); $("productModal").classList.add("open"); lockBody();
 }
 
 function renderVariantOptions(){
-  if(!currentProduct)return; const p=currentProduct,variants=getProductVariants(p.id);
+  if(!currentProduct)return;
+  const p=currentProduct,variants=getProductVariants(p.id);
+  const useStyle=productUsesStyle(p);
   const sizes=[...new Set((variants.map(v=>v.size).filter(Boolean).length?variants.map(v=>v.size).filter(Boolean):p.sizes||[]))];
   const colors=[...new Set((variants.map(v=>v.color).filter(Boolean).length?variants.map(v=>v.color).filter(Boolean):p.colors||[]))];
-  const styles=[...new Set((variants.map(v=>v.style).filter(Boolean).length?variants.map(v=>v.style).filter(Boolean):p.styles||[]))];
-  $("sizeOptions").innerHTML=sizes.map(s=>{const selectable=styles.length?colors.some(c=>styles.some(st=>getVariant(p.id,s,c,st)&&getVariantAvailable(getVariant(p.id,s,c,st))>0)):colors.some(c=>getVariant(p.id,s,c)&&getVariantAvailable(getVariant(p.id,s,c))>0);return `<button type="button" class="option-btn ${selectedSize===s?"selected":""} ${selectable?"":"disabled"}" ${selectable?`onclick="selectSize('${esc(s)}')"`:"disabled"}>${esc(s)}</button>`;}).join("");
-  $("colorOptions").innerHTML=colors.map(c=>{const selectable=styles.length?sizes.some(s=>styles.some(st=>getVariant(p.id,s,c,st)&&getVariantAvailable(getVariant(p.id,s,c,st))>0)):sizes.some(s=>getVariant(p.id,s,c)&&getVariantAvailable(getVariant(p.id,s,c))>0);return `<button type="button" class="option-btn ${selectedColor===c?"selected":""} ${selectable?"":"disabled"}" ${selectable?`onclick="selectColor('${esc(c)}')"`:"disabled"}>${esc(c)}</button>`;}).join("");
-  if(p.styles?.length){$("styleGroup").style.display="block";$("styleGroup").innerHTML=`<label>PIN SHAPE</label><div class="option-buttons">${styles.map(st=>{const v=getVariant(p.id,selectedSize,selectedColor,st),available=getVariantAvailable(v)>0;return `<button type="button" class="option-btn ${selectedStyle===st?"selected":""} ${available?"":"disabled"}" ${available?`onclick="selectStyle('${esc(st)}')"`:"disabled"}>${esc(st)}</button>`;}).join("")}</div>`;}else{$("styleGroup").style.display="none";$('styleGroup').innerHTML="";}
-  const variant=getVariant(p.id,selectedSize,selectedColor,selectedStyle),available=getVariantAvailable(variant),price=variant?.price??p.price; $("modalPrice").innerHTML=money(price);
-  let noteEl=$("variantStockNote"); if(!noteEl){noteEl=document.createElement("div");noteEl.id="variantStockNote";noteEl.className="variant-stock-note";$("modalPrice").insertAdjacentElement("afterend",noteEl);}
-  noteEl.innerHTML=variant?(available>0?`<strong>${available}</strong> available for this exact variant.`:"THIS EXACT VARIANT IS OUT OF STOCK."):"THIS SIZE / COLOUR COMBINATION IS NOT AVAILABLE.";
-  const addButton=document.querySelector(".modal-add"); if(addButton){addButton.disabled=available<=0;addButton.textContent=available>0?"ADD TO CART":"OUT OF STOCK";addButton.style.opacity=available>0?"1":".45";addButton.style.cursor=available>0?"pointer":"not-allowed";}
-}
+  const styles=useStyle?[...new Set(variants.map(v=>v.style).filter(Boolean))]:[];
 
+  $("sizeOptions").innerHTML=sizes.map(s=>{
+    const selectable=colors.some(c=>getVariant(p.id,s,c,useStyle?selectedStyle:"")&&getVariantAvailable(getVariant(p.id,s,c,useStyle?selectedStyle:""))>0);
+    return `<button type="button" class="option-btn ${selectedSize===s?"selected":""} ${selectable?"":"disabled"}" ${selectable?`onclick="selectSize('${esc(s)}')"`:"disabled"}>${esc(s)}</button>`;
+  }).join("");
+
+  $("colorOptions").innerHTML=colors.map(c=>{
+    const selectable=sizes.some(s=>getVariant(p.id,s,c,useStyle?selectedStyle:"")&&getVariantAvailable(getVariant(p.id,s,c,useStyle?selectedStyle:""))>0);
+    return `<button type="button" class="option-btn ${selectedColor===c?"selected":""} ${selectable?"":"disabled"}" ${selectable?`onclick="selectColor('${esc(c)}')"`:"disabled"}>${esc(c)}</button>`;
+  }).join("");
+
+  if(useStyle && styles.length){
+    $("styleGroup").style.display="block";
+    $("styleGroup").innerHTML=`<label>PIN SHAPE</label><div class="option-buttons">${styles.map(st=>{
+      const v=getVariant(p.id,selectedSize,selectedColor,st),available=getVariantAvailable(v)>0;
+      return `<button type="button" class="option-btn ${selectedStyle===st?"selected":""} ${available?"":"disabled"}" ${available?`onclick="selectStyle('${esc(st)}')"`:"disabled"}>${esc(st)}</button>`;
+    }).join("")}</div>`;
+  }else{
+    $("styleGroup").style.display="none";
+    $("styleGroup").innerHTML="";
+    selectedStyle="";
+  }
+
+  const variant=getVariant(p.id,selectedSize,selectedColor,useStyle?selectedStyle:"");
+  const available=getVariantAvailable(variant),price=variant?.price??p.price;
+  $("modalPrice").innerHTML=money(price);
+
+  let noteEl=$("variantStockNote");
+  if(!noteEl){
+    noteEl=document.createElement("div");
+    noteEl.id="variantStockNote";
+    noteEl.className="variant-stock-note";
+    $("modalPrice").insertAdjacentElement("afterend",noteEl);
+  }
+  noteEl.innerHTML=variant?(available>0?`<strong>${available}</strong> available for this exact variant.`:"THIS EXACT VARIANT IS OUT OF STOCK."):"THIS SIZE / COLOUR COMBINATION IS NOT AVAILABLE.";
+
+  const addButton=document.querySelector(".modal-add");
+  if(addButton){
+    addButton.disabled=available<=0;
+    addButton.textContent=available>0?"ADD TO CART":"OUT OF STOCK";
+    addButton.style.opacity=available>0?"1":".45";
+    addButton.style.cursor=available>0?"pointer":"not-allowed";
+  }
+}
 function selectSize(s){
   const hasAny=getProductVariants(currentProduct?.id).some(v=>String(v.size)===String(s)&&getVariantAvailable(v)>0); if(!hasAny){showToast("THAT SIZE IS OUT OF STOCK.");return;} selectedSize=s;
-  const exact=getVariant(currentProduct.id,selectedSize,selectedColor,selectedStyle); if(!exact||getVariantAvailable(exact)<=0){const f=getProductVariants(currentProduct.id).find(v=>String(v.size)===String(s)&&getVariantAvailable(v)>0);if(f){selectedColor=f.color||selectedColor;selectedStyle=f.style||selectedStyle;}} renderVariantOptions();updateModalQuantity();
+  const exact=getVariant(currentProduct.id,selectedSize,selectedColor,productUsesStyle(currentProduct)?selectedStyle:""); if(!exact||getVariantAvailable(exact)<=0){const f=getProductVariants(currentProduct.id).find(v=>String(v.size)===String(s)&&getVariantAvailable(v)>0);if(f){selectedColor=f.color||selectedColor;selectedStyle=f.style||selectedStyle;}} renderVariantOptions();updateModalQuantity();
 }
 function selectColor(c){
   const hasAny=getProductVariants(currentProduct?.id).some(v=>String(v.color)===String(c)&&getVariantAvailable(v)>0); if(!hasAny){showToast("THAT COLOUR IS OUT OF STOCK.");return;} selectedColor=c;
-  const exact=getVariant(currentProduct.id,selectedSize,selectedColor,selectedStyle); if(!exact||getVariantAvailable(exact)<=0){const f=getProductVariants(currentProduct.id).find(v=>String(v.color)===String(c)&&getVariantAvailable(v)>0);if(f){selectedSize=f.size||selectedSize;selectedStyle=f.style||selectedStyle;}} renderVariantOptions();updateModalQuantity();
+  const exact=getVariant(currentProduct.id,selectedSize,selectedColor,productUsesStyle(currentProduct)?selectedStyle:""); if(!exact||getVariantAvailable(exact)<=0){const f=getProductVariants(currentProduct.id).find(v=>String(v.color)===String(c)&&getVariantAvailable(v)>0);if(f){selectedSize=f.size||selectedSize;selectedStyle=f.style||selectedStyle;}} renderVariantOptions();updateModalQuantity();
 }
-function selectStyle(st){const v=getVariant(currentProduct?.id,selectedSize,selectedColor,st);if(!v||getVariantAvailable(v)<=0){showToast("THAT OPTION IS OUT OF STOCK.");return;}selectedStyle=st;renderVariantOptions();updateModalQuantity();}
+function selectStyle(st){const v=getVariant(currentProduct?.id,selectedSize,selectedColor,productUsesStyle(currentProduct)?st:"");if(!v||getVariantAvailable(v)<=0){showToast("THAT OPTION IS OUT OF STOCK.");return;}selectedStyle=st;renderVariantOptions();updateModalQuantity();}
 function closeProductModal(){$("productModal").classList.remove("open");closeSizeGuide();unlockBodyIfClear();}
 function closeProductModalOnBackdrop(e){if(e.target.id==="productModal")closeProductModal();}
 
-function changeModalQuantity(n){const available=getVariantAvailable(getVariant(currentProduct?.id,selectedSize,selectedColor,selectedStyle));if(n>0&&modalQuantity>=Math.min(20,available)){showToast(available>0?`ONLY ${available} AVAILABLE.`:"THIS VARIANT IS OUT OF STOCK.");return;}modalQuantity=Math.max(1,Math.min(20,modalQuantity+n));updateModalQuantity();}
-function updateModalQuantity(){const available=getVariantAvailable(getVariant(currentProduct?.id,selectedSize,selectedColor,selectedStyle));if(available>0)modalQuantity=Math.min(modalQuantity,Math.min(20,available));$("modalQuantity").textContent=modalQuantity;}
+function changeModalQuantity(n){const available=getVariantAvailable(getVariant(currentProduct?.id,selectedSize,selectedColor,productUsesStyle(currentProduct)?selectedStyle:""));if(n>0&&modalQuantity>=Math.min(20,available)){showToast(available>0?`ONLY ${available} AVAILABLE.`:"THIS VARIANT IS OUT OF STOCK.");return;}modalQuantity=Math.max(1,Math.min(20,modalQuantity+n));updateModalQuantity();}
+function updateModalQuantity(){const available=getVariantAvailable(getVariant(currentProduct?.id,selectedSize,selectedColor,productUsesStyle(currentProduct)?selectedStyle:""));if(available>0)modalQuantity=Math.min(modalQuantity,Math.min(20,available));$("modalQuantity").textContent=modalQuantity;}
 
 /* =========================================================
    SIZE GUIDE
@@ -1186,7 +1236,7 @@ function getCartSubtotal(){
 
 function addCurrentProductToCart(){
   if(!currentProduct)return; if(currentProduct.gender!=="accessories"&&!selectedSize){showToast("PLEASE SELECT A SIZE.");return;} if(!selectedColor){showToast("PLEASE SELECT A COLOUR.");return;}
-  const variant=getVariant(currentProduct.id,selectedSize,selectedColor,selectedStyle),available=getVariantAvailable(variant);
+  const variant=getVariant(currentProduct.id,selectedSize,selectedColor,productUsesStyle(currentProduct)?selectedStyle:""),available=getVariantAvailable(variant);
   if(!variant){showToast("THAT SIZE / COLOUR COMBINATION IS NOT AVAILABLE.");return;} if(available<=0){showToast("THAT VARIANT IS OUT OF STOCK.");return;}
   const existing=cart.find(i=>String(i.variant_id)===String(variant.id)),nextQty=(existing?.quantity||0)+modalQuantity;
   if(nextQty>available){showToast(`ONLY ${available} AVAILABLE FOR THIS VARIANT.`);return;}
