@@ -730,11 +730,35 @@ function productUsesStyle(product){
 function getVariant(productId,size,color,style){
   const product=PRODUCTS.find(p=>String(p.id)===String(productId));
   const useStyle=productUsesStyle(product);
-  return getProductVariants(productId).find(v=>
+  const matches=getProductVariants(productId).filter(v=>
     String(v.size||"")===String(size||"") &&
     String(v.color||"")===String(color||"") &&
     (!useStyle || String(v.style||"")===String(style||""))
-  )||null;
+  );
+  return matches.find(v=>getVariantAvailable(v)>0)||matches[0]||null;
+}
+function orderedSizes(product,variants){
+  const standard=["S","M","L","XL","XXL"];
+  const raw=[...new Set((variants||[]).map(v=>String(v.size||"")).filter(Boolean))];
+  const preferred=(product?.sizes||[]).map(String).filter(Boolean);
+  const merged=[...preferred,...raw];
+  return [...new Set(merged)].sort((a,b)=>{
+    const ai=standard.indexOf(a),bi=standard.indexOf(b);
+    if(ai>=0&&bi>=0)return ai-bi;
+    if(ai>=0)return -1;
+    if(bi>=0)return 1;
+    return a.localeCompare(b);
+  });
+}
+function variantForSelection(productId,size,color,style){
+  const product=PRODUCTS.find(p=>String(p.id)===String(productId));
+  const useStyle=productUsesStyle(product);
+  const matches=getProductVariants(productId).filter(v=>
+    String(v.size||"")===String(size||"") &&
+    String(v.color||"")===String(color||"") &&
+    (!useStyle || String(v.style||"")===String(style||""))
+  );
+  return matches.find(v=>getVariantAvailable(v)>0)||matches[0]||null;
 }
 function getVariantAvailable(variant){return variant?Math.max(0,Number(variant.stock_quantity||0)-Number(variant.reserved_quantity||0)):0;}
 function getProductDisplayPrice(product){return Number(product?.base_price??product?.price??0);}
@@ -989,17 +1013,29 @@ function renderVariantOptions(){
   if(!currentProduct)return;
   const p=currentProduct,variants=getProductVariants(p.id);
   const useStyle=productUsesStyle(p);
-  const sizes=[...new Set((variants.map(v=>v.size).filter(Boolean).length?variants.map(v=>v.size).filter(Boolean):p.sizes||[]))];
-  const colors=[...new Set((variants.map(v=>v.color).filter(Boolean).length?variants.map(v=>v.color).filter(Boolean):p.colors||[]))];
-  const styles=useStyle?[...new Set(variants.map(v=>v.style).filter(Boolean))]:[];
+  const sizes=orderedSizes(p,variants);
+  const colors=[...new Set([...(p.colors||[]).map(String),...variants.map(v=>String(v.color||"")).filter(Boolean)])];
+  const styles=useStyle?[...new Set(variants.map(v=>String(v.style||"")).filter(Boolean))]:[];
+
+  const sizeAvailable=s=>variants.some(v=>
+    String(v.size||"")===String(s) &&
+    getVariantAvailable(v)>0 &&
+    (!useStyle || String(v.style||"")===String(selectedStyle||v.style||""))
+  ) || variants.some(v=>String(v.size||"")===String(s)&&getVariantAvailable(v)>0);
+
+  const colorAvailable=c=>variants.some(v=>
+    String(v.color||"")===String(c) &&
+    getVariantAvailable(v)>0 &&
+    (!useStyle || String(v.style||"")===String(selectedStyle||v.style||""))
+  ) || variants.some(v=>String(v.color||"")===String(c)&&getVariantAvailable(v)>0);
 
   $("sizeOptions").innerHTML=sizes.map(s=>{
-    const selectable=colors.some(c=>getVariant(p.id,s,c,useStyle?selectedStyle:"")&&getVariantAvailable(getVariant(p.id,s,c,useStyle?selectedStyle:""))>0);
+    const selectable=sizeAvailable(s);
     return `<button type="button" class="option-btn ${selectedSize===s?"selected":""} ${selectable?"":"disabled"}" ${selectable?`onclick="selectSize('${esc(s)}')"`:"disabled"}>${esc(s)}</button>`;
   }).join("");
 
   $("colorOptions").innerHTML=colors.map(c=>{
-    const selectable=sizes.some(s=>getVariant(p.id,s,c,useStyle?selectedStyle:"")&&getVariantAvailable(getVariant(p.id,s,c,useStyle?selectedStyle:""))>0);
+    const selectable=colorAvailable(c);
     return `<button type="button" class="option-btn ${selectedColor===c?"selected":""} ${selectable?"":"disabled"}" ${selectable?`onclick="selectColor('${esc(c)}')"`:"disabled"}>${esc(c)}</button>`;
   }).join("");
 
@@ -1015,7 +1051,17 @@ function renderVariantOptions(){
     selectedStyle="";
   }
 
-  const variant=getVariant(p.id,selectedSize,selectedColor,useStyle?selectedStyle:"");
+  let variant=variantForSelection(p.id,selectedSize,selectedColor,useStyle?selectedStyle:"");
+  if(!variant || getVariantAvailable(variant)<=0){
+    const fallback=variants.find(v=>getVariantAvailable(v)>0);
+    if(fallback){
+      selectedSize=String(fallback.size||selectedSize);
+      selectedColor=String(fallback.color||selectedColor);
+      if(useStyle)selectedStyle=String(fallback.style||selectedStyle);
+      variant=variantForSelection(p.id,selectedSize,selectedColor,useStyle?selectedStyle:"");
+    }
+  }
+
   const available=getVariantAvailable(variant),price=variant?.price??p.price;
   $("modalPrice").innerHTML=money(price);
 
@@ -1037,12 +1083,26 @@ function renderVariantOptions(){
   }
 }
 function selectSize(s){
-  const hasAny=getProductVariants(currentProduct?.id).some(v=>String(v.size)===String(s)&&getVariantAvailable(v)>0); if(!hasAny){showToast("THAT SIZE IS OUT OF STOCK.");return;} selectedSize=s;
-  const exact=getVariant(currentProduct.id,selectedSize,selectedColor,productUsesStyle(currentProduct)?selectedStyle:""); if(!exact||getVariantAvailable(exact)<=0){const f=getProductVariants(currentProduct.id).find(v=>String(v.size)===String(s)&&getVariantAvailable(v)>0);if(f){selectedColor=f.color||selectedColor;selectedStyle=f.style||selectedStyle;}} renderVariantOptions();updateModalQuantity();
+  const variants=getProductVariants(currentProduct?.id);
+  const candidate=variants.find(v=>String(v.size||"")===String(s)&&String(v.color||"")===String(selectedColor||"")&&getVariantAvailable(v)>0)
+    || variants.find(v=>String(v.size||"")===String(s)&&getVariantAvailable(v)>0);
+  if(!candidate){showToast("THAT SIZE IS OUT OF STOCK.");return;}
+  selectedSize=String(candidate.size||s);
+  selectedColor=String(candidate.color||selectedColor);
+  if(productUsesStyle(currentProduct))selectedStyle=String(candidate.style||selectedStyle);
+  renderVariantOptions();
+  updateModalQuantity();
 }
 function selectColor(c){
-  const hasAny=getProductVariants(currentProduct?.id).some(v=>String(v.color)===String(c)&&getVariantAvailable(v)>0); if(!hasAny){showToast("THAT COLOUR IS OUT OF STOCK.");return;} selectedColor=c;
-  const exact=getVariant(currentProduct.id,selectedSize,selectedColor,productUsesStyle(currentProduct)?selectedStyle:""); if(!exact||getVariantAvailable(exact)<=0){const f=getProductVariants(currentProduct.id).find(v=>String(v.color)===String(c)&&getVariantAvailable(v)>0);if(f){selectedSize=f.size||selectedSize;selectedStyle=f.style||selectedStyle;}} renderVariantOptions();updateModalQuantity();
+  const variants=getProductVariants(currentProduct?.id);
+  const candidate=variants.find(v=>String(v.color||"")===String(c)&&String(v.size||"")===String(selectedSize||"")&&getVariantAvailable(v)>0)
+    || variants.find(v=>String(v.color||"")===String(c)&&getVariantAvailable(v)>0);
+  if(!candidate){showToast("THAT COLOUR IS OUT OF STOCK.");return;}
+  selectedColor=String(candidate.color||c);
+  selectedSize=String(candidate.size||selectedSize);
+  if(productUsesStyle(currentProduct))selectedStyle=String(candidate.style||selectedStyle);
+  renderVariantOptions();
+  updateModalQuantity();
 }
 function selectStyle(st){const v=getVariant(currentProduct?.id,selectedSize,selectedColor,productUsesStyle(currentProduct)?st:"");if(!v||getVariantAvailable(v)<=0){showToast("THAT OPTION IS OUT OF STOCK.");return;}selectedStyle=st;renderVariantOptions();updateModalQuantity();}
 function closeProductModal(){$("productModal").classList.remove("open");closeSizeGuide();unlockBodyIfClear();}
