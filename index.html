@@ -161,7 +161,7 @@ header{position:sticky;top:0;z-index:1000;height:88px;background:rgba(5,5,5,.97)
 .option-btn{min-width:55px;min-height:42px;padding:0 14px;background:transparent;color:#ccc;border:1px solid var(--border);font-size:11px}
 .option-btn:hover,.option-btn.selected{border-color:var(--gold);color:var(--gold)}
 .option-btn.disabled{opacity:.32;color:#666;border-color:rgba(255,255,255,.06);cursor:not-allowed;text-decoration:line-through}
-.variant-stock-note{margin-top:10px;color:#888;font-size:10px;line-height:1.6;min-height:16px}
+.variant-stock-note{margin-top:10px;color:#888;font-size:10px;line-height:1.6;min-height:16px;letter-spacing:.2px}
 .variant-stock-note strong{color:var(--gold)}
 .product-stock-badge{position:absolute;left:12px;top:12px;z-index:3;padding:7px 9px;background:rgba(5,5,5,.88);border:1px solid var(--border);color:#aaa;font-size:9px;letter-spacing:1.2px;text-transform:uppercase;font-weight:900}
 .product-stock-badge.in-stock{color:var(--success);border-color:rgba(99,216,138,.35)}
@@ -1017,26 +1017,51 @@ function renderVariantOptions(){
   const colors=[...new Set([...(p.colors||[]).map(String),...variants.map(v=>String(v.color||"")).filter(Boolean)])];
   const styles=useStyle?[...new Set(variants.map(v=>String(v.style||"")).filter(Boolean))]:[];
 
-  const sizeAvailable=s=>variants.some(v=>
+  /*
+    CUSTOMER-FACING AVAILABILITY RULE:
+    - Colours show whether that colour has ANY available stock.
+    - Sizes show whether that size has ANY available stock.
+    - Once a colour is selected, sizes are narrowed to the sizes available
+      for that colour (and vice versa).
+    - We never hide a colour/size just because the currently selected
+      combination is unavailable.
+  */
+  const colorHasStock=c=>variants.some(v=>
+    String(v.color||"")===String(c) && getVariantAvailable(v)>0 &&
+    (!useStyle || !selectedStyle || String(v.style||"")===String(selectedStyle))
+  );
+  const sizeHasStock=s=>variants.some(v=>
+    String(v.size||"")===String(s) && getVariantAvailable(v)>0 &&
+    (!useStyle || !selectedStyle || String(v.style||"")===String(selectedStyle))
+  );
+  const sizeAvailableForColor=s=>variants.some(v=>
     String(v.size||"")===String(s) &&
+    String(v.color||"")===String(selectedColor||"") &&
     getVariantAvailable(v)>0 &&
-    (!useStyle || String(v.style||"")===String(selectedStyle||v.style||""))
-  ) || variants.some(v=>String(v.size||"")===String(s)&&getVariantAvailable(v)>0);
-
-  const colorAvailable=c=>variants.some(v=>
+    (!useStyle || !selectedStyle || String(v.style||"")===String(selectedStyle))
+  );
+  const colorAvailableForSize=c=>variants.some(v=>
     String(v.color||"")===String(c) &&
+    String(v.size||"")===String(selectedSize||"") &&
     getVariantAvailable(v)>0 &&
-    (!useStyle || String(v.style||"")===String(selectedStyle||v.style||""))
-  ) || variants.some(v=>String(v.color||"")===String(c)&&getVariantAvailable(v)>0);
+    (!useStyle || !selectedStyle || String(v.style||"")===String(selectedStyle))
+  );
 
   $("sizeOptions").innerHTML=sizes.map(s=>{
-    const selectable=sizeAvailable(s);
-    return `<button type="button" class="option-btn ${selectedSize===s?"selected":""} ${selectable?"":"disabled"}" ${selectable?`onclick="selectSize('${esc(s)}')"`:"disabled"}>${esc(s)}</button>`;
+    const available=sizeHasStock(s);
+    const compatible=sizeAvailableForColor(s);
+    const selectable=available;
+    const disabledClass=selectable?"":"disabled";
+    const title=available&&!compatible?"This size is available in another colour.":"";
+    return `<button type="button" class="option-btn ${selectedSize===s?"selected":""} ${disabledClass}" ${selectable?`onclick="selectSize('${esc(s)}')"`:"disabled"} title="${esc(title)}">${esc(s)}</button>`;
   }).join("");
 
   $("colorOptions").innerHTML=colors.map(c=>{
-    const selectable=colorAvailable(c);
-    return `<button type="button" class="option-btn ${selectedColor===c?"selected":""} ${selectable?"":"disabled"}" ${selectable?`onclick="selectColor('${esc(c)}')"`:"disabled"}>${esc(c)}</button>`;
+    const available=colorHasStock(c);
+    const compatible=colorAvailableForSize(c);
+    const disabledClass=available?"":"disabled";
+    const title=available&&!compatible?"This colour is available in another size.":"";
+    return `<button type="button" class="option-btn ${selectedColor===c?"selected":""} ${disabledClass}" ${available?`onclick="selectColor('${esc(c)}')"`:"disabled"} title="${esc(title)}">${esc(c)}</button>`;
   }).join("");
 
   if(useStyle && styles.length){
@@ -1051,18 +1076,9 @@ function renderVariantOptions(){
     selectedStyle="";
   }
 
-  let variant=variantForSelection(p.id,selectedSize,selectedColor,useStyle?selectedStyle:"");
-  if(!variant || getVariantAvailable(variant)<=0){
-    const fallback=variants.find(v=>getVariantAvailable(v)>0);
-    if(fallback){
-      selectedSize=String(fallback.size||selectedSize);
-      selectedColor=String(fallback.color||selectedColor);
-      if(useStyle)selectedStyle=String(fallback.style||selectedStyle);
-      variant=variantForSelection(p.id,selectedSize,selectedColor,useStyle?selectedStyle:"");
-    }
-  }
-
-  const available=getVariantAvailable(variant),price=variant?.price??p.price;
+  const variant=variantForSelection(p.id,selectedSize,selectedColor,useStyle?selectedStyle:"");
+  const available=getVariantAvailable(variant);
+  const price=variant?.price??p.price;
   $("modalPrice").innerHTML=money(price);
 
   let noteEl=$("variantStockNote");
@@ -1072,39 +1088,76 @@ function renderVariantOptions(){
     noteEl.className="variant-stock-note";
     $("modalPrice").insertAdjacentElement("afterend",noteEl);
   }
-  noteEl.innerHTML=variant?(available>0?`<strong>${available}</strong> available for this exact variant.`:"THIS EXACT VARIANT IS OUT OF STOCK."):"THIS SIZE / COLOUR COMBINATION IS NOT AVAILABLE.";
+
+  if(variant && available>0){
+    noteEl.innerHTML=`<span style="color:#7ee787;font-weight:700;">IN STOCK</span> <span style="color:#777;">â€” ${esc(selectedColor)} / ${esc(selectedSize)}</span>`;
+  }else{
+    noteEl.innerHTML=`<span style="color:#ff7777;font-weight:700;">NOT AVAILABLE</span> <span style="color:#777;">â€” ${esc(selectedColor)} / ${esc(selectedSize)}</span>`;
+  }
 
   const addButton=document.querySelector(".modal-add");
   if(addButton){
     addButton.disabled=available<=0;
-    addButton.textContent=available>0?"ADD TO CART":"OUT OF STOCK";
+    addButton.textContent=available>0?"ADD TO CART":"NOT AVAILABLE";
     addButton.style.opacity=available>0?"1":".45";
     addButton.style.cursor=available>0?"pointer":"not-allowed";
   }
 }
 function selectSize(s){
-  const variants=getProductVariants(currentProduct?.id);
-  const candidate=variants.find(v=>String(v.size||"")===String(s)&&String(v.color||"")===String(selectedColor||"")&&getVariantAvailable(v)>0)
-    || variants.find(v=>String(v.size||"")===String(s)&&getVariantAvailable(v)>0);
-  if(!candidate){showToast("THAT SIZE IS OUT OF STOCK.");return;}
-  selectedSize=String(candidate.size||s);
-  selectedColor=String(candidate.color||selectedColor);
-  if(productUsesStyle(currentProduct))selectedStyle=String(candidate.style||selectedStyle);
+  if(!currentProduct)return;
+  const variants=getProductVariants(currentProduct.id);
+  const candidate=variants.find(v=>
+    String(v.size||"")===String(s) &&
+    String(v.color||"")===String(selectedColor||"") &&
+    getVariantAvailable(v)>0 &&
+    (!productUsesStyle(currentProduct) || !selectedStyle || String(v.style||"")===String(selectedStyle))
+  );
+
+  if(candidate){
+    selectedSize=String(candidate.size||s);
+  }else if(variants.some(v=>String(v.size||"")===String(s)&&getVariantAvailable(v)>0)){
+    /* The size exists, but not in the currently selected colour. */
+    selectedSize=String(s);
+  }else{
+    showToast("THAT SIZE IS NOT AVAILABLE.");
+    return;
+  }
+
   renderVariantOptions();
   updateModalQuantity();
 }
+
 function selectColor(c){
-  const variants=getProductVariants(currentProduct?.id);
-  const candidate=variants.find(v=>String(v.color||"")===String(c)&&String(v.size||"")===String(selectedSize||"")&&getVariantAvailable(v)>0)
-    || variants.find(v=>String(v.color||"")===String(c)&&getVariantAvailable(v)>0);
-  if(!candidate){showToast("THAT COLOUR IS OUT OF STOCK.");return;}
-  selectedColor=String(candidate.color||c);
-  selectedSize=String(candidate.size||selectedSize);
-  if(productUsesStyle(currentProduct))selectedStyle=String(candidate.style||selectedStyle);
+  if(!currentProduct)return;
+  const variants=getProductVariants(currentProduct.id);
+  const candidate=variants.find(v=>
+    String(v.color||"")===String(c) &&
+    String(v.size||"")===String(selectedSize||"") &&
+    getVariantAvailable(v)>0 &&
+    (!productUsesStyle(currentProduct) || !selectedStyle || String(v.style||"")===String(selectedStyle))
+  );
+
+  if(candidate){
+    selectedColor=String(candidate.color||c);
+  }else if(variants.some(v=>String(v.color||"")===String(c)&&getVariantAvailable(v)>0)){
+    /* The colour exists, but not in the currently selected size. */
+    selectedColor=String(c);
+  }else{
+    showToast("THAT COLOUR IS NOT AVAILABLE.");
+    return;
+  }
+
   renderVariantOptions();
   updateModalQuantity();
 }
-function selectStyle(st){const v=getVariant(currentProduct?.id,selectedSize,selectedColor,productUsesStyle(currentProduct)?st:"");if(!v||getVariantAvailable(v)<=0){showToast("THAT OPTION IS OUT OF STOCK.");return;}selectedStyle=st;renderVariantOptions();updateModalQuantity();}
+
+function selectStyle(st){
+  const v=getVariant(currentProduct?.id,selectedSize,selectedColor,productUsesStyle(currentProduct)?st:"");
+  if(!v||getVariantAvailable(v)<=0){showToast("THAT OPTION IS NOT AVAILABLE.");return;}
+  selectedStyle=st;
+  renderVariantOptions();
+  updateModalQuantity();
+}
 function closeProductModal(){$("productModal").classList.remove("open");closeSizeGuide();unlockBodyIfClear();}
 function closeProductModalOnBackdrop(e){if(e.target.id==="productModal")closeProductModal();}
 
