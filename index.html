@@ -160,6 +160,12 @@ header{position:sticky;top:0;z-index:1000;height:88px;background:rgba(5,5,5,.97)
 .option-buttons{display:flex;gap:8px;flex-wrap:wrap}
 .option-btn{min-width:55px;min-height:42px;padding:0 14px;background:transparent;color:#ccc;border:1px solid var(--border);font-size:11px}
 .option-btn:hover,.option-btn.selected{border-color:var(--gold);color:var(--gold)}
+.option-btn.disabled{opacity:.32;color:#666;border-color:rgba(255,255,255,.06);cursor:not-allowed;text-decoration:line-through}
+.variant-stock-note{margin-top:10px;color:#888;font-size:10px;line-height:1.6;min-height:16px}
+.variant-stock-note strong{color:var(--gold)}
+.product-stock-badge{position:absolute;left:12px;top:12px;z-index:3;padding:7px 9px;background:rgba(5,5,5,.88);border:1px solid var(--border);color:#aaa;font-size:9px;letter-spacing:1.2px;text-transform:uppercase;font-weight:900}
+.product-stock-badge.in-stock{color:var(--success);border-color:rgba(99,216,138,.35)}
+.product-stock-badge.out-of-stock{color:var(--danger);border-color:rgba(255,112,112,.35)}
 .quantity{display:flex;align-items:center;gap:12px}
 .qty-btn{width:38px;height:38px;background:transparent;border:1px solid var(--border);color:#fff}
 .qty-value{min-width:28px;text-align:center;font-weight:900}
@@ -597,7 +603,7 @@ footer{border-top:1px solid var(--border);padding:55px 35px;background:#060606}
           </div>
         </div>
 
-<!-- CUSTOM FIT â€” FUTURE FEATURE
+<!-- CUSTOM FIT Ã¢â‚¬â€ FUTURE FEATURE
      Kept in the system for future KNG custom orders.
      Hidden from customers for the current READY-MADE launch.
 -->
@@ -709,38 +715,49 @@ footer{border-top:1px solid var(--border);padding:55px 35px;background:#060606}
    XS is intentionally NOT included anywhere.
 ========================================================= */
 
-const PRODUCTS = [
-  {id:"men-basic-short-sleeve",name:"Basic / Short Sleeve Tops",price:100,gender:"men",section:"Upper Body",category:"Basic / Short Sleeve Tops",colors:["Obsidian Black","White","Rich Brown","Royal Burgundy","Dark Blue"],sizes:["S","M","L","XL","XXL"]},
-  {id:"men-polos",name:"Polos",price:100,gender:"men",section:"Upper Body",category:"Polos",colors:["Obsidian Black","White","Rich Brown","Royal Burgundy","Dark Blue"],sizes:["S","M","L","XL","XXL"]},
-  {id:"men-hoodies",name:"Hoodies",price:100,gender:"men",section:"Upper Body",category:"Hoodies",colors:["Obsidian Black","White","Rich Brown","Royal Burgundy","Dark Blue"],sizes:["S","M","L","XL","XXL"]},
-  {id:"men-tank-sleeveless",name:"Tank Tops / Sleeveless",price:100,gender:"men",section:"Upper Body",category:"Tank Tops / Sleeveless",colors:["Obsidian Black","White","Rich Brown","Royal Burgundy","Dark Blue"],sizes:["S","M","L","XL","XXL"]},
-  {id:"men-long-sleeve",name:"Long Sleeve Tops",price:100,gender:"men",section:"Upper Body",category:"Long Sleeve Tops",colors:["Obsidian Black","White","Rich Brown","Royal Burgundy","Dark Blue"],sizes:["S","M","L","XL","XXL"]},
-  {id:"men-cropped-shirts",name:"Cropped Shirts",price:100,gender:"men",section:"Upper Body",category:"Cropped Shirts",colors:["Obsidian Black","White","Rich Brown","Royal Burgundy","Dark Blue"],sizes:["S","M","L","XL","XXL"]},
+let PRODUCTS=[];
+let PRODUCT_VARIANTS=[];
+let VARIANTS_BY_PRODUCT=new Map();
+let liveCatalogReady=false;
 
-  {id:"men-jorts",name:"Jorts",price:100,gender:"men",section:"Lower Body",category:"Jorts",colors:["Obsidian Black","Ash Grey","Stone","Rich Brown","Dark Indigo"],sizes:["S","M","L","XL","XXL"]},
-  {id:"men-baggy-sweatpants",name:"Baggy Sweatpants",price:100,gender:"men",section:"Lower Body",category:"Baggy Sweatpants",colors:["Obsidian Black","Ash Grey","Stone","Rich Brown","Dark Indigo"],sizes:["S","M","L","XL","XXL"]},
-  {id:"men-shorts",name:"Shorts",price:100,gender:"men",section:"Lower Body",category:"Shorts",colors:["Obsidian Black","Ash Grey","Stone","Rich Brown","Dark Indigo"],sizes:["S","M","L","XL","XXL"]},
-  {id:"men-tracksuit-pants",name:"Tracksuit Pants",price:100,gender:"men",section:"Lower Body",category:"Tracksuit Pants",colors:["Obsidian Black","Ash Grey","Stone","Rich Brown","Dark Indigo"],sizes:["S","M","L","XL","XXL"]},
+function normalizeArray(value){return Array.isArray(value)?value.filter(Boolean).map(String):[];}
+function getProductVariants(productId){return VARIANTS_BY_PRODUCT.get(String(productId))||[];}
+function getVariant(productId,size,color,style){return getProductVariants(productId).find(v=>String(v.size||"")===String(size||"")&&String(v.color||"")===String(color||"")&&String(v.style||"")===String(style||""))||null;}
+function getVariantAvailable(variant){return variant?Math.max(0,Number(variant.stock_quantity||0)-Number(variant.reserved_quantity||0)):0;}
+function getProductDisplayPrice(product){return Number(product?.base_price??product?.price??0);}
 
-  {id:"women-basic-short-sleeve",name:"Basic / Short Sleeve Tops",price:100,gender:"women",section:"Upper Body",category:"Basic / Short Sleeve Tops",colors:["Obsidian Black","Bone","Deep Olive","Royal Burgundy","Dusty Rose","Chocolate Brown"],sizes:["S","M","L","XL","XXL"]},
-  {id:"women-long-sleeve",name:"Long Sleeve Tops",price:100,gender:"women",section:"Upper Body",category:"Long Sleeve Tops",colors:["Obsidian Black","Bone","Deep Olive","Royal Burgundy","Dusty Rose","Chocolate Brown"],sizes:["S","M","L","XL","XXL"]},
-  {id:"women-tank-sleeveless",name:"Tank Tops / Sleeveless",price:100,gender:"women",section:"Upper Body",category:"Tank Tops / Sleeveless",colors:["Obsidian Black","Bone","Deep Olive","Royal Burgundy","Dusty Rose","Chocolate Brown"],sizes:["S","M","L","XL","XXL"]},
-  {id:"women-polos",name:"Polos",price:100,gender:"women",section:"Upper Body",category:"Polos",colors:["Obsidian Black","Bone","Deep Olive","Royal Burgundy","Dusty Rose","Chocolate Brown"],sizes:["S","M","L","XL","XXL"]},
-  {id:"women-hoodies",name:"Hoodies",price:100,gender:"women",section:"Upper Body",category:"Hoodies",colors:["Obsidian Black","Bone","Deep Olive","Royal Burgundy","Dusty Rose","Chocolate Brown"],sizes:["S","M","L","XL","XXL"]},
-  {id:"women-fitted-crop",name:"Fitted Crop Tops",price:100,gender:"women",section:"Upper Body",category:"Fitted Crop Tops",colors:["Obsidian Black","Bone","Deep Olive","Royal Burgundy","Dusty Rose","Chocolate Brown"],sizes:["S","M","L","XL","XXL"]},
-  {id:"women-loose-crop",name:"Loose Crop Tops",price:100,gender:"women",section:"Upper Body",category:"Loose Crop Tops",colors:["Obsidian Black","Bone","Deep Olive","Royal Burgundy","Dusty Rose","Chocolate Brown"],sizes:["S","M","L","XL","XXL"]},
+async function loadLiveCatalog(){
+  try{
+    const [{data:products,error:productError},{data:variants,error:variantError}]=await Promise.all([
+      kngSupabase.from("products").select("id,name,price,base_price,gender,section,category,colors,sizes,styles,stock_quantity,active,featured,image_url,image_urls,description").eq("active",true).order("created_at",{ascending:true}),
+      kngSupabase.from("product_variants").select("id,product_id,color,size,style,stock_quantity,reserved_quantity,active,is_active,sku,price,image_url,low_stock_threshold").eq("active",true).eq("is_active",true)
+    ]);
+    if(productError)throw productError; if(variantError)throw variantError;
+    PRODUCT_VARIANTS=variants||[]; VARIANTS_BY_PRODUCT=new Map();
+    PRODUCT_VARIANTS.forEach(v=>{const key=String(v.product_id);if(!VARIANTS_BY_PRODUCT.has(key))VARIANTS_BY_PRODUCT.set(key,[]);VARIANTS_BY_PRODUCT.get(key).push(v);});
+    PRODUCTS=(products||[]).map(p=>{
+      const pv=getProductVariants(p.id);
+      const colors=normalizeArray(p.colors),sizes=normalizeArray(p.sizes),styles=normalizeArray(p.styles);
+      const vc=[...new Set(pv.map(v=>v.color).filter(Boolean))],vs=[...new Set(pv.map(v=>v.size).filter(Boolean))],vst=[...new Set(pv.map(v=>v.style).filter(Boolean))];
+      return {...p,id:String(p.id),price:getProductDisplayPrice(p),colors:vc.length?vc:colors,sizes:vs.length?vs:sizes,styles:vst.length?vst:styles};
+    });
+    let cartChanged=false;
+    cart=cart.filter(item=>{
+      const product=PRODUCTS.find(p=>String(p.id)===String(item.id));
+      if(!product){cartChanged=true;return false;}
+      const variant=item.variant_id?getProductVariants(product.id).find(v=>String(v.id)===String(item.variant_id)):getVariant(product.id,item.size,item.color,item.style);
+      if(!variant){cartChanged=true;return false;}
+      if(String(item.variant_id||"")!==String(variant.id))cartChanged=true;
+      item.variant_id=variant.id; item.price=Number(variant.price??product.price??0); return true;
+    });
+    if(cartChanged)saveCart();
+    liveCatalogReady=true; createFilters(); renderProducts(); updateCartUI();
+  }catch(error){
+    console.error("KNG LIVE CATALOG ERROR:",error); liveCatalogReady=false; PRODUCTS=[]; PRODUCT_VARIANTS=[]; VARIANTS_BY_PRODUCT=new Map();
+    $("products")&&($("products").innerHTML='<div class="wardrobe-empty">KNG products are temporarily unavailable. Please refresh and try again.</div>');
+  }
+}
 
-  {id:"women-jorts",name:"Jorts",price:100,gender:"women",section:"Lower Body",category:"Jorts",colors:["Obsidian Black","Ash Grey","Stone Beige","Deep Olive","Dark Indigo"],sizes:["S","M","L","XL","XXL"]},
-  {id:"women-baggy-sweatpants",name:"Baggy Sweatpants",price:100,gender:"women",section:"Lower Body",category:"Baggy Sweatpants",colors:["Obsidian Black","Ash Grey","Stone Beige","Deep Olive","Dark Indigo"],sizes:["S","M","L","XL","XXL"]},
-  {id:"women-shorts",name:"Shorts",price:100,gender:"women",section:"Lower Body",category:"Shorts",colors:["Obsidian Black","Ash Grey","Stone Beige","Deep Olive","Dark Indigo"],sizes:["S","M","L","XL","XXL"]},
-  {id:"women-tracksuit-pants",name:"Tracksuit Pants",price:100,gender:"women",section:"Lower Body",category:"Tracksuit Pants",colors:["Obsidian Black","Ash Grey","Stone Beige","Deep Olive","Dark Indigo"],sizes:["S","M","L","XL","XXL"]},
-
-  {id:"kng-straight-cap",name:"Straight Cap",price:100,gender:"accessories",section:"Headwear",category:"Straight Cap",colors:["Obsidian Black","Bone","Deep Olive","Royal Burgundy","Slate Grey"],sizes:["ONE SIZE"]},
-  {id:"kng-bent-cap",name:"Bent Cap",price:100,gender:"accessories",section:"Headwear",category:"Bent Cap",colors:["Obsidian Black","Bone","Deep Olive","Royal Burgundy","Slate Grey"],sizes:["ONE SIZE"]},
-  {id:"kng-beanie",name:"Beanie",price:100,gender:"accessories",section:"Headwear",category:"Beanie",colors:["Obsidian Black","Bone","Deep Olive","Royal Burgundy","Slate Grey"],sizes:["ONE SIZE"]},
-  {id:"kng-customised-lapel-pins",name:"Customised Lapel Pins",price:100,gender:"accessories",section:"Lapel Pins",category:"Customised Lapel Pins",colors:["Black & Gold","White & Silver"],styles:["Circle","Square"],sizes:["ONE SIZE"]},
-  {id:"kng-plain-lapel-pin",name:"Plain Lapel Pin",price:100,gender:"accessories",section:"Lapel Pins",category:"Plain Lapel Pin",colors:["Black & Gold"],styles:["Plain"],sizes:["ONE SIZE"]}
-];
 
 let currentCollection="men";
 let currentFilter="All";
@@ -938,119 +955,51 @@ function createFilters(){
 function renderProducts(){
   const q=($("productSearch")?.value||"").toLowerCase().trim();
   const pool=PRODUCTS.filter(p=>p.gender===currentCollection);
-  const list=(currentFilter==="All"?pool:pool.filter(p=>p.category===currentFilter))
-    .filter(p=>(p.name+" "+p.category+" "+p.section).toLowerCase().includes(q));
-
-  if(!list.length){
-    $("products").innerHTML='<div class="wardrobe-empty">No KNG pieces found.</div>';
-    return;
-  }
-
-  $("products").innerHTML=list.map(p=>`
-    <article class="product-card">
-      <div class="product-art product-art-placeholder">
-        <span>KNG</span>
-        <small>PRODUCT IMAGE<br>COMING SOON</small>
-      </div>
-      <div class="product-body">
-        <small>${esc(p.section)} / ${esc(p.category)}</small>
-        <h3>${esc(p.name)}</h3>
-        <div class="product-price">${money(p.price)}</div>
-        <button class="btn" onclick="openProductModal('${p.id}')">VIEW PIECE</button>
-      </div>
-    </article>
-  `).join("");
+  const list=(currentFilter==="All"?pool:pool.filter(p=>p.category===currentFilter)).filter(p=>(p.name+" "+p.category+" "+p.section).toLowerCase().includes(q));
+  if(!list.length){$("products").innerHTML=liveCatalogReady?'<div class="wardrobe-empty">No KNG pieces found.</div>':'<div class="wardrobe-empty">LOADING KNG PIECES...</div>';return;}
+  $("products").innerHTML=list.map(p=>{
+    const variants=getProductVariants(p.id),available=variants.reduce((sum,v)=>sum+getVariantAvailable(v),0),image=p.image_urls?.[0]||p.image_url||"";
+    return `<article class="product-card"><div class="product-art ${image?"":"product-art-placeholder"}">${image?`<img src="${esc(image)}" alt="${esc(p.name)}">`:`<span>KNG</span><small>PRODUCT IMAGE<br>COMING SOON</small>`}<div class="product-stock-badge ${available>0?"in-stock":"out-of-stock"}">${available>0?`${available} IN STOCK`:"OUT OF STOCK"}</div></div><div class="product-body"><small>${esc(p.section)} / ${esc(p.category)}</small><h3>${esc(p.name)}</h3><div class="product-price">${money(p.price)}</div><button class="btn" onclick="openProductModal('${esc(p.id)}')">VIEW PIECE</button></div></article>`;
+  }).join("");
 }
 
 /* PRODUCT MODAL */
 function openProductModal(id){
-  const p=PRODUCTS.find(x=>x.id===id);
-  if(!p)return;
+  const p=PRODUCTS.find(x=>String(x.id)===String(id)); if(!p)return; currentProduct=p;
+  const variants=getProductVariants(p.id),firstAvailable=variants.find(v=>getVariantAvailable(v)>0)||variants[0]||null;
+  selectedSize=firstAvailable?.size||p.sizes?.[0]||""; selectedColor=firstAvailable?.color||p.colors?.[0]||""; selectedStyle=firstAvailable?.style||p.styles?.[0]||""; modalQuantity=1;
+  $("modalCategory").textContent=p.gender==="men"?"KINGS / "+p.section+" / "+p.category:p.gender==="women"?"QUEENS / "+p.section+" / "+p.category:"ACCESSORIES / "+p.section+" / "+p.category;
+  $("modalName").textContent=p.name; renderVariantOptions(); renderCustomFitFields(); updateModalQuantity(); closeSizeGuide(); $("productModal").classList.add("open"); lockBody();
+}
 
-  currentProduct=p;
-  selectedSize=p.sizes[0]||"";
-  selectedColor=p.colors[0]||"";
-  selectedStyle=p.styles?.[0]||"";
-  modalQuantity=1;
-
-  $("modalCategory").textContent=p.gender==="men"?"KINGS / "+p.section+" / "+p.category:
-    p.gender==="women"?"QUEENS / "+p.section+" / "+p.category:
-    "ACCESSORIES / "+p.section+" / "+p.category;
-
-  $("modalName").textContent=p.name;
-  $("modalPrice").innerHTML=money(p.price);
-
-  $("sizeOptions").innerHTML=p.sizes.map((s,i)=>
-    `<button type="button" class="option-btn ${i===0?"selected":""}" onclick="selectSize('${esc(s)}')">${esc(s)}</button>`
-  ).join("");
-
-  $("colorOptions").innerHTML=p.colors.map((c,i)=>
-    `<button type="button" class="option-btn ${i===0?"selected":""}" onclick="selectColor('${esc(c)}')">${esc(c)}</button>`
-  ).join("");
-
-  if(p.styles){
-    $("styleGroup").style.display="block";
-    $("styleGroup").innerHTML=
-      `<label>PIN SHAPE</label><div class="option-buttons">`+
-      p.styles.map((s,i)=>
-        `<button type="button" class="option-btn ${i===0?"selected":""}" onclick="selectStyle('${esc(s)}')">${esc(s)}</button>`
-      ).join("")+
-      `</div>`;
-  }else{
-    $("styleGroup").style.display="none";
-    $("styleGroup").innerHTML="";
-  }
-
-  /* Accessories do not need an apparel size guide. */
-  $("sizeGuideSection").style.display=p.gender==="accessories"?"none":"block";
-
-  renderCustomFitFields();
-  updateModalQuantity();
-  closeSizeGuide();
-
-  $("productModal").classList.add("open");
-  lockBody();
+function renderVariantOptions(){
+  if(!currentProduct)return; const p=currentProduct,variants=getProductVariants(p.id);
+  const sizes=[...new Set((variants.map(v=>v.size).filter(Boolean).length?variants.map(v=>v.size).filter(Boolean):p.sizes||[]))];
+  const colors=[...new Set((variants.map(v=>v.color).filter(Boolean).length?variants.map(v=>v.color).filter(Boolean):p.colors||[]))];
+  const styles=[...new Set((variants.map(v=>v.style).filter(Boolean).length?variants.map(v=>v.style).filter(Boolean):p.styles||[]))];
+  $("sizeOptions").innerHTML=sizes.map(s=>{const selectable=styles.length?colors.some(c=>styles.some(st=>getVariant(p.id,s,c,st)&&getVariantAvailable(getVariant(p.id,s,c,st))>0)):colors.some(c=>getVariant(p.id,s,c)&&getVariantAvailable(getVariant(p.id,s,c))>0);return `<button type="button" class="option-btn ${selectedSize===s?"selected":""} ${selectable?"":"disabled"}" ${selectable?`onclick="selectSize('${esc(s)}')"`:"disabled"}>${esc(s)}</button>`;}).join("");
+  $("colorOptions").innerHTML=colors.map(c=>{const selectable=styles.length?sizes.some(s=>styles.some(st=>getVariant(p.id,s,c,st)&&getVariantAvailable(getVariant(p.id,s,c,st))>0)):sizes.some(s=>getVariant(p.id,s,c)&&getVariantAvailable(getVariant(p.id,s,c))>0);return `<button type="button" class="option-btn ${selectedColor===c?"selected":""} ${selectable?"":"disabled"}" ${selectable?`onclick="selectColor('${esc(c)}')"`:"disabled"}>${esc(c)}</button>`;}).join("");
+  if(p.styles?.length){$("styleGroup").style.display="block";$("styleGroup").innerHTML=`<label>PIN SHAPE</label><div class="option-buttons">${styles.map(st=>{const v=getVariant(p.id,selectedSize,selectedColor,st),available=getVariantAvailable(v)>0;return `<button type="button" class="option-btn ${selectedStyle===st?"selected":""} ${available?"":"disabled"}" ${available?`onclick="selectStyle('${esc(st)}')"`:"disabled"}>${esc(st)}</button>`;}).join("")}</div>`;}else{$("styleGroup").style.display="none";$('styleGroup').innerHTML="";}
+  const variant=getVariant(p.id,selectedSize,selectedColor,selectedStyle),available=getVariantAvailable(variant),price=variant?.price??p.price; $("modalPrice").innerHTML=money(price);
+  let noteEl=$("variantStockNote"); if(!noteEl){noteEl=document.createElement("div");noteEl.id="variantStockNote";noteEl.className="variant-stock-note";$("modalPrice").insertAdjacentElement("afterend",noteEl);}
+  noteEl.innerHTML=variant?(available>0?`<strong>${available}</strong> available for this exact variant.`:"THIS EXACT VARIANT IS OUT OF STOCK."):"THIS SIZE / COLOUR COMBINATION IS NOT AVAILABLE.";
+  const addButton=document.querySelector(".modal-add"); if(addButton){addButton.disabled=available<=0;addButton.textContent=available>0?"ADD TO CART":"OUT OF STOCK";addButton.style.opacity=available>0?"1":".45";addButton.style.cursor=available>0?"pointer":"not-allowed";}
 }
 
 function selectSize(s){
-  selectedSize=s;
-  document.querySelectorAll("#sizeOptions .option-btn").forEach(b=>
-    b.classList.toggle("selected",b.textContent.trim()===s)
-  );
+  const hasAny=getProductVariants(currentProduct?.id).some(v=>String(v.size)===String(s)&&getVariantAvailable(v)>0); if(!hasAny){showToast("THAT SIZE IS OUT OF STOCK.");return;} selectedSize=s;
+  const exact=getVariant(currentProduct.id,selectedSize,selectedColor,selectedStyle); if(!exact||getVariantAvailable(exact)<=0){const f=getProductVariants(currentProduct.id).find(v=>String(v.size)===String(s)&&getVariantAvailable(v)>0);if(f){selectedColor=f.color||selectedColor;selectedStyle=f.style||selectedStyle;}} renderVariantOptions();updateModalQuantity();
 }
-
 function selectColor(c){
-  selectedColor=c;
-  document.querySelectorAll("#colorOptions .option-btn").forEach(b=>
-    b.classList.toggle("selected",b.textContent.trim()===c)
-  );
+  const hasAny=getProductVariants(currentProduct?.id).some(v=>String(v.color)===String(c)&&getVariantAvailable(v)>0); if(!hasAny){showToast("THAT COLOUR IS OUT OF STOCK.");return;} selectedColor=c;
+  const exact=getVariant(currentProduct.id,selectedSize,selectedColor,selectedStyle); if(!exact||getVariantAvailable(exact)<=0){const f=getProductVariants(currentProduct.id).find(v=>String(v.color)===String(c)&&getVariantAvailable(v)>0);if(f){selectedSize=f.size||selectedSize;selectedStyle=f.style||selectedStyle;}} renderVariantOptions();updateModalQuantity();
 }
+function selectStyle(st){const v=getVariant(currentProduct?.id,selectedSize,selectedColor,st);if(!v||getVariantAvailable(v)<=0){showToast("THAT OPTION IS OUT OF STOCK.");return;}selectedStyle=st;renderVariantOptions();updateModalQuantity();}
+function closeProductModal(){$("productModal").classList.remove("open");closeSizeGuide();unlockBodyIfClear();}
+function closeProductModalOnBackdrop(e){if(e.target.id==="productModal")closeProductModal();}
 
-function selectStyle(s){
-  selectedStyle=s;
-  document.querySelectorAll("#styleGroup .option-btn").forEach(b=>
-    b.classList.toggle("selected",b.textContent.trim()===s)
-  );
-}
-
-function closeProductModal(){
-  $("productModal").classList.remove("open");
-  closeSizeGuide();
-  unlockBodyIfClear();
-}
-
-function closeProductModalOnBackdrop(e){
-  if(e.target.id==="productModal")closeProductModal();
-}
-
-function changeModalQuantity(n){
-  modalQuantity=Math.max(1,Math.min(20,modalQuantity+n));
-  updateModalQuantity();
-}
-
-function updateModalQuantity(){
-  $("modalQuantity").textContent=modalQuantity;
-}
+function changeModalQuantity(n){const available=getVariantAvailable(getVariant(currentProduct?.id,selectedSize,selectedColor,selectedStyle));if(n>0&&modalQuantity>=Math.min(20,available)){showToast(available>0?`ONLY ${available} AVAILABLE.`:"THIS VARIANT IS OUT OF STOCK.");return;}modalQuantity=Math.max(1,Math.min(20,modalQuantity+n));updateModalQuantity();}
+function updateModalQuantity(){const available=getVariantAvailable(getVariant(currentProduct?.id,selectedSize,selectedColor,selectedStyle));if(available>0)modalQuantity=Math.min(modalQuantity,Math.min(20,available));$("modalQuantity").textContent=modalQuantity;}
 
 /* =========================================================
    SIZE GUIDE
@@ -1236,40 +1185,13 @@ function getCartSubtotal(){
 }
 
 function addCurrentProductToCart(){
-  if(!currentProduct)return;
-
-  if(currentProduct.gender!=="accessories"&&!selectedSize){
-    showToast("PLEASE SELECT A SIZE.");
-    return;
-  }
-
-  if(!selectedColor){
-    showToast("PLEASE SELECT A COLOUR.");
-    return;
-  }
-
-  const existing=cart.find(i=>
-    i.id===currentProduct.id &&
-    i.size===selectedSize &&
-    i.color===selectedColor &&
-    i.style===selectedStyle
-  );
-
-  if(existing)existing.quantity+=modalQuantity;
-  else cart.push({
-    id:currentProduct.id,
-    name:currentProduct.name,
-    price:currentProduct.price,
-    size:selectedSize,
-    color:selectedColor,
-    style:selectedStyle,
-    quantity:modalQuantity
-  });
-
-  saveCart();
-  closeProductModal();
-  updateCartUI();
-  showToast(currentProduct.name+" ADDED TO CART.");
+  if(!currentProduct)return; if(currentProduct.gender!=="accessories"&&!selectedSize){showToast("PLEASE SELECT A SIZE.");return;} if(!selectedColor){showToast("PLEASE SELECT A COLOUR.");return;}
+  const variant=getVariant(currentProduct.id,selectedSize,selectedColor,selectedStyle),available=getVariantAvailable(variant);
+  if(!variant){showToast("THAT SIZE / COLOUR COMBINATION IS NOT AVAILABLE.");return;} if(available<=0){showToast("THAT VARIANT IS OUT OF STOCK.");return;}
+  const existing=cart.find(i=>String(i.variant_id)===String(variant.id)),nextQty=(existing?.quantity||0)+modalQuantity;
+  if(nextQty>available){showToast(`ONLY ${available} AVAILABLE FOR THIS VARIANT.`);return;}
+  if(existing){existing.quantity=nextQty;existing.price=Number(variant.price??currentProduct.price??0);}else cart.push({id:currentProduct.id,variant_id:variant.id,name:currentProduct.name,price:Number(variant.price??currentProduct.price??0),size:selectedSize,color:selectedColor,style:selectedStyle,quantity:modalQuantity});
+  saveCart();closeProductModal();updateCartUI();showToast(currentProduct.name+" ADDED TO CART.");
 }
 
 function openCart(){
@@ -1296,40 +1218,20 @@ function updateCartUI(){
         <p style="margin-top:12px">Enter a KNG wardrobe and choose your pieces.</p>
       </div>`;
   }else{
-    $("cartItems").innerHTML=cart.map((item,index)=>`
-      <div class="cart-item">
-        <div class="cart-item-image">
-          <img src="${getCollectionImage(PRODUCTS.find(p=>p.id===item.id)?.gender||"men")}" alt="${esc(item.name)}" style="width:100%;height:100%;object-fit:cover">
-        </div>
-        <div>
-          <div class="cart-item-name">${esc(item.name)}</div>
-          <div class="cart-item-meta">
-            ${item.style?`Option: ${esc(item.style)}<br>`:""}
-            Size: ${esc(item.size)}<br>
-            Colour: ${esc(item.color)}
-          </div>
-          <div class="cart-item-price">${money(item.price*item.quantity)}</div>
-          <div class="cart-controls">
-            <button class="qty-btn" onclick="changeCartQuantity(${index},-1)">-</button>
-            <span>${item.quantity}</span>
-            <button class="qty-btn" onclick="changeCartQuantity(${index},1)">+</button>
-            <button class="remove-btn" onclick="removeCartItem(${index})">REMOVE</button>
-          </div>
-        </div>
-      </div>
-    `).join("");
+    $("cartItems").innerHTML=cart.map((item,index)=>{
+      const product=PRODUCTS.find(p=>String(p.id)===String(item.id));
+      const variant=getProductVariants(item.id).find(v=>String(v.id)===String(item.variant_id))||getVariant(item.id,item.size,item.color,item.style);
+      const available=getVariantAvailable(variant);
+      if(variant){item.variant_id=variant.id;item.price=Number(variant.price??product?.price??item.price??0);}
+      return `<div class="cart-item"><div class="cart-item-image">${product?.image_urls?.[0]||product?.image_url?`<img src="${esc(product.image_urls?.[0]||product.image_url)}" alt="${esc(item.name)}" style="width:100%;height:100%;object-fit:cover">`:`<img src="${getCollectionImage(product?.gender||"men")}" alt="${esc(item.name)}" style="width:100%;height:100%;object-fit:cover">`}</div><div><div class="cart-item-name">${esc(item.name)}</div><div class="cart-item-meta">${item.style?`Option: ${esc(item.style)}<br>`:""}Size: ${esc(item.size)}<br>Colour: ${esc(item.color)}<br><span style="color:${available>=Number(item.quantity||0)?"var(--success)":"var(--danger)"}">${available>=Number(item.quantity||0)?`${available} available`:`Only ${available} currently available.`}</span></div><div class="cart-item-price">${money(item.price*item.quantity)}</div><div class="cart-controls"><button class="qty-btn" onclick="changeCartQuantity(${index},-1)">-</button><span>${item.quantity}</span><button class="qty-btn" onclick="changeCartQuantity(${index},1)" ${item.quantity>=available?"disabled":""}>+</button><button class="remove-btn" onclick="removeCartItem(${index})">REMOVE</button></div></div></div>`;
+    }).join("");
+    saveCart();
   }
 
   $("cartTotal").innerHTML=money(getCartSubtotal());
 }
 
-function changeCartQuantity(index,n){
-  if(!cart[index])return;
-  cart[index].quantity+=n;
-  if(cart[index].quantity<=0)cart.splice(index,1);
-  saveCart();
-  updateCartUI();
-}
+function changeCartQuantity(index,n){const item=cart[index];if(!item)return;const variant=getProductVariants(item.id).find(v=>String(v.id)===String(item.variant_id))||getVariant(item.id,item.size,item.color,item.style),available=getVariantAvailable(variant);if(n>0&&item.quantity>=available){showToast(available>0?`ONLY ${available} AVAILABLE.`:"THIS VARIANT IS OUT OF STOCK.");return;}item.quantity+=n;if(item.quantity<=0)cart.splice(index,1);saveCart();updateCartUI();}
 
 function removeCartItem(index){
   cart.splice(index,1);
@@ -2157,7 +2059,7 @@ async function renderDashboard(user){
 
     <div class="dashboard-grid">
       <div class="dashboard-card"><button onclick="showProfile()">PROFILE</button></div>
-     <!-- MEASUREMENTS â€” FUTURE FEATURE
+     <!-- MEASUREMENTS Ã¢â‚¬â€ FUTURE FEATURE
      Kept in the system for future KNG custom orders.
      Hidden from customers for the current READY-MADE launch.
 -->
@@ -2713,10 +2615,7 @@ document.addEventListener("keydown",e=>{
 });
 
 /* INIT */
-updateCartUI();
-openWardrobe("men");
-showPage("home");
-loadPublicReviews();
+(async()=>{updateCartUI();showPage("home");await loadLiveCatalog();openWardrobe("men");showPage("home");loadPublicReviews();})();
 </script>
 
 </body>
