@@ -4440,8 +4440,6 @@ function openInventoryAdjustModal(variantId, type) {
     const quantity = Math.floor(Number(modal.querySelector("#inventoryAdjustQuantity").value || 0));
     const reason = modal.querySelector("#inventoryAdjustReason").value;
     const note = modal.querySelector("#inventoryAdjustNote").value.trim() || null;
-    const signedQuantity = type === "remove" ? -quantity : quantity;
-
     if (!Number.isInteger(quantity) || quantity <= 0) {
       showToast("Enter a valid quantity greater than zero.", "error");
       return;
@@ -4451,9 +4449,13 @@ function openInventoryAdjustModal(variantId, type) {
     button.textContent = "SAVING...";
 
     try {
-      const { data, error } = await kngSupabase.rpc("kng_adjust_variant_stock", {
+      const functionName = type === "remove"
+        ? "kng_remove_variant_stock"
+        : "kng_add_variant_stock";
+
+      const { data, error } = await kngSupabase.rpc(functionName, {
         p_variant_id: variantId,
-        p_adjustment_quantity: signedQuantity,
+        p_quantity: quantity,
         p_reason: reason,
         p_note: note,
         p_actor_id: currentUser?.id || null
