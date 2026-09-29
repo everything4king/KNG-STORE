@@ -603,7 +603,7 @@ footer{border-top:1px solid var(--border);padding:55px 35px;background:#060606}
           </div>
         </div>
 
-<!-- CUSTOM FIT Ã¢â‚¬â€ FUTURE FEATURE
+<!-- CUSTOM FIT â€” FUTURE FEATURE
      Kept in the system for future KNG custom orders.
      Hidden from customers for the current READY-MADE launch.
 -->
@@ -996,7 +996,7 @@ function renderProducts(){
   if(!list.length){$("products").innerHTML=liveCatalogReady?'<div class="wardrobe-empty">No KNG pieces found.</div>':'<div class="wardrobe-empty">LOADING KNG PIECES...</div>';return;}
   $("products").innerHTML=list.map(p=>{
     const variants=getProductVariants(p.id),available=variants.reduce((sum,v)=>sum+getVariantAvailable(v),0),image=p.image_urls?.[0]||p.image_url||"";
-    return `<article class="product-card"><div class="product-art ${image?"":"product-art-placeholder"}">${image?`<img src="${esc(image)}" alt="${esc(p.name)}">`:`<span>KNG</span><small>PRODUCT IMAGE<br>COMING SOON</small>`}<div class="product-stock-badge ${available>0?"in-stock":"out-of-stock"}">${available>0?`${available} IN STOCK`:"OUT OF STOCK"}</div></div><div class="product-body"><small>${esc(p.section)} / ${esc(p.category)}</small><h3>${esc(p.name)}</h3><div class="product-price">${money(p.price)}</div><button class="btn" onclick="openProductModal('${esc(p.id)}')">VIEW PIECE</button></div></article>`;
+    return `<article class="product-card"><div class="product-art ${image?"":"product-art-placeholder"}">${image?`<img src="${esc(image)}" alt="${esc(p.name)}">`:`<span>KNG</span><small>PRODUCT IMAGE<br>COMING SOON</small>`}<div class="product-stock-badge ${available>0?"in-stock":"out-of-stock"}">${available>0?"IN STOCK":"OUT OF STOCK"}</div></div><div class="product-body"><small>${esc(p.section)} / ${esc(p.category)}</small><h3>${esc(p.name)}</h3><div class="product-price">${money(p.price)}</div><button class="btn" onclick="openProductModal('${esc(p.id)}')">VIEW PIECE</button></div></article>`;
   }).join("");
 }
 
@@ -1090,9 +1090,9 @@ function renderVariantOptions(){
   }
 
   if(variant && available>0){
-    noteEl.innerHTML=`<span style="color:#7ee787;font-weight:700;">IN STOCK</span> <span style="color:#777;">â€” ${esc(selectedColor)} / ${esc(selectedSize)}</span>`;
+    noteEl.innerHTML=`<span style="color:#7ee787;font-weight:700;">IN STOCK</span> <span style="color:#777;">— ${esc(selectedColor)} / ${esc(selectedSize)}</span>`;
   }else{
-    noteEl.innerHTML=`<span style="color:#ff7777;font-weight:700;">NOT AVAILABLE</span> <span style="color:#777;">â€” ${esc(selectedColor)} / ${esc(selectedSize)}</span>`;
+    noteEl.innerHTML=`<span style="color:#ff7777;font-weight:700;">NOT AVAILABLE</span> <span style="color:#777;">— ${esc(selectedColor)} / ${esc(selectedSize)}</span>`;
   }
 
   const addButton=document.querySelector(".modal-add");
@@ -2222,7 +2222,7 @@ async function renderDashboard(user){
 
     <div class="dashboard-grid">
       <div class="dashboard-card"><button onclick="showProfile()">PROFILE</button></div>
-     <!-- MEASUREMENTS Ã¢â‚¬â€ FUTURE FEATURE
+     <!-- MEASUREMENTS â€” FUTURE FEATURE
      Kept in the system for future KNG custom orders.
      Hidden from customers for the current READY-MADE launch.
 -->
