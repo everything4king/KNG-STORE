@@ -555,11 +555,6 @@ footer{border-top:1px solid var(--border);padding:55px 35px;background:#060606}
           <label>Select Size</label>
           <div class="option-buttons" id="sizeOptions"></div>
 
-          <!-- The guide is intentionally generated from the CURRENT PRODUCT.
-               Kings products can ONLY show the Kings guide.
-               Queens products can ONLY show the Queens guide.
-               Upper-body products show ONLY upper-body measurements.
-               Lower-body products show ONLY lower-body measurements. -->
         </div>
 
         <div class="option-group">
@@ -747,7 +742,15 @@ async function loadLiveCatalog(){
     if(productError)throw productError; if(variantError)throw variantError;
     PRODUCT_VARIANTS=variants||[]; VARIANTS_BY_PRODUCT=new Map();
     PRODUCT_VARIANTS.forEach(v=>{const key=String(v.product_id);if(!VARIANTS_BY_PRODUCT.has(key))VARIANTS_BY_PRODUCT.set(key,[]);VARIANTS_BY_PRODUCT.get(key).push(v);});
-    PRODUCTS=(products||[]).map(p=>{
+    const KNG_COLLECTION_REMOVALS=new Set([
+      "kng signature hoodie",
+      "kng oversized tee",
+      "kng women's hoodie",
+      "kng banded sweat pants",
+      "kng women's tee",
+      "kng women's tank"
+    ]);
+    PRODUCTS=(products||[]).filter(p=>!KNG_COLLECTION_REMOVALS.has(String(p.name||"").trim().toLowerCase())).map(p=>{
       const pv=getProductVariants(p.id);
       const colors=normalizeArray(p.colors),sizes=normalizeArray(p.sizes),styles=normalizeArray(p.styles);
       const vc=[...new Set(pv.map(v=>v.color).filter(Boolean))],vs=[...new Set(pv.map(v=>v.size).filter(Boolean))],vst=[...new Set(pv.map(v=>v.style).filter(Boolean))];
@@ -971,7 +974,7 @@ function renderProducts(){
   if(!list.length){$("products").innerHTML=liveCatalogReady?'<div class="wardrobe-empty">No KNG pieces found.</div>':'<div class="wardrobe-empty">LOADING KNG PIECES...</div>';return;}
   $("products").innerHTML=list.map(p=>{
     const variants=getProductVariants(p.id),available=variants.reduce((sum,v)=>sum+getVariantAvailable(v),0),image=p.image_urls?.[0]||p.image_url||"";
-    return `<article class="product-card"><div class="product-art ${image?"":"product-art-placeholder"}">${image?`<img src="${esc(image)}" alt="${esc(p.name)}">`:`<span>KNG</span><small>PRODUCT IMAGE<br>COMING SOON</small>`}<div class="product-stock-badge ${available>0?"in-stock":"out-of-stock"}">${available>0?`${available} IN STOCK`:"OUT OF STOCK"}</div></div><div class="product-body"><small>${esc(p.section)} / ${esc(p.category)}</small><h3>${esc(p.name)}</h3><div class="product-price">${money(p.price)}</div><button class="btn" onclick="openProductModal('${esc(p.id)}')">VIEW PIECE</button></div></article>`;
+    return `<article class="product-card"><div class="product-art ${image?"":"product-art-placeholder"}">${image?`<img src="${esc(image)}" alt="${esc(p.name)}">`:`<span>KNG</span><small>PRODUCT IMAGE<br>COMING SOON</small>`}<div class="product-stock-badge ${available>0?"in-stock":"out-of-stock"}">${available>0?"IN STOCK":"OUT OF STOCK"}</div></div><div class="product-body"><small>${esc(p.section)} / ${esc(p.category)}</small><h3>${esc(p.name)}</h3><div class="product-price">${money(p.price)}</div><button class="btn" onclick="openProductModal('${esc(p.id)}')">VIEW PIECE</button></div></article>`;
   }).join("");
 }
 
