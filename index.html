@@ -6,18 +6,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <meta name="description"
-content="KNG â€” Official online store. Premium Nigerian streetwear built different. Wear the crown. Be the standard.">
+content="KNG &#8212; Official online store. Premium Nigerian streetwear built different. Wear the crown. Be the standard.">
 
 <meta name="keywords"
 content="KNG, KNGwears, KNG clothing, Nigerian fashion, Nigerian streetwear, hoodies, sweatpants, t-shirts, jorts, beanies, face caps, lapel pins">
 
 <meta name="author" content="KNG">
 
-<meta property="og:title" content="KNG â€” Official Store">
+<meta property="og:title" content="KNG &#8212; Official Store">
 <meta property="og:description" content="Built Different. Wear the Crown. Be the Standard.">
 <meta property="og:type" content="website">
 
-<title>KNG â€” Official Store</title>
+<title>KNG &#8212; Official Store</title>
 
 <style>
 /* =========================================================
@@ -530,6 +530,21 @@ header {
     position: relative;
 }
 
+    /* KNG PRODUCT IMAGE
+       Preserve the actual garment/photo proportions.
+       Never stretch, squash, crop, or force a fixed aspect ratio. */
+    .product-image img {
+        display: block;
+        width: auto;
+        height: auto;
+        max-width: 92%;
+        max-height: 92%;
+        object-fit: contain;
+        object-position: center;
+        position: relative;
+        z-index: 1;
+    }
+
 .product-image::after {
     content: "KNG";
     font-size: 75px;
@@ -636,6 +651,23 @@ header {
     align-items: center;
     justify-content: center;
 }
+
+    /* Large front product image.
+       Natural proportions are always preserved. */
+    .modal-image {
+        overflow: hidden;
+        padding: 24px;
+    }
+
+    .modal-image img {
+        display: block;
+        width: auto;
+        height: auto;
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        object-position: center;
+    }
 
 .modal-image span {
     font-size: 130px;
@@ -782,6 +814,19 @@ header {
     align-items: center;
     justify-content: center;
 }
+
+    .cart-item-image {
+        overflow: hidden;
+    }
+
+    .cart-item-image img {
+        display: block;
+        width: auto;
+        height: auto;
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
 
 .cart-item-image::after {
     content: "K";
@@ -1178,6 +1223,16 @@ footer {
         height: 390px;
     }
 
+    .product-image img {
+        max-width: 92%;
+        max-height: 92%;
+    }
+
+    .modal-image img {
+        max-width: 100%;
+        max-height: 100%;
+    }
+
     .product-modal-content {
         grid-template-columns: 1fr;
     }
@@ -1259,14 +1314,14 @@ footer {
                 class="icon-btn"
                 onclick="openSearch()"
                 aria-label="Search">
-                âŒ•
+                &#8981;
             </button>
 
             <button
                 class="icon-btn"
                 onclick="openCart()"
                 aria-label="Cart">
-                ðŸ›’
+                &#240;&#376;&#8250;&#8217;
                 <span class="cart-count" id="cartCount">
                     0
                 </span>
@@ -1275,7 +1330,7 @@ footer {
             <button
                 class="icon-btn mobile-menu"
                 onclick="toggleMobileMenu()">
-                â˜°
+                &#9776;
             </button>
 
         </div>
@@ -1376,7 +1431,7 @@ footer {
                 <button
                     class="btn btn-outline"
                     onclick="openWardrobe('men')">
-                    ENTER MEN'S WARDROBE â†’
+                    ENTER MEN'S WARDROBE &#8594;
                 </button>
 
             </article>
@@ -1404,7 +1459,7 @@ footer {
                 <button
                     class="btn btn-outline"
                     onclick="openWardrobe('women')">
-                    ENTER WOMEN'S WARDROBE â†’
+                    ENTER WOMEN'S WARDROBE &#8594;
                 </button>
 
             </article>
@@ -1432,7 +1487,7 @@ footer {
                 <button
                     class="btn btn-outline"
                     onclick="openWardrobe('accessories')">
-                    ENTER ACCESSORIES â†’
+                    ENTER ACCESSORIES &#8594;
                 </button>
 
             </article>
@@ -1455,7 +1510,7 @@ footer {
         <button
             class="back-link"
             onclick="goHome()">
-            â† BACK TO COLLECTIONS
+            &#8592; BACK TO COLLECTIONS
         </button>
 
         <div class="eyebrow" id="wardrobeEyebrow">
@@ -1560,7 +1615,7 @@ footer {
             <button
                 class="back-link"
                 onclick="openCart()">
-                â† BACK TO CART
+                &#8592; BACK TO CART
             </button>
 
             <div class="eyebrow">
@@ -1715,7 +1770,7 @@ footer {
 
                 <div class="payment-note">
 
-                    ðŸ”’ Your payment gateway will be connected
+                    &#240;&#376;&#8221;&#8217; Your payment gateway will be connected
                     here. Once Paystack/Flutterwave is connected,
                     customers will be able to securely complete
                     payment online.
@@ -1756,7 +1811,7 @@ footer {
                 </span>
 
                 <span id="checkoutTotal">
-                    â‚¦0
+                    &#8358;0
                 </span>
 
             </div>
@@ -1781,14 +1836,14 @@ footer {
         <button
             class="close-modal"
             onclick="closeProductModal()">
-            Ã—
+            &#215;
         </button>
 
         <div class="product-modal-content">
 
-            <div class="modal-image">
+            <div class="modal-image" id="modalImage">
 
-                <span>
+                <span id="modalImagePlaceholder">
                     KNG
                 </span>
 
@@ -1851,7 +1906,7 @@ footer {
                         <button
                             class="option-btn"
                             onclick="changeModalQuantity(-1)">
-                            âˆ’
+                            &#8722;
                         </button>
 
                         <button
@@ -1910,7 +1965,7 @@ footer {
         <button
             class="drawer-close"
             onclick="closeCart()">
-            Ã—
+            &#215;
         </button>
 
     </div>
@@ -1931,7 +1986,7 @@ footer {
             </span>
 
             <span id="cartTotal">
-                â‚¦0
+                &#8358;0
             </span>
 
         </div>
@@ -1962,7 +2017,7 @@ footer {
         <button
             class="close-modal"
             onclick="closeSearch()">
-            Ã—
+            &#215;
         </button>
 
         <div style="padding:70px 35px 45px;">
@@ -2115,7 +2170,7 @@ footer {
         <div class="footer-bottom">
 
             <span>
-                Â© 2026 KNG. ALL RIGHTS RESERVED.
+                &#169; 2026 KNG. ALL RIGHTS RESERVED.
             </span>
 
             <span>
@@ -2163,16 +2218,34 @@ async function loadStoreProducts() {
 
     try {
 
-        const { data, error } =
-            await kngStoreSupabase
+        const [
+            { data, error },
+            { data: variants, error: variantsError }
+        ] = await Promise.all([
+
+            kngStoreSupabase
                 .from("products")
                 .select("id,name,price,gender,section,category,colors,sizes,styles,active,featured,image_url,updated_at")
                 .eq("active", true)
-                .order("created_at", { ascending: false });
+                .order("created_at", { ascending: false }),
+
+            kngStoreSupabase
+                .from("product_variants")
+                .select("id,product_id,color,size,style,image_url,active,is_active")
+                .eq("active", true)
+                .eq("is_active", true)
+
+        ]);
 
         if (error) {
             throw error;
         }
+
+        if (variantsError) {
+            throw variantsError;
+        }
+
+        const variantRows = variants || [];
 
         products = (data || []).map(product => ({
 
@@ -2185,6 +2258,13 @@ async function loadStoreProducts() {
             sizes: Array.isArray(product.sizes) ? product.sizes : [],
             styles: Array.isArray(product.styles) ? product.styles : [],
             image_url: product.image_url || "",
+
+            /* Each variant can carry its own front image.
+               This enables BLACK -> black image, WHITE -> white image, etc. */
+            variants: variantRows.filter(
+                variant => String(variant.product_id) === String(product.id)
+            ),
+
             new: product.featured === true
 
         }));
@@ -2426,6 +2506,73 @@ function createFilters() {
 
 
 /* =========================================================
+   PRODUCT IMAGE HANDLING
+========================================================= */
+
+/*
+   Priority:
+   1. Exact variant image for selected colour + size.
+   2. Exact variant image for selected colour.
+   3. Product-level image_url.
+   4. Original KNG placeholder if no image exists.
+
+   The CSS uses contain + natural dimensions, so the actual
+   garment/photo keeps its original proportions.
+*/
+function getProductImage(product, color, size) {
+
+    if (!product) return "";
+
+    const variants = Array.isArray(product.variants)
+        ? product.variants
+        : [];
+
+    const wantedColor = String(color || "").trim().toLowerCase();
+    const wantedSize = String(size || "").trim().toLowerCase();
+
+    const exact = variants.find(variant =>
+        String(variant.color || "").trim().toLowerCase() === wantedColor &&
+        String(variant.size || "").trim().toLowerCase() === wantedSize &&
+        variant.image_url
+    );
+
+    if (exact && exact.image_url) {
+        return exact.image_url;
+    }
+
+    const colorMatch = variants.find(variant =>
+        String(variant.color || "").trim().toLowerCase() === wantedColor &&
+        variant.image_url
+    );
+
+    if (colorMatch && colorMatch.image_url) {
+        return colorMatch.image_url;
+    }
+
+    return product.image_url || "";
+}
+
+function productImageMarkup(product, color, size, altText) {
+
+    const imageUrl = getProductImage(product, color, size);
+
+    if (!imageUrl) {
+        return "";
+    }
+
+    return `
+        <img
+            src="${imageUrl}"
+            alt="${altText || product.name || "KNG product"}"
+            loading="lazy"
+            draggable="false"
+            onerror="this.style.display='none';"
+        >
+    `;
+}
+
+
+/* =========================================================
    PRODUCT RENDERING
 ========================================================= */
 
@@ -2503,6 +2650,17 @@ function renderProducts() {
 
                 <div class="product-image">
 
+                    ${productImageMarkup(
+                        product,
+                        product.colors && product.colors.length
+                            ? product.colors[0]
+                            : "",
+                        product.sizes && product.sizes.length
+                            ? product.sizes[0]
+                            : "",
+                        product.name
+                    )}
+
                     ${
                         product.new
                         ? `<div class="new-badge">NEW</div>`
@@ -2577,6 +2735,8 @@ function openProductModal(id) {
         "modalPrice"
     ).textContent =
         formatMoney(product.price);
+
+    updateModalProductImage();
 
 
     /* SIZE */
@@ -2671,6 +2831,42 @@ function selectSize(size) {
 
         });
 
+    updateModalProductImage();
+
+}
+
+
+function updateModalProductImage() {
+
+    const container = document.getElementById("modalImage");
+
+    if (!container || !currentProduct) {
+        return;
+    }
+
+    const imageUrl = getProductImage(
+        currentProduct,
+        selectedColor,
+        selectedSize
+    );
+
+    if (!imageUrl) {
+        container.innerHTML = `
+            <span id="modalImagePlaceholder">
+                KNG
+            </span>
+        `;
+        return;
+    }
+
+    container.innerHTML = `
+        <img
+            src="${imageUrl}"
+            alt="${currentProduct.name || "KNG product"}"
+            draggable="false"
+            onerror="this.style.display='none';"
+        >
+    `;
 }
 
 
@@ -2688,6 +2884,8 @@ function selectColor(color) {
             );
 
         });
+
+    updateModalProductImage();
 
 }
 
@@ -2886,6 +3084,22 @@ function updateCartUI() {
                     <div class="cart-item">
 
                         <div class="cart-item-image">
+                            ${
+                                (() => {
+                                    const cartProduct = products.find(
+                                        product =>
+                                            String(product.id) === String(item.id)
+                                    );
+                                    const cartImage = getProductImage(
+                                        cartProduct,
+                                        item.color,
+                                        item.size
+                                    );
+                                    return cartImage
+                                        ? `<img src="${cartImage}" alt="${item.name}" draggable="false">`
+                                        : "";
+                                })()
+                            }
                         </div>
 
                         <div>
@@ -2911,7 +3125,7 @@ function updateCartUI() {
                                 <button
                                     class="qty-btn"
                                     onclick="changeCartQuantity(${index},-1)">
-                                    âˆ’
+                                    &#8722;
                                 </button>
 
                                 <span>
@@ -3036,7 +3250,7 @@ function renderCheckoutSummary() {
 
                     <span>
                         ${item.name}
-                        Ã— ${item.quantity}
+                        &#215; ${item.quantity}
                         <br>
                         <small>
                             ${item.size} /
@@ -3327,7 +3541,7 @@ function toggleMobileMenu() {
 
 function formatMoney(amount) {
 
-    return "â‚¦" +
+    return "&#8358;" +
         Number(amount).toLocaleString(
             "en-NG"
         );
