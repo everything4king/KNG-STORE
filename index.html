@@ -718,10 +718,14 @@ function variantForSelection(productId,size,color,style){
   return matches.find(v=>getVariantAvailable(v)>0)||matches[0]||null;
 }
 function getVariantAvailable(variant){return variant?Math.max(0,Number(variant.stock_quantity||0)-Number(variant.reserved_quantity||0)):0;}
-function getProductDisplayPrice(product){return Number(product?.base_price??product?.price??0);}
+function getProductDisplayPrice(product){
+  const basePrice=Number(product?.base_price);
+  const productPrice=Number(product?.price);
+  return basePrice>0?basePrice:(productPrice>0?productPrice:0);
+}
 function getEffectivePrice(product,variant){
   const variantPrice=Number(variant?.price);
-  const productPrice=Number(product?.base_price??product?.price??0);
+  const productPrice=getProductDisplayPrice(product);
   return variantPrice>0?variantPrice:productPrice;
 }
 
