@@ -170,27 +170,6 @@ header{position:sticky;top:0;z-index:1000;height:88px;background:rgba(5,5,5,.97)
 .qty-value{min-width:28px;text-align:center;font-weight:900}
 .modal-add{width:100%;margin-top:25px}
 
-/* SIZE GUIDE - IMPORTANT: ONE COLLECTION ONLY, ONE BODY SECTION ONLY */
-.size-guide-section{margin-top:18px}
-.size-guide-toggle{width:100%;min-height:54px;background:transparent;border:1px solid var(--border);color:var(--cream);text-transform:uppercase;letter-spacing:2px;font-size:11px;font-weight:900}
-.size-guide-toggle:hover{border-color:var(--gold);color:var(--gold)}
-.size-guide-panel{display:none;margin-top:12px;border:1px solid var(--border);background:#0b0b0b;border-radius:14px;padding:25px}
-.size-guide-panel.active{display:block}
-.size-guide-header{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:18px}
-.size-guide-header h3{font-size:23px}
-.size-guide-close{border:0;background:none;color:#aaa;font-size:18px}
-.size-guide-close:hover{color:var(--gold)}
-.size-guide-kicker{color:var(--gold);font-size:10px;letter-spacing:3px;text-transform:uppercase;font-weight:900;margin-bottom:8px}
-.size-guide-title{font-size:25px;font-weight:900;margin-bottom:8px}
-.size-note{color:#888;font-size:11px;line-height:1.7;margin-bottom:18px}
-.size-table-wrap{overflow-x:auto}
-.size-table{width:100%;border-collapse:collapse;min-width:430px}
-.size-table th{color:var(--gold);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;text-align:left;padding:12px;border-bottom:1px solid var(--border)}
-.size-table td{padding:13px 12px;border-bottom:1px solid rgba(255,255,255,.06);color:#ddd;font-size:12px}
-.size-table td:first-child{font-weight:900;color:#fff}
-.measure-help{margin-top:15px;padding:13px;background:#111;color:#888;font-size:10px;line-height:1.7}
-.measure-help strong{color:#eee}
-
 /* CUSTOM FIT */
 .custom-fit{margin-top:14px;border:1px solid var(--border);padding:18px;background:#0b0b0b}
 .custom-fit h4{font-size:13px;text-transform:uppercase;letter-spacing:2px}
@@ -569,15 +548,6 @@ footer{border-top:1px solid var(--border);padding:55px 35px;background:#060606}
       <label>Select Size</label>
       <div class="option-buttons" id="sizeOptions"></div>
 
-      <!-- The guide is intentionally generated from the CURRENT PRODUCT.
-           Kings products can ONLY show the Kings guide.
-           Queens products can ONLY show the Queens guide.
-           Upper-body products show ONLY upper-body measurements.
-           Lower-body products show ONLY lower-body measurements. -->
-      <div class="size-guide-section" id="sizeGuideSection">
-        <button type="button" class="size-guide-toggle" onclick="openSizeGuide()">VIEW SIZE GUIDE</button>
-        <div id="sizeGuidePanel" class="size-guide-panel"></div>
-      </div>
     </div>
 
     <div class="option-group">
@@ -1026,7 +996,7 @@ function openProductModal(id){
   const variants=getProductVariants(p.id),firstAvailable=variants.find(v=>getVariantAvailable(v)>0)||variants[0]||null;
   selectedSize=firstAvailable?.size||p.sizes?.[0]||""; selectedColor=firstAvailable?.color||p.colors?.[0]||""; selectedStyle=firstAvailable?.style||""; modalQuantity=1;
   $("modalCategory").textContent=p.gender==="men"?"KINGS / "+p.section+" / "+p.category:p.gender==="women"?"QUEENS / "+p.section+" / "+p.category:"ACCESSORIES / "+p.section+" / "+p.category;
-  $("modalName").textContent=p.name; setModalProductImage(); renderVariantOptions(); renderCustomFitFields(); updateModalQuantity(); closeSizeGuide(); $("productModal").classList.add("open"); lockBody();
+  $("modalName").textContent=p.name; setModalProductImage(); renderVariantOptions(); renderCustomFitFields(); updateModalQuantity(); $("productModal").classList.add("open"); lockBody();
 }
 
 function renderVariantOptions(){
@@ -1111,9 +1081,9 @@ function renderVariantOptions(){
   }
 
   if(variant && available>0){
-    noteEl.innerHTML=`<span style="color:#7ee787;font-weight:700;">IN STOCK</span> <span style="color:#777;">â€” ${esc(selectedColor)} / ${esc(selectedSize)}</span>`;
+    noteEl.innerHTML=`<span style="color:#7ee787;font-weight:700;">IN STOCK</span> <span style="color:#777;">: ${esc(selectedColor)} / ${esc(selectedSize)}</span>`;
   }else{
-    noteEl.innerHTML=`<span style="color:#ff7777;font-weight:700;">NOT AVAILABLE</span> <span style="color:#777;">â€” ${esc(selectedColor)} / ${esc(selectedSize)}</span>`;
+    noteEl.innerHTML=`<span style="color:#ff7777;font-weight:700;">NOT AVAILABLE</span> <span style="color:#777;">: ${esc(selectedColor)} / ${esc(selectedSize)}</span>`;
   }
 
   const addButton=document.querySelector(".modal-add");
@@ -1179,127 +1149,11 @@ function selectStyle(st){
   renderVariantOptions();
   updateModalQuantity();
 }
-function closeProductModal(){$("productModal").classList.remove("open");closeSizeGuide();unlockBodyIfClear();}
+function closeProductModal(){$("productModal").classList.remove("open");unlockBodyIfClear();}
 function closeProductModalOnBackdrop(e){if(e.target.id==="productModal")closeProductModal();}
 
 function changeModalQuantity(n){const available=getVariantAvailable(getVariant(currentProduct?.id,selectedSize,selectedColor,productUsesStyle(currentProduct)?selectedStyle:""));if(n>0&&modalQuantity>=Math.min(20,available)){showToast(available>0?`ONLY ${available} AVAILABLE.`:"THIS VARIANT IS OUT OF STOCK.");return;}modalQuantity=Math.max(1,Math.min(20,modalQuantity+n));updateModalQuantity();}
 function updateModalQuantity(){const available=getVariantAvailable(getVariant(currentProduct?.id,selectedSize,selectedColor,productUsesStyle(currentProduct)?selectedStyle:""));if(available>0)modalQuantity=Math.min(modalQuantity,Math.min(20,available));$("modalQuantity").textContent=modalQuantity;}
-
-/* =========================================================
-   SIZE GUIDE
-   CRITICAL RULE:
-   - Kings product => Kings guide ONLY.
-   - Queens product => Queens guide ONLY.
-   - Upper Body product => Upper Body table ONLY.
-   - Lower Body product => Lower Body table ONLY.
-   - No XS.
-   - No gender tabs.
-   - No body tabs.
-========================================================= */
-
-const SIZE_GUIDES={
-  men:{
-    label:"KINGS",
-    upper:{
-      title:"KINGS / UPPER BODY",
-      columns:["SIZE","CHEST","SHOULDER","SLEEVE","LENGTH"],
-      rows:[
-        ["S",'36"','16"','8"','27"'],
-        ["M",'38"','17"','8.5"','28"'],
-        ["L",'40"','18"','9"','29"'],
-        ["XL",'42"','19"','9.5"','30"'],
-        ["XXL",'44"','20"','10"','31"']
-      ],
-      help:"Chest is the garment measurement around the chest. Shoulder is measured edge-to-edge across the back. Sleeve is measured from the shoulder seam to the sleeve end. Length is measured from the high shoulder point to the bottom hem."
-    },
-    lower:{
-      title:"KINGS / LOWER BODY",
-      columns:["SIZE","WAIST","HIP","INSEAM","OUTSEAM"],
-      rows:[
-        ["S",'30"','40"','29"','40"'],
-        ["M",'32"','42"','29.5"','41"'],
-        ["L",'34"','44"','30"','42"'],
-        ["XL",'36"','46"','31"','43"'],
-        ["XXL",'38"','48"','31.5"','44"']
-      ],
-      help:"Waist is measured around the waistband. Hip is measured around the widest part of the garment. Inseam is measured from the crotch seam to the hem. Outseam is measured from the waistband to the hem."
-    }
-  },
-
-  women:{
-    label:"QUEENS",
-    upper:{
-      title:"QUEENS / UPPER BODY",
-      columns:["SIZE","BUST","SHOULDER","SLEEVE","LENGTH"],
-      rows:[
-        ["S",'34"','14"','7"','20"'],
-        ["M",'36"','15"','7.5"','21"'],
-        ["L",'38"','16"','8"','22"'],
-        ["XL",'40"','17"','8.5"','23"'],
-        ["XXL",'42"','18"','9"','24"']
-      ],
-      help:"Bust is measured around the garment at the fullest part. Shoulder is measured edge-to-edge across the back. Sleeve is measured from the shoulder seam to the sleeve end. Length is measured from the high shoulder point to the bottom hem."
-    },
-    lower:{
-      title:"QUEENS / LOWER BODY",
-      columns:["SIZE","WAIST","HIP","INSEAM","OUTSEAM"],
-      rows:[
-        ["S",'26"','36"','28"','38"'],
-        ["M",'28"','38"','28.5"','39"'],
-        ["L",'30"','40"','29"','40"'],
-        ["XL",'32"','42"','29.5"','41"'],
-        ["XXL",'34"','44"','30"','42"']
-      ],
-      help:"Waist is measured around the waistband. Hip is measured around the widest part of the garment. Inseam is measured from the crotch seam to the hem. Outseam is measured from the waistband to the hem."
-    }
-  }
-};
-
-function openSizeGuide(){
-  if(!currentProduct || currentProduct.gender==="accessories")return;
-
-  const gender=currentProduct.gender;
-  const body=currentProduct.section==="Upper Body"?"upper":"lower";
-  const guide=SIZE_GUIDES[gender][body];
-
-  $("sizeGuidePanel").innerHTML=`
-    <div class="size-guide-header">
-      <div>
-        <div class="size-guide-kicker">${guide.title.split(" / ")[0]}</div>
-        <div class="size-guide-title">${guide.title}</div>
-      </div>
-      <button class="size-guide-close" type="button" onclick="closeSizeGuide()">X</button>
-    </div>
-
-    <p class="size-note">
-      KNG garment measurements. All measurements are in inches.
-      Compare with a similar garment you already own for the closest fit.
-      Standard sizes are S, M, L, XL and XXL. XS is not offered.
-    </p>
-
-    <div class="size-table-wrap">
-      <table class="size-table">
-        <thead>
-          <tr>${guide.columns.map(c=>`<th>${c}</th>`).join("")}</tr>
-        </thead>
-        <tbody>
-          ${guide.rows.map(row=>`<tr>${row.map((v,i)=>`<td>${i===0?`<strong>${v}</strong>`:v}</td>`).join("")}</tr>`).join("")}
-        </tbody>
-      </table>
-    </div>
-
-    <div class="measure-help">
-      <strong>HOW TO READ THIS:</strong> ${guide.help}
-    </div>
-  `;
-
-  $("sizeGuidePanel").classList.add("active");
-}
-
-function closeSizeGuide(){
-  $("sizeGuidePanel").classList.remove("active");
-  $("sizeGuidePanel").innerHTML="";
-}
 
 /* CUSTOM FIT */
   function renderCustomFitFields(){
