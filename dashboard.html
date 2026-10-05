@@ -943,7 +943,7 @@
             <div class="empty">Loading delivery control room...</div>
           </div>
 
-          <div style="margin-top:22px;padding:14px 16px;border:1px solid #292929;border-radius:12px;background:#0b0b0b;color:#aaa;font-size:12px;">ACTIVE ORDERS &middot; Delivered and cancelled orders are hidden here but remain in customer order history and finance records.</div>
+          <div style="margin-top:22px;padding:14px 16px;border:1px solid #292929;border-radius:12px;background:#0b0b0b;color:#aaa;font-size:12px;">ACTIVE ORDERS  -  Delivered and cancelled orders are hidden here but remain in customer order history and finance records.</div>
 
           <div id="ordersTable" style="margin-top:14px;">
             <div class="empty">Loading...</div>
@@ -1052,7 +1052,7 @@
         onclick="closeProductModal()"
         aria-label="Close"
       >
-        &times;
+         x 
       </button>
     </div>
 
@@ -1252,10 +1252,10 @@
             gap:12px;
             margin-bottom:18px;
           ">
-            <div class="stat-card"><div class="stat-title">Variants</div><div class="stat-value" id="inventoryVariantCount">&mdash;</div></div>
-            <div class="stat-card"><div class="stat-title">Units In Stock</div><div class="stat-value" id="inventoryStockCount">&mdash;</div></div>
-            <div class="stat-card"><div class="stat-title">Reserved</div><div class="stat-value" id="inventoryReservedCount">&mdash;</div></div>
-            <div class="stat-card"><div class="stat-title">Available</div><div class="stat-value" id="inventoryAvailableCount">&mdash;</div></div>
+            <div class="stat-card"><div class="stat-title">Variants</div><div class="stat-value" id="inventoryVariantCount">-</div></div>
+            <div class="stat-card"><div class="stat-title">Units In Stock</div><div class="stat-value" id="inventoryStockCount">-</div></div>
+            <div class="stat-card"><div class="stat-title">Reserved</div><div class="stat-value" id="inventoryReservedCount">-</div></div>
+            <div class="stat-card"><div class="stat-title">Available</div><div class="stat-value" id="inventoryAvailableCount">-</div></div>
           </div>
 
           <div id="inventoryTable">
@@ -1359,7 +1359,7 @@
           <div class="settings-row">
             <div class="settings-label">Access level</div>
             <div class="settings-value">
-              OWNER / ADMIN = FULL CONTROL &middot; MANAGER = OPERATIONAL ACCESS
+              OWNER / ADMIN = FULL CONTROL  -  MANAGER = OPERATIONAL ACCESS
             </div>
           </div>
 
@@ -2292,7 +2292,7 @@ ${
     console.error("Staff error:", error);
 
     document.getElementById("totalStaff")
-      .textContent = "\u2014";
+      .textContent = "-";
 
     overview.innerHTML =
       '<div class="empty">Unable to load staff.</div>';
@@ -2885,8 +2885,8 @@ async function loadOrders() {
         <div style="margin-bottom:6px;">
           <strong>${safe(item.product_name || "Product")}</strong>
           <div style="font-size:12px;opacity:.7;">
-            ${safe(item.size || "\u2014")} &middot;
-            ${safe(item.color || "\u2014")} &middot;
+            ${safe(item.size || "-")}  - 
+            ${safe(item.color || "-")}  - 
             Qty ${safe(item.quantity || 0)}
           </div>
         </div>
@@ -3073,27 +3073,27 @@ showKNGToast("Order status updated successfully.");
 
             <div class="order-info-box">
               <small>Customer</small>
-              <strong>${safe(order.customer_name || "\u2014")}</strong>
+              <strong>${safe(order.customer_name || "-")}</strong>
             </div>
 
             <div class="order-info-box">
               <small>Phone</small>
-              <strong>${safe(order.customer_phone || "\u2014")}</strong>
+              <strong>${safe(order.customer_phone || "-")}</strong>
             </div>
 
             <div class="order-info-box">
               <small>Address</small>
-              <strong>${safe(order.delivery_address || "\u2014")}</strong>
+              <strong>${safe(order.delivery_address || "-")}</strong>
             </div>
 
             <div class="order-info-box">
               <small>City</small>
-              <strong>${safe(order.city || "\u2014")}</strong>
+              <strong>${safe(order.city || "-")}</strong>
             </div>
 
             <div class="order-info-box">
               <small>State</small>
-              <strong>${safe(order.state || "\u2014")}</strong>
+              <strong>${safe(order.state || "-")}</strong>
             </div>
 
             <div class="order-info-box">
@@ -3206,15 +3206,15 @@ showKNGToast("Order status updated successfully.");
                     ? items.map(item => `
                       <tr>
                         <td style="padding:12px;border-bottom:1px solid #222;">
-                          ${safe(item.product_name || "\u2014")}
+                          ${safe(item.product_name || "-")}
                         </td>
 
                         <td style="padding:12px;border-bottom:1px solid #222;">
-                          ${safe(item.size || "\u2014")}
+                          ${safe(item.size || "-")}
                         </td>
 
                         <td style="padding:12px;border-bottom:1px solid #222;">
-                          ${safe(item.color || "\u2014")}
+                          ${safe(item.color || "-")}
                         </td>
 
                         <td style="padding:12px;text-align:center;border-bottom:1px solid #222;">
@@ -3250,7 +3250,7 @@ showKNGToast("Order status updated successfully.");
 
             <div class="order-info-box">
               <small>Payment Reference</small>
-              <strong>${safe(order.payment_reference || "\u2014")}</strong>
+              <strong>${safe(order.payment_reference || "-")}</strong>
             </div>
 
             <div class="order-info-box">
@@ -3269,7 +3269,7 @@ showKNGToast("Order status updated successfully.");
                 ${
                   order.created_at
                     ? new Date(order.created_at).toLocaleString("en-NG")
-                    : "\u2014"
+                    : "-"
                 }
               </strong>
             </div>
@@ -3322,16 +3322,16 @@ showKNGToast("Order status updated successfully.");
 
                       <td>
                         <strong>
-                          ${safe(order.order_number || "\u2014")}
+                          ${safe(order.order_number || "-")}
                         </strong>
                       </td>
 
                       <td>
-                        ${safe(order.customer_name || "\u2014")}
+                        ${safe(order.customer_name || "-")}
                       </td>
 
                       <td>
-                        ${safe(order.customer_phone || "\u2014")}
+                        ${safe(order.customer_phone || "-")}
                       </td>
 
                       <td style="min-width:210px;">
@@ -3429,14 +3429,14 @@ showKNGToast("Order status updated successfully.");
     const totalOrders = document.getElementById("totalOrders");
 
     if (totalOrders) {
-      totalOrders.textContent = "\u2014";
+      totalOrders.textContent = "-";
     }
 
     const totalSalesElement =
       document.getElementById("totalSales");
 
     if (totalSalesElement) {
-      totalSalesElement.textContent = "\u2014";
+      totalSalesElement.textContent = "-";
     }
 
     if (recent) {
@@ -3482,6 +3482,12 @@ function isCovenantOrder(order) {
   return /covenant university|covenant univ|covenant uni\b/.test(text);
 }
 
+function isLagosOrder(order) {
+  const state = String(order?.state || "").trim().toLowerCase();
+  const city = String(order?.city || "").trim().toLowerCase();
+  return state.includes("lagos") || city === "lagos";
+}
+
 function isPaidOrder(order) {
   return String(order?.payment_status || "").toLowerCase() === "paid";
 }
@@ -3500,13 +3506,23 @@ function kngDeliveryStatus(order) {
     if (status === "READY") return "READY FOR SUNDAY";
     return status;
   }
-  if (status === "DISPATCHED") return "OUT FOR DELIVERY";
+  if (isLagosOrder(order) && status === "DISPATCHED") return "OUT FOR DELIVERY";
   return status;
 }
 
 function kngFormatDeliveryDate(order) {
-  if (isCovenantOrder(order)) return "SUNDAY &middot; KNG TEAM";
-  return "DISPATCH DELIVERY";
+  if (isCovenantOrder(order)) return "SUNDAY - KNG TEAM";
+  if (isLagosOrder(order)) return "LAGOS DISPATCH";
+  return "LOCATION REVIEW";
+}
+
+function kngFullDeliveryAddress(order) {
+  const parts = [
+    order?.delivery_address || order?.address,
+    order?.city,
+    order?.state
+  ].filter(v => String(v || "").trim());
+  return parts.length ? parts.join(", ") : "Address not provided";
 }
 
 function kngDeliveryCard(title, value, note) {
@@ -3524,10 +3540,11 @@ function kngDeliveryRow(order, type) {
   const orderId = kngSafe(order.id);
   const items = (window.kngOrderItems || []).filter(item => item.order_id === order.id);
   const itemText = items.length
-    ? items.map(i => `${kngSafe(i.product_name || "Product")} &times; ${kngSafe(i.quantity || 0)}`).join("<br>")
+    ? items.map(i => `${kngSafe(i.product_name || "Product")} x ${kngSafe(i.quantity || 0)}`).join("<br>")
     : "No items";
   const status = kngDeliveryStatus(order);
-  const location = covenant ? "Covenant University" : (order.city || order.state || "Lagos / Other");
+  const address = kngFullDeliveryAddress(order);
+  const route = covenant ? "Covenant University - Sunday" : "Lagos State - Dispatch";
 
   return `
     <tr>
@@ -3539,11 +3556,16 @@ function kngDeliveryRow(order, type) {
         <div style="margin-top:4px;color:#666;font-size:10px;">${kngSafe(kngFormatDeliveryDate(order))}</div>
       </td>
       <td style="padding:13px 10px;border-bottom:1px solid #222;vertical-align:top;">
-        <strong>${kngSafe(order.customer_name || "&mdash;")}</strong>
-        <div style="margin-top:4px;color:#777;font-size:11px;">${kngSafe(order.customer_phone || "&mdash;")}</div>
+        <strong>${kngSafe(order.customer_name || "-")}</strong>
+        <div style="margin-top:4px;color:#777;font-size:11px;">${kngSafe(order.customer_phone || "-")}</div>
       </td>
-      <td style="padding:13px 10px;border-bottom:1px solid #222;vertical-align:top;min-width:180px;">${itemText}</td>
-      <td style="padding:13px 10px;border-bottom:1px solid #222;vertical-align:top;">${kngSafe(location)}</td>
+      <td style="padding:13px 10px;border-bottom:1px solid #222;vertical-align:top;min-width:190px;">
+        <div>${itemText}</div>
+        <div style="margin-top:8px;color:#aaa;font-size:11px;line-height:1.5;">${kngSafe(route)}</div>
+      </td>
+      <td style="padding:13px 10px;border-bottom:1px solid #222;vertical-align:top;min-width:260px;max-width:420px;">
+        <div style="font-weight:700;color:#fff;line-height:1.5;">${kngSafe(address)}</div>
+      </td>
       <td style="padding:13px 10px;border-bottom:1px solid #222;vertical-align:top;">${kngStatusBadge(order.order_status)}</td>
       <td style="padding:13px 10px;border-bottom:1px solid #222;vertical-align:top;white-space:nowrap;">
         <button class="refresh-btn" onclick="viewOrderDetails('${orderId}')" style="cursor:pointer;">VIEW</button>
@@ -3555,25 +3577,25 @@ function kngDeliveryRow(order, type) {
 function kngDeliveryTable(title, orders, type) {
   const covenant = type === "covenant";
   const action = covenant ? "MARK SELECTED DELIVERED" : "MARK SELECTED DISPATCHED";
-  const emptyText = covenant ? "No Covenant orders are waiting for delivery." : "No Lagos / other dispatch orders are waiting.";
+  const emptyText = covenant ? "No Covenant University orders are waiting for Sunday delivery." : "No paid Lagos State orders are waiting for dispatch.";
 
   return `
     <div style="margin-top:18px;border:1px solid #292929;border-radius:14px;overflow:hidden;background:#0b0b0b;">
       <div style="padding:17px 18px;border-bottom:1px solid #292929;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
         <div>
           <div style="font-size:15px;font-weight:800;">${kngSafe(title)}</div>
-          <div style="margin-top:4px;color:#777;font-size:11px;">${covenant ? "Sunday delivery &middot; Delivered By: KNG Team &middot; No rider / no delivery code" : "Dispatch route &middot; Assign/handle the physical dispatch outside this queue"}</div>
+          <div style="margin-top:4px;color:#777;font-size:11px;">${covenant ? "Sunday delivery - Delivered By: KNG Team - No rider - No delivery code" : "Lagos State dispatch route - handle the physical dispatch outside this queue"}</div>
         </div>
         <button type="button" onclick="kngBatchDeliveryAction('${type}')" style="width:auto;margin:0;padding:11px 15px;border:1px solid #444;border-radius:10px;background:#fff;color:#000;font-weight:800;cursor:pointer;">${action}</button>
       </div>
       <div style="overflow-x:auto;">
-        <table style="width:100%;border-collapse:collapse;min-width:920px;">
+        <table style="width:100%;border-collapse:collapse;min-width:1120px;">
           <thead><tr>
             <th style="padding:11px 10px;text-align:left;border-bottom:1px solid #333;"><input type="checkbox" onclick="kngToggleDeliveryChecks(this,'${type}')" style="width:17px;height:17px;accent-color:#fff;"></th>
             <th style="padding:11px 10px;text-align:left;border-bottom:1px solid #333;">ORDER</th>
             <th style="padding:11px 10px;text-align:left;border-bottom:1px solid #333;">CUSTOMER</th>
             <th style="padding:11px 10px;text-align:left;border-bottom:1px solid #333;">ITEMS</th>
-            <th style="padding:11px 10px;text-align:left;border-bottom:1px solid #333;">LOCATION</th>
+            <th style="padding:11px 10px;text-align:left;border-bottom:1px solid #333;">DELIVERY ADDRESS</th>
             <th style="padding:11px 10px;text-align:left;border-bottom:1px solid #333;">STATUS</th>
             <th style="padding:11px 10px;text-align:left;border-bottom:1px solid #333;">ACTION</th>
           </tr></thead>
@@ -3586,28 +3608,31 @@ function kngDeliveryTable(title, orders, type) {
 
 function kngRenderDeliveryControlRoom(orderList) {
   const active = orderList.filter(o => !isFinishedOrder(o));
-  const covenant = active.filter(isCovenantOrder);
-  const external = active.filter(o => !isCovenantOrder(o));
-  const paid = active.filter(isPaidOrder);
-  const ready = active.filter(o => ["READY","DISPATCHED"].includes(String(o.order_status || "").toUpperCase()));
+  const paidActive = active.filter(isPaidOrder);
+  const covenant = paidActive.filter(isCovenantOrder);
+  const lagos = paidActive.filter(o => !isCovenantOrder(o) && isLagosOrder(o));
+  const locationReview = paidActive.filter(o => !isCovenantOrder(o) && !isLagosOrder(o));
+  const ready = paidActive.filter(o => ["READY","DISPATCHED"].includes(String(o.order_status || "").toUpperCase()));
   const box = document.getElementById("deliveryControlRoom");
   if (!box) return;
 
   box.innerHTML = `
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;">
-      ${kngDeliveryCard("PAID / ACTIVE", String(paid.length), "Orders cleared for processing")}
+      ${kngDeliveryCard("PAID / ACTIVE", String(paidActive.length), "Orders cleared for processing")}
       ${kngDeliveryCard("READY / DISPATCHED", String(ready.length), "Orders approaching delivery")}
-      ${kngDeliveryCard("COVENANT SUNDAY", String(covenant.length), "Sunday &middot; KNG Team")}
-      ${kngDeliveryCard("LAGOS / OTHER", String(external.length), "Dispatch route")}
+      ${kngDeliveryCard("COVENANT SUNDAY", String(covenant.length), "Covenant University - Sunday")}
+      ${kngDeliveryCard("LAGOS STATE", String(lagos.length), "Dispatch route")}
+      ${locationReview.length ? kngDeliveryCard("LOCATION REVIEW", String(locationReview.length), "Paid order outside KNG service routes") : ""}
     </div>
 
     <div style="margin-top:18px;padding:15px 17px;border:1px solid #292929;border-radius:14px;background:#0b0b0b;display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
-      <input id="kngDeliverySearch" type="search" placeholder="Search order, customer, phone or location..." oninput="kngFilterDeliveryQueues()" style="flex:1;min-width:240px;padding:12px 14px;border-radius:10px;border:1px solid #333;background:#080808;color:#fff;outline:none;">
-      <div style="color:#777;font-size:11px;">Covenant orders are treated as Sunday delivery automatically.</div>
+      <input id="kngDeliverySearch" type="search" placeholder="Search order, customer, phone or address..." oninput="kngFilterDeliveryQueues()" style="flex:1;min-width:240px;padding:12px 14px;border-radius:10px;border:1px solid #333;background:#080808;color:#fff;outline:none;">
+      <div style="color:#777;font-size:11px;">Service routes: Covenant University in Ogun State and Lagos State.</div>
     </div>
 
-    <div id="kngCovenantQueue">${kngDeliveryTable("COVENANT UNIVERSITY &middot; SUNDAY QUEUE", covenant, "covenant")}</div>
-    <div id="kngExternalQueue">${kngDeliveryTable("LAGOS / OTHER &middot; DISPATCH QUEUE", external, "external")}</div>
+    <div id="kngCovenantQueue">${kngDeliveryTable("COVENANT UNIVERSITY - SUNDAY QUEUE", covenant, "covenant")}</div>
+    <div id="kngExternalQueue">${kngDeliveryTable("LAGOS STATE - DISPATCH QUEUE", lagos, "external")}</div>
+    ${locationReview.length ? `<div id="kngLocationReview">${kngDeliveryTable("LOCATION REVIEW - OUTSIDE SERVICE ROUTES", locationReview, "review")}</div>` : ""}
   `;
 
   window.kngDeliveryOrders = orderList;
@@ -3616,23 +3641,30 @@ function kngRenderDeliveryControlRoom(orderList) {
 function kngFilterDeliveryQueues() {
   const list = window.kngDeliveryOrders || [];
   const query = String(document.getElementById("kngDeliverySearch")?.value || "").trim().toLowerCase();
-  const active = list.filter(o => !isFinishedOrder(o));
+  const active = list.filter(o => !isFinishedOrder(o) && isPaidOrder(o));
   const match = o => !query || kngOrderText(o).includes(query) || String(o.order_number || "").toLowerCase().includes(query) || String(o.customer_phone || "").toLowerCase().includes(query);
   const covenant = active.filter(isCovenantOrder).filter(match);
-  const external = active.filter(o => !isCovenantOrder(o)).filter(match);
+  const lagos = active.filter(o => !isCovenantOrder(o) && isLagosOrder(o)).filter(match);
+  const review = active.filter(o => !isCovenantOrder(o) && !isLagosOrder(o)).filter(match);
   const cq = document.getElementById("kngCovenantQueue");
   const eq = document.getElementById("kngExternalQueue");
-  if (cq) cq.innerHTML = kngDeliveryTable("COVENANT UNIVERSITY &middot; SUNDAY QUEUE", covenant, "covenant");
-  if (eq) eq.innerHTML = kngDeliveryTable("LAGOS / OTHER &middot; DISPATCH QUEUE", external, "external");
+  const rq = document.getElementById("kngLocationReview");
+  if (cq) cq.innerHTML = kngDeliveryTable("COVENANT UNIVERSITY - SUNDAY QUEUE", covenant, "covenant");
+  if (eq) eq.innerHTML = kngDeliveryTable("LAGOS STATE - DISPATCH QUEUE", lagos, "external");
+  if (rq) rq.innerHTML = kngDeliveryTable("LOCATION REVIEW - OUTSIDE SERVICE ROUTES", review, "review");
 }
 
 function kngToggleDeliveryChecks(master, type) {
-  const box = type === "covenant" ? document.getElementById("kngCovenantQueue") : document.getElementById("kngExternalQueue");
+  const box = type === "covenant" ? document.getElementById("kngCovenantQueue") : type === "external" ? document.getElementById("kngExternalQueue") : document.getElementById("kngLocationReview");
   if (!box) return;
   box.querySelectorAll(".kng-delivery-check").forEach(cb => cb.checked = master.checked);
 }
 
 async function kngBatchDeliveryAction(type) {
+  if (type === "review") {
+    showKNGToast("This order is outside the current KNG delivery routes. Review the address first.");
+    return;
+  }
   const box = type === "covenant" ? document.getElementById("kngCovenantQueue") : document.getElementById("kngExternalQueue");
   if (!box) return;
   const ids = Array.from(box.querySelectorAll(".kng-delivery-check:checked")).map(cb => cb.value);
@@ -3797,7 +3829,7 @@ async function loadCustomers() {
     console.error("Customer error:", error);
 
     const totalCustomers = document.getElementById("totalCustomers");
-    if (totalCustomers) totalCustomers.textContent = "\u2014";
+    if (totalCustomers) totalCustomers.textContent = "-";
 
     container.innerHTML = `
       <div class="empty">
@@ -4229,7 +4261,7 @@ async function loadProducts() {
     container.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px;">
         <div style="color:#777;font-size:12px;">
-          ${productList.length} product${productList.length === 1 ? "" : "s"} &middot; ${variantList.length} variant${variantList.length === 1 ? "" : "s"}
+          ${productList.length} product${productList.length === 1 ? "" : "s"}  -  ${variantList.length} variant${variantList.length === 1 ? "" : "s"}
         </div>
         ${canManage ? `
           <button type="button" class="primary-btn" style="width:auto;margin:0;padding:10px 16px;cursor:pointer;" onclick="openProductModal()">
@@ -4278,7 +4310,7 @@ async function loadProducts() {
                       </div>
                     </td>
                     <td><strong>${money(product.price ?? product.base_price ?? 0)}</strong></td>
-                    <td><span class="pill">${escapeHTML(String(product.gender || "\u2014").toUpperCase())}</span></td>
+                    <td><span class="pill">${escapeHTML(String(product.gender || "-").toUpperCase())}</span></td>
                     <td>${escapeHTML(product.category || "Not provided")}</td>
                     <td>
                       <strong>${variantCount}</strong>
@@ -4317,7 +4349,7 @@ async function loadProducts() {
   } catch (error) {
     console.error("Product error:", error);
     const totalProducts = document.getElementById("totalProducts");
-    if (totalProducts) totalProducts.textContent = "\u2014";
+    if (totalProducts) totalProducts.textContent = "-";
     container.innerHTML = `
       <div class="empty">
         Unable to load KNG products.
@@ -4417,10 +4449,10 @@ async function loadInventory() {
                       <div><strong>${escapeHTML(product.name || "Unknown product")}</strong><div style="margin-top:4px;color:#666;font-size:10px;">${escapeHTML(variant.product_id || "")}</div></div>
                     </div>
                   </td>
-                  <td><code style="color:#aaa;font-size:11px;">${escapeHTML(variant.sku || "\u2014")}</code></td>
-                  <td>${escapeHTML(variant.color || "\u2014")}</td>
-                  <td>${escapeHTML(variant.size || "\u2014")}</td>
-                  <td>${escapeHTML(variant.style || "\u2014")}</td>
+                  <td><code style="color:#aaa;font-size:11px;">${escapeHTML(variant.sku || "-")}</code></td>
+                  <td>${escapeHTML(variant.color || "-")}</td>
+                  <td>${escapeHTML(variant.size || "-")}</td>
+                  <td>${escapeHTML(variant.style || "-")}</td>
                   <td><strong>${stock}</strong></td>
                   <td>${reserved}</td>
                   <td>
@@ -4448,7 +4480,7 @@ async function loadInventory() {
     console.error("Inventory error:", error);
     ["inventoryVariantCount","inventoryStockCount","inventoryReservedCount","inventoryAvailableCount"].forEach(function(id) {
       const element = document.getElementById(id);
-      if (element) element.textContent = "\u2014";
+      if (element) element.textContent = "-";
     });
     container.innerHTML = `<div class="empty">Unable to load inventory.<div style="margin-top:8px;font-size:12px;opacity:.6;">${escapeHTML(error.message || "Please check the product variants table connection.")}</div></div>`;
   }
@@ -4488,7 +4520,7 @@ function openVariantEditModal(variantId) {
           <h2 style="margin:0;font-size:23px;">EDIT VARIANT</h2>
           <div style="margin-top:7px;color:#888;font-size:12px;">${escapeHTML(product.name || "Unknown product")}</div>
         </div>
-        <button type="button" id="closeVariantEdit" style="width:38px;height:38px;border-radius:50%;border:1px solid #333;background:#181818;color:#fff;font-size:20px;cursor:pointer;">&times;</button>
+        <button type="button" id="closeVariantEdit" style="width:38px;height:38px;border-radius:50%;border:1px solid #333;background:#181818;color:#fff;font-size:20px;cursor:pointer;"> x </button>
       </div>
 
       <div style="padding:25px;">
@@ -4539,8 +4571,8 @@ function openVariantEditModal(variantId) {
 
         <div style="margin-top:15px;padding:13px 15px;border:1px solid #292929;border-radius:11px;background:#0b0b0b;color:#888;font-size:11px;line-height:1.6;">
           Current stock: <strong style="color:#fff;">${Number(variant.stock_quantity || 0)}</strong>
-          &nbsp;&middot;&nbsp; Reserved: <strong style="color:#fff;">${Number(variant.reserved_quantity || 0)}</strong>
-          &nbsp;&middot;&nbsp; Available: <strong style="color:#fff;">${Math.max(0, Number(variant.stock_quantity || 0) - Number(variant.reserved_quantity || 0))}</strong>
+          &nbsp; - &nbsp; Reserved: <strong style="color:#fff;">${Number(variant.reserved_quantity || 0)}</strong>
+          &nbsp; - &nbsp; Available: <strong style="color:#fff;">${Math.max(0, Number(variant.stock_quantity || 0) - Number(variant.reserved_quantity || 0))}</strong>
           <br>
           Use the stock buttons in the Inventory table to change quantities. This edit screen does not change stock.
         </div>
@@ -4671,13 +4703,13 @@ function openInventoryAdjustModal(variantId, type) {
           <div style="font-size:18px;font-weight:800;letter-spacing:1px;">${title}</div>
           <div style="margin-top:5px;color:#777;font-size:12px;">${escapeHTML(product?.name || "Unknown product")}</div>
         </div>
-        <button type="button" id="closeInventoryAdjust" style="width:38px;height:38px;border-radius:50%;border:1px solid #333;background:#181818;color:#fff;font-size:20px;cursor:pointer;">&times;</button>
+        <button type="button" id="closeInventoryAdjust" style="width:38px;height:38px;border-radius:50%;border:1px solid #333;background:#181818;color:#fff;font-size:20px;cursor:pointer;"> x </button>
       </div>
 
       <div style="padding:14px;border:1px solid #292929;border-radius:10px;background:#0b0b0b;margin-bottom:18px;">
-        <div style="font-size:12px;color:#aaa;">${escapeHTML(variant.color || "No color")} &middot; ${escapeHTML(variant.size || "No size")} &middot; ${escapeHTML(variant.style || "No style")}</div>
-        <div style="margin-top:7px;color:#666;font-size:11px;">SKU: ${escapeHTML(variant.sku || "\u2014")}</div>
-        <div style="margin-top:10px;font-size:12px;color:#aaa;">Current stock: <strong style="color:#fff;">${Number(variant.stock_quantity || 0)}</strong> &middot; Reserved: <strong style="color:#fff;">${Number(variant.reserved_quantity || 0)}</strong> &middot; Available: <strong style="color:#fff;">${available}</strong></div>
+        <div style="font-size:12px;color:#aaa;">${escapeHTML(variant.color || "No color")}  -  ${escapeHTML(variant.size || "No size")}  -  ${escapeHTML(variant.style || "No style")}</div>
+        <div style="margin-top:7px;color:#666;font-size:11px;">SKU: ${escapeHTML(variant.sku || "-")}</div>
+        <div style="margin-top:10px;font-size:12px;color:#aaa;">Current stock: <strong style="color:#fff;">${Number(variant.stock_quantity || 0)}</strong>  -  Reserved: <strong style="color:#fff;">${Number(variant.reserved_quantity || 0)}</strong>  -  Available: <strong style="color:#fff;">${available}</strong></div>
       </div>
 
       <div class="field" style="margin-bottom:14px;">
@@ -5815,7 +5847,7 @@ async function loadFinance() {
       const { data: transfers } = await kngSupabase.from("kng_savings_transfers").select("amount,status,created_at").gte("created_at",start).lt("created_at",end);
       transferred = (transfers || []).filter(x=>String(x.status).toLowerCase()==="success").reduce((sum,x)=>sum+Number(x.amount||0),0);
       const history = document.getElementById("financeHistory");
-      if (history) history.innerHTML = transfers?.length ? `<div class="table-wrap"><table><thead><tr><th>TIME</th><th>AMOUNT</th><th>STATUS</th><th>REFERENCE</th></tr></thead><tbody>${transfers.map(x=>`<tr><td>${new Date(x.created_at).toLocaleString("en-NG")}</td><td><strong>${money(x.amount)}</strong></td><td>${escapeHTML(String(x.status||"pending").toUpperCase())}</td><td>${escapeHTML(x.reference||"&mdash;")}</td></tr>`).join("")}</tbody></table></div>` : `<div class="empty">No savings transfer recorded today.</div>`;
+      if (history) history.innerHTML = transfers?.length ? `<div class="table-wrap"><table><thead><tr><th>TIME</th><th>AMOUNT</th><th>STATUS</th><th>REFERENCE</th></tr></thead><tbody>${transfers.map(x=>`<tr><td>${new Date(x.created_at).toLocaleString("en-NG")}</td><td><strong>${money(x.amount)}</strong></td><td>${escapeHTML(String(x.status||"pending").toUpperCase())}</td><td>${escapeHTML(x.reference||"-")}</td></tr>`).join("")}</tbody></table></div>` : `<div class="empty">No savings transfer recorded today.</div>`;
     } catch (_) {}
     document.getElementById("financeTodaySales").textContent = money(sales);
     document.getElementById("financeSavingsRate").textContent = `${rate}%`;
@@ -5825,7 +5857,7 @@ async function loadFinance() {
     const r = document.getElementById("financeRecipientCode"); if (r) r.value = recipient;
   } catch (error) {
     console.error("Finance error:",error);
-    ids.forEach(id=>{const el=document.getElementById(id);if(el)el.textContent="\u2014";});
+    ids.forEach(id=>{const el=document.getElementById(id);if(el)el.textContent="-";});
     const history=document.getElementById("financeHistory"); if(history) history.innerHTML=`<div class="empty">Finance data is not ready yet. Run the KNG Finance SQL migration first.</div>`;
   }
 }
