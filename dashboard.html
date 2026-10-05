@@ -3406,6 +3406,7 @@ showKNGToast("Order status updated successfully.");
     ============================================================ */
 
     window.kngOrderList = orderList;
+    window.kngOrderItems = orderItems;
 
     kngRenderDeliveryControlRoom(orderList);
 
@@ -3513,7 +3514,7 @@ function kngDeliveryCard(title, value, note) {
 function kngDeliveryRow(order, type) {
   const covenant = type === "covenant";
   const orderId = kngSafe(order.id);
-  const items = getItems(order.id);
+  const items = (window.kngOrderItems || []).filter(item => item.order_id === order.id);
   const itemText = items.length
     ? items.map(i => `${kngSafe(i.product_name || "Product")} Ã— ${kngSafe(i.quantity || 0)}`).join("<br>")
     : "No items";
