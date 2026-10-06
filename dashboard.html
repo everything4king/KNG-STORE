@@ -2971,8 +2971,8 @@ showKNGToast("Order status updated successfully.");
   } catch (error) {
     console.error("Order status update error:", error);
 
-    alert(
-      "Unable to update order status.\n\n" +
+    showKNGToast(
+      "Unable to update order status: " +
       (error?.message || "Please check your permissions and try again.")
     );
 
@@ -3118,31 +3118,23 @@ showKNGToast("Order status updated successfully.");
         outline:none;
       "
     >
-      <option value="PENDING" ${String(order.order_status).toUpperCase() === "PENDING" ? "selected" : ""}>
+      <option value="pending" ${String(order.order_status).toLowerCase() === "pending" ? "selected" : ""}>
         PENDING
       </option>
 
-      <option value="CONFIRMED" ${String(order.order_status).toUpperCase() === "CONFIRMED" ? "selected" : ""}>
-        CONFIRMED
+      <option value="processing" ${String(order.order_status).toLowerCase() === "processing" ? "selected" : ""}>
+        PROCESSING
       </option>
 
-      <option value="IN PRODUCTION" ${String(order.order_status).toUpperCase() === "IN PRODUCTION" ? "selected" : ""}>
-        IN PRODUCTION
+      <option value="shipped" ${String(order.order_status).toLowerCase() === "shipped" ? "selected" : ""}>
+        SHIPPED / OUT FOR DELIVERY
       </option>
 
-      <option value="READY" ${String(order.order_status).toUpperCase() === "READY" ? "selected" : ""}>
-        READY
-      </option>
-
-      <option value="DISPATCHED" ${String(order.order_status).toUpperCase() === "DISPATCHED" ? "selected" : ""}>
-        DISPATCHED
-      </option>
-
-      <option value="DELIVERED" ${String(order.order_status).toUpperCase() === "DELIVERED" ? "selected" : ""}>
+      <option value="delivered" ${String(order.order_status).toLowerCase() === "delivered" ? "selected" : ""}>
         DELIVERED
       </option>
 
-      <option value="CANCELLED" ${String(order.order_status).toUpperCase() === "CANCELLED" ? "selected" : ""}>
+      <option value="cancelled" ${String(order.order_status).toLowerCase() === "cancelled" ? "selected" : ""}>
         CANCELLED
       </option>
     </select>
@@ -3673,9 +3665,8 @@ async function kngBatchDeliveryAction(type) {
     return;
   }
 
-  const newStatus = type === "covenant" ? "DELIVERED" : "DISPATCHED";
+  const newStatus = type === "covenant" ? "delivered" : "shipped";
   const label = type === "covenant" ? "delivered" : "dispatched";
-  if (!confirm(`Mark ${ids.length} selected order${ids.length === 1 ? "" : "s"} as ${label}?`)) return;
 
   try {
     const { error } = await kngSupabase.from("orders").update({ order_status:newStatus }).in("id", ids);
