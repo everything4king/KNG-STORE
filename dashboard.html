@@ -935,7 +935,7 @@
             <div>
               <h2>Delivery Control Room</h2>
               <div style="color:#777;font-size:11px;margin-top:5px;letter-spacing:.3px;">
-                Paid ready-made orders are advanced automatically. You only handle the physical delivery.
+                Paid orders appear automatically. You only handle the actual delivery.
               </div>
             </div>
 
@@ -2808,6 +2808,13 @@ function kngIsCovenantOrder(order) {
   return state === "ogun" || address.includes("covenant university") || address.includes("canaan land");
 }
 
+function kngCovenantDetails(order){
+  const raw=String(order?.delivery_address||"");
+  const hall=(raw.match(/(?:^|\n|\|)\s*Hall\s*:\s*([^\n|]+)/i)||[])[1]||"â€”";
+  const room=(raw.match(/(?:^|\n|\|)\s*Room Number\s*:\s*([^\n|]+)/i)||[])[1]||"â€”";
+  return {hall:hall.trim(),room:room.trim()};
+}
+
 function kngIsFinishedOrder(order) {
   const status = kngOrderStatus(order);
   return status === "DELIVERED" || status === "CANCELLED";
@@ -2818,7 +2825,7 @@ function kngPaymentPaid(order) {
 }
 
 function kngDeliveryLabel(order) {
-  return kngIsCovenantOrder(order) ? "COVENANT / SUNDAY" : "EXTERNAL DISPATCH";
+  return kngIsCovenantOrder(order) ? "OGUN â€” COVENANT UNIVERSITY" : "LAGOS STATE";
 }
 
 async function kngAutoAdvanceReadyOrders(orderList) {
@@ -2876,7 +2883,7 @@ window.kngMarkCovenantDelivered = async function() {
   } finally {
     if (button) {
       button.disabled = false;
-      button.textContent = "MARK SELECTED DELIVERED";
+      button.textContent = "âœ“ MARK SELECTED DELIVERED";
     }
   }
 };
@@ -2896,7 +2903,7 @@ window.kngFilterOrders = function() {
       .map(v => String(v || "").toLowerCase()).join(" ");
     if (query && !text.includes(query)) return false;
     if (filter === "COVENANT" && !kngIsCovenantOrder(order)) return false;
-    if (filter === "EXTERNAL" && kngIsCovenantOrder(order)) return false;
+    if (filter === "LAGOS" && kngIsCovenantOrder(order)) return false;
     if (filter === "PAID" && !kngPaymentPaid(order)) return false;
     if (filter === "READY" && kngOrderStatus(order) !== "READY") return false;
     if (filter === "DELIVERED" && kngOrderStatus(order) !== "DELIVERED") return false;
@@ -2935,120 +2942,26 @@ function kngPaymentBadge(status) {
 }
 
 function kngBuildCovenantQueue(orders, items) {
-  const queue = (orders || []).filter(order => kngIsCovenantOrder(order) && kngPaymentPaid(order) && !kngIsFinishedOrder(order));
-  if (!queue.length) {
-    return `
-      <div class="empty">
-        No Covenant orders are currently waiting for delivery.
-      </div>
-    `;
-  }
-
+  const queue=(orders||[]).filter(order=>kngIsCovenantOrder(order)&&kngPaymentPaid(order)&&!kngIsFinishedOrder(order));
+  if(!queue.length) return '<div class="empty">No Ogun State â€” Covenant University orders waiting.</div>';
   return `
     <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px;">
-      <div>
-        <div style="font-size:11px;letter-spacing:2px;color:#c9a227;text-transform:uppercase;">SUNDAY DELIVERY QUEUE</div>
-        <div style="font-size:12px;color:#777;margin-top:5px;">Delivered by <strong style="color:#ddd;">KNG Team</strong> Â· No rider number Â· No customer delivery code</div>
-      </div>
-      <button id="markCovenantDeliveredBtn" type="button" class="primary-btn" style="width:auto;margin:0;padding:11px 16px;cursor:pointer;" onclick="kngMarkCovenantDelivered()">MARK SELECTED DELIVERED</button>
+      <div><div style="font-size:11px;letter-spacing:2px;color:#c9a227;text-transform:uppercase;">OGUN STATE â€” COVENANT UNIVERSITY</div><div style="font-size:12px;color:#777;margin-top:5px;">Sunday delivery Â· KNG Team Â· Select the orders you have delivered.</div></div>
+      <button id="markCovenantDeliveredBtn" type="button" class="primary-btn" style="width:auto;margin:0;padding:11px 16px;cursor:pointer;" onclick="kngMarkCovenantDelivered()">âœ“ MARK SELECTED DELIVERED</button>
     </div>
-
-    <div class="table-wrap">
-      <table style="min-width:1050px;">
-        <thead>
-          <tr>
-            <th><input type="checkbox" onchange="kngSelectAllCovenant(this.checked)" aria-label="Select all Covenant orders"></th>
-            <th>ORDER</th>
-            <th>CUSTOMER</th>
-            <th>PHONE</th>
-            <th>ITEMS</th>
-            <th>TOTAL</th>
-            <th>STATUS</th>
-            <th>DELIVERY</th>
-            <th>ACTION</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${queue.map(order => `
-            <tr>
-              <td><input type="checkbox" data-covenant-order-id="${kngSafe(order.id)}" aria-label="Select ${kngSafe(order.order_number || "order")}"></td>
-              <td><strong>${kngSafe(order.order_number || order.id)}</strong></td>
-              <td>${kngSafe(order.customer_name || "â€”")}</td>
-              <td>${kngSafe(order.customer_phone || "â€”")}</td>
-              <td style="min-width:210px;">${kngItemSummary(items, order.id)}</td>
-              <td><strong>${money(order.total_amount)}</strong></td>
-              <td>${kngStatusBadge(kngOrderStatus(order))}</td>
-              <td><strong style="color:#c9a227;">SUNDAY</strong><br><span style="font-size:11px;color:#777;">KNG Team</span></td>
-              <td><button type="button" class="refresh-btn" style="cursor:pointer;white-space:nowrap;" onclick="kngViewOrderDetails('${kngSafe(order.id)}')">VIEW</button></td>
-            </tr>
-          `).join("")}
-        </tbody>
-      </table>
-    </div>
-  `;
+    <div class="table-wrap"><table style="min-width:980px;"><thead><tr><th>âœ“</th><th>ORDER</th><th>CUSTOMER</th><th>PHONE</th><th>HALL</th><th>ROOM</th><th>ITEMS</th><th>TOTAL</th><th>ACTION</th></tr></thead><tbody>
+    ${queue.map(order=>{const c=kngCovenantDetails(order);return `<tr><td><input type="checkbox" data-covenant-order-id="${kngSafe(order.id)}"></td><td><strong>${kngSafe(order.order_number||order.id)}</strong></td><td>${kngSafe(order.customer_name||"â€”")}</td><td>${kngSafe(order.customer_phone||"â€”")}</td><td>${kngSafe(c.hall)}</td><td>${kngSafe(c.room)}</td><td>${kngItemSummary(items,order.id)}</td><td><strong>${money(order.total_amount)}</strong></td><td><button type="button" class="refresh-btn" onclick="kngViewOrderDetails('${kngSafe(order.id)}')">VIEW</button></td></tr>`}).join("")}
+    </tbody></table></div>`;
 }
 
 function kngBuildExternalQueue(orders, items) {
-  const queue = (orders || []).filter(order => !kngIsCovenantOrder(order) && kngPaymentPaid(order) && !kngIsFinishedOrder(order));
-  if (!queue.length) {
-    return '<div class="empty">No external dispatch orders are currently waiting.</div>';
-  }
-
+  const queue=(orders||[]).filter(order=>!kngIsCovenantOrder(order)&&kngPaymentPaid(order)&&!kngIsFinishedOrder(order));
+  if(!queue.length) return '<div class="empty">No Lagos State orders waiting for dispatch.</div>';
   return `
-    <div style="margin-bottom:14px;">
-      <div style="font-size:11px;letter-spacing:2px;color:#c9a227;text-transform:uppercase;">EXTERNAL DISPATCH</div>
-      <div style="font-size:12px;color:#777;margin-top:5px;">External locations keep the normal dispatch workflow. Assign the rider/dispatcher when the package is handed over.</div>
-    </div>
-    <div class="table-wrap">
-      <table style="min-width:1100px;">
-        <thead><tr><th>ORDER</th><th>CUSTOMER</th><th>PHONE</th><th>ADDRESS</th><th>ITEMS</th><th>TOTAL</th><th>STATUS</th><th>DISPATCHER</th><th>ACTION</th></tr></thead>
-        <tbody>
-          ${queue.map(order => `
-            <tr>
-              <td><strong>${kngSafe(order.order_number || order.id)}</strong></td>
-              <td>${kngSafe(order.customer_name || "â€”")}</td>
-              <td>${kngSafe(order.customer_phone || "â€”")}</td>
-              <td style="min-width:230px;">${kngSafe(order.delivery_address || "â€”")}<br><span style="font-size:11px;color:#777;">${kngSafe(order.state || "")}</span></td>
-              <td style="min-width:210px;">${kngItemSummary(items, order.id)}</td>
-              <td><strong>${money(order.total_amount)}</strong></td>
-              <td>${kngStatusBadge(kngOrderStatus(order))}</td>
-              <td>${order.dispatcher_id ? kngSafe(order.dispatcher_id) : '<span style="opacity:.5">Not assigned</span>'}</td>
-              <td><button type="button" class="refresh-btn" style="cursor:pointer;white-space:nowrap;" onclick="kngViewOrderDetails('${kngSafe(order.id)}')">VIEW</button></td>
-            </tr>
-          `).join("")}
-        </tbody>
-      </table>
-    </div>
-  `;
-}
-
-function kngBuildAllOrdersTable(items) {
-  const all = window.kngOrderControlState || {items: []};
-  const orderItems = all.items || [];
-  if (!items.length) return '<div class="empty">No orders match this filter.</div>';
-  return `
-    <div class="table-wrap">
-      <table style="min-width:1250px;">
-        <thead><tr><th>ORDER</th><th>DATE</th><th>CUSTOMER</th><th>PHONE</th><th>ROUTE</th><th>ITEMS</th><th>TOTAL</th><th>PAYMENT</th><th>STATUS</th><th>ACTION</th></tr></thead>
-        <tbody>
-          ${items.map(order => `
-            <tr>
-              <td><strong>${kngSafe(order.order_number || order.id)}</strong></td>
-              <td>${order.created_at ? new Date(order.created_at).toLocaleString("en-NG") : "â€”"}</td>
-              <td>${kngSafe(order.customer_name || "â€”")}</td>
-              <td>${kngSafe(order.customer_phone || "â€”")}</td>
-              <td><strong>${kngSafe(kngDeliveryLabel(order))}</strong><br><span style="font-size:11px;color:#777;">${kngIsCovenantOrder(order) ? "Sunday / KNG Team" : "External dispatch"}</span></td>
-              <td style="min-width:210px;">${kngItemSummary(orderItems, order.id)}</td>
-              <td><strong>${money(order.total_amount)}</strong></td>
-              <td>${kngPaymentBadge(order.payment_status)}</td>
-              <td>${kngStatusBadge(kngOrderStatus(order))}</td>
-              <td><button type="button" class="refresh-btn" style="cursor:pointer;white-space:nowrap;" onclick="kngViewOrderDetails('${kngSafe(order.id)}')">VIEW</button></td>
-            </tr>
-          `).join("")}
-        </tbody>
-      </table>
-    </div>
-  `;
+    <div style="margin-bottom:14px;"><div style="font-size:11px;letter-spacing:2px;color:#c9a227;text-transform:uppercase;">LAGOS STATE</div><div style="font-size:12px;color:#777;margin-top:5px;">Normal Lagos dispatch / rider delivery.</div></div>
+    <div class="table-wrap"><table style="min-width:1100px;"><thead><tr><th>ORDER</th><th>CUSTOMER</th><th>PHONE</th><th>ZONE</th><th>ADDRESS</th><th>ITEMS</th><th>TOTAL</th><th>STATUS</th><th>ACTION</th></tr></thead><tbody>
+    ${queue.map(order=>`<tr><td><strong>${kngSafe(order.order_number||order.id)}</strong></td><td>${kngSafe(order.customer_name||"â€”")}</td><td>${kngSafe(order.customer_phone||"â€”")}</td><td>${kngSafe(order.delivery_zone||order.dispatch_zone||order.zone||"â€”")}</td><td style="min-width:220px;">${kngSafe(order.delivery_address||"â€”")}</td><td>${kngItemSummary(items,order.id)}</td><td><strong>${money(order.total_amount)}</strong></td><td>${kngStatusBadge(kngOrderStatus(order))}</td><td><button type="button" class="refresh-btn" onclick="kngViewOrderDetails('${kngSafe(order.id)}')">VIEW</button></td></tr>`).join("")}
+    </tbody></table></div>`;
 }
 
 window.kngViewOrderDetails = function(orderId) {
@@ -3071,12 +2984,12 @@ window.kngViewOrderDetails = function(orderId) {
         <div class="order-info-box"><small>Phone</small><strong>${kngSafe(order.customer_phone || "â€”")}</strong></div>
         <div class="order-info-box"><small>Payment</small><strong>${kngSafe(String(order.payment_status || "PENDING").toUpperCase())}</strong></div>
         <div class="order-info-box"><small>Status</small><strong>${kngSafe(kngOrderStatus(order))}</strong></div>
-        <div class="order-info-box"><small>Delivery</small><strong>${covenant ? "COVENANT / SUNDAY" : "EXTERNAL DISPATCH"}</strong></div>
+        <div class="order-info-box"><small>Delivery</small><strong>${covenant ? "OGUN â€” COVENANT UNIVERSITY" : "LAGOS STATE"}</strong></div>
         <div class="order-info-box"><small>Delivered By</small><strong>${covenant ? "KNG Team" : (order.dispatcher_id || "External dispatcher")}</strong></div>
       </div>
       <div style="margin-top:16px;padding:15px;border:1px solid #292929;border-radius:12px;background:#0b0b0b;">
-        <div style="font-size:9px;letter-spacing:2px;color:#777;margin-bottom:7px;">DELIVERY ADDRESS</div>
-        <div style="font-size:13px;line-height:1.6;">${kngSafe(order.delivery_address || "â€”")}</div>
+        <div style="font-size:9px;letter-spacing:2px;color:#777;margin-bottom:7px;">${covenant ? "OGUN STATE â€” COVENANT UNIVERSITY" : "LAGOS STATE DELIVERY"}</div>
+        ${covenant ? (()=>{const c=kngCovenantDetails(order);return `<div style="font-size:13px;line-height:1.8;"><strong>Hall:</strong> ${kngSafe(c.hall)}<br><strong>Room Number:</strong> ${kngSafe(c.room)}<br><span style="color:#888;">KM. 10 Idiroko Road, Canaan Land, Ota, Ogun State, Nigeria</span></div>`})() : `<div style="font-size:13px;line-height:1.6;">${kngSafe(order.delivery_address || "â€”")}</div>`}
       </div>
       <h3 style="margin:24px 0 12px;border-bottom:1px solid #292929;padding-bottom:10px;">ORDER ITEMS</h3>
       <div class="table-wrap"><table style="min-width:620px;"><thead><tr><th>PRODUCT</th><th>COLOUR</th><th>SIZE</th><th>QTY</th><th>PRICE</th></tr></thead><tbody>
@@ -3140,7 +3053,7 @@ async function loadOrders() {
         <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:18px;">
           <div class="stat-card"><div class="stat-title">PAID / READY</div><div class="stat-value">${ready.length}</div></div>
           <div class="stat-card"><div class="stat-title">COVENANT SUNDAY</div><div class="stat-value">${covenantWaiting.length}</div></div>
-          <div class="stat-card"><div class="stat-title">EXTERNAL DISPATCH</div><div class="stat-value">${externalWaiting.length}</div></div>
+          <div class="stat-card"><div class="stat-title">LAGOS STATE</div><div class="stat-value">${externalWaiting.length}</div></div>
           <div class="stat-card"><div class="stat-title">DELIVERED</div><div class="stat-value">${delivered.length}</div></div>
           <div class="stat-card"><div class="stat-title">PAID SALES</div><div class="stat-value" style="font-size:22px;">${money(totalSales)}</div></div>
         </div>
@@ -3151,7 +3064,7 @@ async function loadOrders() {
             <div style="display:flex;gap:8px;flex-wrap:wrap;">
               <input id="kngOrderSearch" oninput="kngFilterOrders()" placeholder="Search order / customer / phone" style="min-width:240px;padding:11px 12px;border-radius:9px;border:1px solid #333;background:#080808;color:#fff;outline:none;">
               <select id="kngOrderFilter" onchange="kngFilterOrders()" style="padding:11px 12px;border-radius:9px;border:1px solid #333;background:#080808;color:#fff;outline:none;">
-                <option value="ALL">ALL ORDERS</option><option value="PAID">PAID</option><option value="READY">READY</option><option value="COVENANT">COVENANT</option><option value="EXTERNAL">EXTERNAL</option><option value="DELIVERED">DELIVERED</option>
+                <option value="ALL">ALL ORDERS</option><option value="LAGOS">LAGOS STATE</option><option value="COVENANT">OGUN â€” COVENANT UNIVERSITY</option><option value="READY">READY</option><option value="DELIVERED">DELIVERED</option>
               </select>
             </div>
           </div>
