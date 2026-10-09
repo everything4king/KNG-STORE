@@ -480,18 +480,8 @@ footer{border-top:1px solid var(--border);padding:55px 35px;background:#060606}
         <label id="deliveryAddressLabel">Delivery Address</label>
         <textarea id="address" rows="4" required></textarea>
         <div id="covenantAddressNote" style="display:none;margin-top:7px;color:#c9a227;font-size:10px;line-height:1.5;letter-spacing:.3px;">
-          COVENANT UNIVERSITY DELIVERY - official university address is filled automatically. Hall and room number are required.
+          COVENANT UNIVERSITY DELIVERY â€” the official university address has been filled automatically. You may add your hostel / hall / pickup details underneath if needed.
         </div>
-      </div>
-
-      <div class="form-field" id="covenantHallField" style="display:none;">
-        <label>Hall</label>
-        <input id="covenantHall" autocomplete="organization">
-      </div>
-
-      <div class="form-field" id="covenantRoomField" style="display:none;">
-        <label>Room Number</label>
-        <input id="covenantRoom" autocomplete="off">
       </div>
 
       <div class="form-field">
@@ -499,7 +489,7 @@ footer{border-top:1px solid var(--border);padding:55px 35px;background:#060606}
         <select id="state" onchange="updateDispatchOptions()" required>
           <option value="">Select state</option>
           <option value="Lagos">Lagos</option>
-          <option value="Ogun">Ogun State - Covenant University</option>
+          <option value="Ogun">Ogun - Covenant University</option>
         </select>
       </div>
 
@@ -514,7 +504,7 @@ footer{border-top:1px solid var(--border);padding:55px 35px;background:#060606}
 
       <div class="dispatch-box">
         <h3>DELIVERY / DISPATCH</h3>
-        <p>Select your state, then choose the delivery zone that contains your area. Every zone shows its areas and has one fixed delivery fee. KNG currently delivers only within Lagos State and to Covenant University, Ogun State.</p>
+        <p>Select your state, then choose the delivery zone that contains your area. Every zone shows its areas and has one fixed delivery fee. KNG currently delivers only within Lagos and to Covenant University, Ogun State.</p>
 
         <div class="dispatch-options" id="dispatchOptions">
           <div style="color:#777;font-size:11px">Select your state to see delivery options.</div>
@@ -579,7 +569,7 @@ footer{border-top:1px solid var(--border);padding:55px 35px;background:#060606}
       </div>
     </div>
 
-<!-- CUSTOM FIT - FUTURE FEATURE
+<!-- CUSTOM FIT Ã¢â‚¬â€ FUTURE FEATURE
      Kept in the system for future KNG custom orders.
      Hidden from customers for the current READY-MADE launch.
 -->
@@ -697,12 +687,34 @@ function productUsesStyle(product){
   const name=String(product?.name||"").toLowerCase();
   return category.includes("pin") || name.includes("lapel pin");
 }
+function kngColorKey(value){return String(value||"").trim().toLowerCase().replace(/\s+/g," ");}
+function getProductColorLabel(product,color){
+  const raw=String(color||"").trim();
+  if(!product||!raw)return raw;
+  const colors=normalizeArray(product.colors);
+  const exact=colors.find(c=>kngColorKey(c)===kngColorKey(raw));
+  if(exact)return exact;
+  // Backward compatibility for the old Pink stock variant after the product colour was renamed Dusty Pink.
+  const hasDustyPink=colors.some(c=>kngColorKey(c)==="dusty pink");
+  const hasPink=colors.some(c=>kngColorKey(c)==="pink");
+  if(hasDustyPink&&!hasPink&&kngColorKey(raw)==="pink")return colors.find(c=>kngColorKey(c)==="dusty pink");
+  return raw;
+}
+function kngVariantColorMatches(product,variantColor,selectedColor){
+  const a=kngColorKey(getProductColorLabel(product,variantColor));
+  const b=kngColorKey(getProductColorLabel(product,selectedColor));
+  return a===b;
+}
+function kngVariantsForColor(product,variants,color){
+  return (variants||[]).filter(v=>kngVariantColorMatches(product,v.color,color));
+}
+
 function getVariant(productId,size,color,style){
   const product=PRODUCTS.find(p=>String(p.id)===String(productId));
   const useStyle=productUsesStyle(product);
   const matches=getProductVariants(productId).filter(v=>
     String(v.size||"")===String(size||"") &&
-    String(v.color||"")===String(color||"") &&
+    kngVariantColorMatches(product,v.color,color) &&
     (!useStyle || String(v.style||"")===String(style||""))
   );
   return matches.find(v=>getVariantAvailable(v)>0)||matches[0]||null;
@@ -725,7 +737,7 @@ function variantForSelection(productId,size,color,style){
   const useStyle=productUsesStyle(product);
   const matches=getProductVariants(productId).filter(v=>
     String(v.size||"")===String(size||"") &&
-    String(v.color||"")===String(color||"") &&
+    kngVariantColorMatches(product,v.color,color) &&
     (!useStyle || String(v.style||"")===String(style||""))
   );
   return matches.find(v=>getVariantAvailable(v)>0)||matches[0]||null;
@@ -757,8 +769,9 @@ async function loadLiveCatalog(){
     const rawProducts=(products||[]).map(p=>{
       const pv=getProductVariants(p.id);
       const colors=normalizeArray(p.colors),sizes=normalizeArray(p.sizes),styles=normalizeArray(p.styles);
-      const vc=[...new Set(pv.map(v=>v.color).filter(Boolean))],vs=[...new Set(pv.map(v=>v.size).filter(Boolean))],vst=[...new Set(pv.map(v=>v.style).filter(Boolean))];
-      return {...p,id:String(p.id),price:getProductDisplayPrice(p),colors:vc.length?vc:colors,sizes:vs.length?vs:sizes,styles:vst};
+      const vc=[...new Set(pv.map(v=>getProductColorLabel({...p,colors},v.color)).filter(Boolean))],vs=[...new Set(pv.map(v=>v.size).filter(Boolean))],vst=[...new Set(pv.map(v=>v.style).filter(Boolean))];
+      const mergedColors=[...colors,...vc.filter(c=>!colors.some(pc=>kngColorKey(pc)===kngColorKey(c)))];
+      return {...p,id:String(p.id),price:getProductDisplayPrice(p),colors:mergedColors,sizes:[...new Set([...sizes,...vs])],styles:[...new Set([...styles,...vst])]};
     });
 
     const duplicateGroups=new Map();
@@ -790,15 +803,21 @@ async function loadLiveCatalog(){
 
       VARIANTS_BY_PRODUCT.set(String(canonical.id),mergedVariants);
 
-      const colors=[...new Set(mergedVariants.map(v=>v.color).filter(Boolean))];
-      const sizes=[...new Set(mergedVariants.map(v=>v.size).filter(Boolean))];
-      const styles=[...new Set(mergedVariants.map(v=>v.style).filter(Boolean))];
+      const canonicalColors=normalizeArray(canonical.colors);
+      const productColors=[...new Set(canonicalColors.length?canonicalColors:group.flatMap(p=>normalizeArray(p.colors)))];
+      const variantColors=[...new Set(mergedVariants.map(v=>getProductColorLabel({...canonical,colors:productColors.length?productColors:canonical.colors},v.color)).filter(Boolean))];
+      const colors=[...productColors,...variantColors.filter(c=>!productColors.some(pc=>kngColorKey(pc)===kngColorKey(c)))];
+      const sizes=[...new Set([...group.flatMap(p=>normalizeArray(p.sizes)),...mergedVariants.map(v=>v.size).filter(Boolean)])];
+      const styles=[...new Set([...group.flatMap(p=>normalizeArray(p.styles)),...mergedVariants.map(v=>v.style).filter(Boolean)])];
+      const mergedImageUrls={};
+      group.forEach(p=>{if(p.image_urls&&typeof p.image_urls==="object"&&!Array.isArray(p.image_urls))Object.assign(mergedImageUrls,p.image_urls);});
 
       PRODUCTS.push({
         ...canonical,
-        colors:colors.length?colors:canonical.colors,
-        sizes:sizes.length?sizes:canonical.sizes,
-        styles:styles.length?styles:canonical.styles
+        image_urls:Object.keys(mergedImageUrls).length?mergedImageUrls:canonical.image_urls,
+        colors,
+        sizes,
+        styles
       });
     });
     let cartChanged=false;
@@ -1013,13 +1032,20 @@ function createFilters(){
 }
 
 function getProductColorImage(product,color){
-  const map=product?.image_urls;
-  if(!map || !color) return "";
-  if(typeof map === "object" && !Array.isArray(map)){
-    const exact=map[color];
-    if(typeof exact === "string" && exact.trim()) return exact.trim();
-    const key=Object.keys(map).find(k=>String(k).trim().toLowerCase()===String(color).trim().toLowerCase());
-    if(key && typeof map[key] === "string" && map[key].trim()) return map[key].trim();
+  let map=product?.image_urls;
+  if(!map || !color)return "";
+  if(typeof map==="string"){
+    try{map=JSON.parse(map);}catch(_){return "";}
+  }
+  if(typeof map==="object"&&!Array.isArray(map)){
+    const wanted=getProductColorLabel(product,color);
+    const key=Object.keys(map).find(k=>kngColorKey(k)===kngColorKey(wanted)) || Object.keys(map).find(k=>kngColorKey(k)===kngColorKey(color));
+    if(key&&typeof map[key]==="string"&&map[key].trim())return map[key].trim();
+    // Support legacy Pink image keys when the visible product colour is Dusty Pink, but prefer the exact Dusty Pink image.
+    if(kngColorKey(wanted)==="dusty pink"){
+      const legacy=Object.keys(map).find(k=>kngColorKey(k)==="pink");
+      if(legacy&&typeof map[legacy]==="string"&&map[legacy].trim())return map[legacy].trim();
+    }
   }
   return "";
 }
@@ -1027,8 +1053,8 @@ function getVariantImage(product,size,color,style){
   if(!product)return "";
   const variants=getProductVariants(product.id);
   const useStyle=productUsesStyle(product);
-  const same=(v)=>String(v.size||"")===String(size||"") && String(v.color||"")===String(color||"") && (!useStyle || String(v.style||"")===String(style||""));
-  const sameColor=(v)=>String(v.color||"")===String(color||"") && (!useStyle || !style || String(v.style||"")===String(style||""));
+  const same=(v)=>String(v.size||"")===String(size||"") && kngVariantColorMatches(product,v.color,color) && (!useStyle || String(v.style||"")===String(style||""));
+  const sameColor=(v)=>kngVariantColorMatches(product,v.color,color) && (!useStyle || !style || String(v.style||"")===String(style||""));
   const exact=variants.find(v=>same(v)&&v.image_url);
   if(exact?.image_url)return exact.image_url;
   const colorImage=getProductColorImage(product,color);
@@ -1074,7 +1100,7 @@ function renderProducts(){
 function openProductModal(id){
   const p=PRODUCTS.find(x=>String(x.id)===String(id)); if(!p)return; currentProduct=p;
   const variants=getProductVariants(p.id),firstAvailable=variants.find(v=>getVariantAvailable(v)>0)||variants[0]||null;
-  selectedSize=firstAvailable?.size||p.sizes?.[0]||""; selectedColor=firstAvailable?.color||p.colors?.[0]||""; selectedStyle=firstAvailable?.style||""; modalQuantity=1;
+  selectedSize=firstAvailable?.size||p.sizes?.[0]||""; selectedColor=getProductColorLabel(p,firstAvailable?.color||p.colors?.[0]||""); selectedStyle=firstAvailable?.style||""; modalQuantity=1;
   $("modalCategory").textContent=p.gender==="men"?"KINGS / "+p.section+" / "+p.category:p.gender==="women"?"QUEENS / "+p.section+" / "+p.category:"ACCESSORIES / "+p.section+" / "+p.category;
   $("modalName").textContent=p.name; setModalProductImage(); renderVariantOptions(); renderCustomFitFields(); updateModalQuantity(); $("productModal").classList.add("open"); lockBody();
 }
@@ -1084,7 +1110,8 @@ function renderVariantOptions(){
   const p=currentProduct,variants=getProductVariants(p.id);
   const useStyle=productUsesStyle(p);
   const sizes=orderedSizes(p,variants);
-  const colors=[...new Set([...(p.colors||[]).map(String),...variants.map(v=>String(v.color||"")).filter(Boolean)])];
+  const rawVariantColors=variants.map(v=>getProductColorLabel(p,v.color)).filter(Boolean);
+  const colors=[...new Set([...(p.colors||[]).map(String),...rawVariantColors])];
   const styles=useStyle?[...new Set(variants.map(v=>String(v.style||"")).filter(Boolean))]:[];
 
   /*
@@ -1096,22 +1123,20 @@ function renderVariantOptions(){
     - We never hide a colour/size just because the currently selected
       combination is unavailable.
   */
-  const colorHasStock=c=>variants.some(v=>
-    String(v.color||"")===String(c) && getVariantAvailable(v)>0 &&
+  const colorHasStock=c=>kngVariantsForColor(p,variants,c).some(v=>
+    getVariantAvailable(v)>0 &&
     (!useStyle || !selectedStyle || String(v.style||"")===String(selectedStyle))
   );
   const sizeHasStock=s=>variants.some(v=>
     String(v.size||"")===String(s) && getVariantAvailable(v)>0 &&
     (!useStyle || !selectedStyle || String(v.style||"")===String(selectedStyle))
   );
-  const sizeAvailableForColor=s=>variants.some(v=>
+  const sizeAvailableForColor=s=>kngVariantsForColor(p,variants,selectedColor).some(v=>
     String(v.size||"")===String(s) &&
-    String(v.color||"")===String(selectedColor||"") &&
     getVariantAvailable(v)>0 &&
     (!useStyle || !selectedStyle || String(v.style||"")===String(selectedStyle))
   );
-  const colorAvailableForSize=c=>variants.some(v=>
-    String(v.color||"")===String(c) &&
+  const colorAvailableForSize=c=>kngVariantsForColor(p,variants,c).some(v=>
     String(v.size||"")===String(selectedSize||"") &&
     getVariantAvailable(v)>0 &&
     (!useStyle || !selectedStyle || String(v.style||"")===String(selectedStyle))
@@ -1177,49 +1202,25 @@ function renderVariantOptions(){
 function selectSize(s){
   if(!currentProduct)return;
   const variants=getProductVariants(currentProduct.id);
-  const candidate=variants.find(v=>
-    String(v.size||"")===String(s) &&
-    String(v.color||"")===String(selectedColor||"") &&
-    getVariantAvailable(v)>0 &&
-    (!productUsesStyle(currentProduct) || !selectedStyle || String(v.style||"")===String(selectedStyle))
-  );
-
-  if(candidate){
-    selectedSize=String(candidate.size||s);
-  }else if(variants.some(v=>String(v.size||"")===String(s)&&getVariantAvailable(v)>0)){
-    /* The size exists, but not in the currently selected colour. */
-    selectedSize=String(s);
-  }else{
-    showToast("THAT SIZE IS NOT AVAILABLE.");
-    return;
-  }
-
-  renderVariantOptions();
-  updateModalQuantity();
+  const matches=kngVariantsForColor(currentProduct,variants,selectedColor);
+  const candidate=matches.find(v=>String(v.size||"")===String(s)&&getVariantAvailable(v)>0&&(!productUsesStyle(currentProduct)||!selectedStyle||String(v.style||"")===String(selectedStyle)));
+  if(candidate){selectedSize=String(s);}
+  else if(variants.some(v=>String(v.size||"")===String(s)&&getVariantAvailable(v)>0)){selectedSize=String(s);}
+  else{showToast("THAT SIZE IS NOT AVAILABLE.");return;}
+  renderVariantOptions();updateModalQuantity();
 }
 
 function selectColor(c){
   if(!currentProduct)return;
   const variants=getProductVariants(currentProduct.id);
-  const candidate=variants.find(v=>
-    String(v.color||"")===String(c) &&
-    String(v.size||"")===String(selectedSize||"") &&
-    getVariantAvailable(v)>0 &&
-    (!productUsesStyle(currentProduct) || !selectedStyle || String(v.style||"")===String(selectedStyle))
-  );
-
-  if(candidate){
-    selectedColor=String(candidate.color||c);
-  }else if(variants.some(v=>String(v.color||"")===String(c)&&getVariantAvailable(v)>0)){
-    /* The colour exists, but not in the currently selected size. */
-    selectedColor=String(c);
+  const matches=kngVariantsForColor(currentProduct,variants,c);
+  const candidate=matches.find(v=>String(v.size||"")===String(selectedSize||"")&&getVariantAvailable(v)>0&&(!productUsesStyle(currentProduct)||!selectedStyle||String(v.style||"")===String(selectedStyle)));
+  if(candidate||matches.some(v=>getVariantAvailable(v)>0)){
+    selectedColor=getProductColorLabel(currentProduct,c);
   }else{
-    showToast("THAT COLOUR IS NOT AVAILABLE.");
-    return;
+    showToast("THAT COLOUR IS NOT AVAILABLE.");return;
   }
-
-  renderVariantOptions();
-  updateModalQuantity();
+  setModalProductImage();renderVariantOptions();updateModalQuantity();
 }
 
 function selectStyle(st){
@@ -1366,36 +1367,28 @@ function setCovenantAddressMode(enabled){
   const address=$("address");
   const label=$("deliveryAddressLabel");
   const note=$("covenantAddressNote");
-  const hallField=$("covenantHallField");
-  const roomField=$("covenantRoomField");
-  const hall=$("covenantHall");
-  const room=$("covenantRoom");
   if(!address)return;
 
   if(enabled){
-    address.value=COVENANT_UNIVERSITY_ADDRESS;
-    address.readOnly=true;
-    address.required=true;
-    if(label)label.textContent="Delivery Address - Covenant University";
+    const current=String(address.value||"").trim();
+    if(!current || current===COVENANT_UNIVERSITY_ADDRESS || current.toLowerCase().includes("covenant university")){
+      address.value=COVENANT_UNIVERSITY_ADDRESS;
+    }else if(!current.toLowerCase().includes(COVENANT_UNIVERSITY_ADDRESS.toLowerCase())){
+      address.value=COVENANT_UNIVERSITY_ADDRESS+"\n"+current;
+    }
+    if(label)label.textContent="Delivery Address â€” Covenant University";
     if(note)note.style.display="block";
-    if(hallField)hallField.style.display="block";
-    if(roomField)roomField.style.display="block";
-    if(hall)hall.required=true;
-    if(room)room.required=true;
     address.setAttribute("data-covenant-address","true");
   }else{
-    address.readOnly=false;
-    if(address.getAttribute("data-covenant-address")==="true") address.value="";
+    const current=String(address.value||"").trim();
+    if(address.getAttribute("data-covenant-address")==="true" && current===COVENANT_UNIVERSITY_ADDRESS){
+      address.value="";
+    }
     if(label)label.textContent="Delivery Address";
     if(note)note.style.display="none";
-    if(hallField)hallField.style.display="none";
-    if(roomField)roomField.style.display="none";
-    if(hall){hall.required=false;hall.value="";}
-    if(room){room.required=false;room.value="";}
     address.removeAttribute("data-covenant-address");
   }
 }
-
 
 const DISPATCH={
   zone1:{label:"ZONE 1",fee:2500,areas:[
@@ -1448,7 +1441,7 @@ function updateDispatchOptions(){
         <strong>${money(d.fee)}</strong>
       </label>`).join("");
   }else{
-    box.innerHTML='<div style="color:#777;font-size:11px">KNG currently delivers only within Lagos State and to Covenant University, Ogun State.</div>';
+    box.innerHTML='<div style="color:#777;font-size:11px">KNG currently delivers only within Lagos and to Covenant University, Ogun State.</div>';
   }
 
   updateCheckoutTotals();
@@ -1554,14 +1547,7 @@ $("checkoutForm").addEventListener("submit",async e=>{
   const phone=$("phone").value.trim();
   const address=$("address").value.trim();
   const state=$("state").value;
-  const covenantHall=selectedDispatch==="covenant" ? $("covenantHall").value.trim() : "";
-  const covenantRoom=selectedDispatch==="covenant" ? $("covenantRoom").value.trim() : "";
   const paymentMethod=$("paymentMethod").value;
-
-  if(selectedDispatch==="covenant" && (!covenantHall || !covenantRoom)){
-    showToast("PLEASE ENTER YOUR HALL AND ROOM NUMBER.");
-    return;
-  }
 
   const subtotal=getCartSubtotal();
   const delivery=getDispatchCharge();
@@ -1594,9 +1580,7 @@ $("checkoutForm").addEventListener("submit",async e=>{
             firstName:firstName,
             lastName:lastName,
             phone:phone,
-            address: selectedDispatch==="covenant"
-              ? `${address}\nHall: ${covenantHall}\nRoom Number: ${covenantRoom}`
-              : address,
+            address:address,
             state:state
           },
           items:cart
@@ -1665,12 +1649,8 @@ $("checkoutForm").addEventListener("submit",async e=>{
                   lastName,
                   email,
                   phone,
-                  address: selectedDispatch==="covenant"
-                    ? `${address}\nHall: ${covenantHall}\nRoom Number: ${covenantRoom}`
-                    : address,
-                  state,
-                  hall:covenantHall,
-                  room:covenantRoom
+                  address,
+                  state
                 },
                 dispatch:selectedDispatch,
                 subtotal:subtotal,
@@ -2230,7 +2210,7 @@ async function renderDashboard(user){
 
     <div class="dashboard-grid">
       <div class="dashboard-card"><button onclick="showProfile()">PROFILE</button></div>
-     <!-- MEASUREMENTS - FUTURE FEATURE
+     <!-- MEASUREMENTS Ã¢â‚¬â€ FUTURE FEATURE
      Kept in the system for future KNG custom orders.
      Hidden from customers for the current READY-MADE launch.
 -->
