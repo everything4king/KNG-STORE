@@ -820,6 +820,11 @@
         <span>Finance</span>
       </button>
 
+      <button class="nav-btn" data-page="activity">
+        <span class="nav-icon">&#9776;</span>
+        <span>Activity Log</span>
+      </button>
+
       <button class="nav-btn" data-page="settings">
         <span class="nav-icon">&#9881;</span>
         <span>Settings</span>
@@ -1315,6 +1320,21 @@
               <div id="financeHistory"><div class="empty">Loading...</div></div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <!-- =========================
+           ACTIVITY LOG
+      ========================= -->
+      <section class="page" id="activityPage">
+        <div class="section">
+          <div class="section-header"><div><h2>Activity Log</h2><p style="color:#777;font-size:12px;margin-top:6px;">Chronological record of order and dispatch changes.</p></div><button class="refresh-btn" onclick="loadKNGActivityLog()">Refresh</button></div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;">
+            <input id="kngActivitySearch" oninput="filterKNGActivityLog()" placeholder="Search order, activity or person" style="min-width:260px;padding:11px 12px;border-radius:9px;border:1px solid #333;background:#080808;color:#fff;">
+            <input id="kngActivityFrom" type="date" onchange="filterKNGActivityLog()" style="padding:11px;border-radius:9px;border:1px solid #333;background:#080808;color:#fff;">
+            <input id="kngActivityTo" type="date" onchange="filterKNGActivityLog()" style="padding:11px;border-radius:9px;border:1px solid #333;background:#080808;color:#fff;">
+          </div>
+          <div id="kngActivityTable"><div class="empty">Loading activity...</div></div>
         </div>
       </section>
 
@@ -2110,6 +2130,11 @@ document
           "KNG sales and savings control room"
         ],
 
+        activity: [
+          "Activity Log",
+          "Timestamped KNG business activity"
+        ],
+
         settings: [
           "Settings",
           "Dashboard and account settings"
@@ -2133,6 +2158,10 @@ document
 
       if (page === "staff") {
         loadStaff();
+      }
+
+      if (page === "activity") {
+        loadKNGActivityLog();
       }
 
       if (page === "customers") {
@@ -2902,6 +2931,10 @@ window.kngFilterOrders = function() {
     const text = [order.order_number, order.customer_name, order.customer_phone, order.delivery_address, order.state]
       .map(v => String(v || "").toLowerCase()).join(" ");
     if (query && !text.includes(query)) return false;
+    if (filter === "PENDING" && kngOrderStatus(order) !== "PENDING") return false;
+    if (filter === "CONFIRMED" && kngOrderStatus(order) !== "CONFIRMED") return false;
+    if (filter === "DISPATCHED" && kngOrderStatus(order) !== "DISPATCHED") return false;
+    if (filter === "CANCELLED" && kngOrderStatus(order) !== "CANCELLED") return false;
     if (filter === "COVENANT" && !kngIsCovenantOrder(order)) return false;
     if (filter === "LAGOS" && kngIsCovenantOrder(order)) return false;
     if (filter === "PAID" && !kngPaymentPaid(order)) return false;
@@ -2950,7 +2983,7 @@ function kngBuildAllOrdersTable(orders, items = []) {
       <tbody>${list.map(order => `
         <tr>
           <td><strong>${kngSafe(order.order_number || order.id || "â€”")}</strong></td>
-          <td>${kngSafe(order.created_at ? new Date(order.created_at).toLocaleDateString("en-GB") : "â€”")}</td>
+          <td>${kngSafe(order.created_at ? new Date(order.created_at).toLocaleString("en-GB", {timeZone:"Africa/Lagos",day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit",hour12:true}) : "â€”")}</td>
           <td>${kngSafe(order.customer_name || "â€”")}</td>
           <td>${kngSafe(order.customer_phone || "â€”")}</td>
           <td>${kngSafe(kngDeliveryLabel(order))}</td>
@@ -2986,42 +3019,128 @@ function kngBuildExternalQueue(orders, items) {
     </tbody></table></div>`;
 }
 
-window.kngViewOrderDetails = function(orderId) {
-  const state = window.kngOrderControlState || {orders: [], items: []};
+function kngFormatDateTime(value) {
+  if (!value) return "Not recorded";
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return "Not recorded";
+  return d.toLocaleString("en-GB", {timeZone:"Africa/Lagos",day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit",hour12:true}) + " WAT";
+}
+
+async function kngWriteActivity(event) {
+  // Activity logging is best-effort until the audit migration is installed.
+  const row = {
+    order_id: String(event.order_id || ""),
+    order_number: String(event.order_number || ""),
+    activity_type: String(event.activity_type || "ORDER_UPDATED"),
+    description: String(event.description || ""),
+    old_value: event.old_value == null ? null : String(event.old_value),
+    new_value: event.new_value == null ? null : String(event.new_value),
+    actor_email: String((window.kngCurrentUserEmail || window.currentUserEmail || "") || ""),
+    created_at: new Date().toISOString()
+  };
+  const { error } = await kngSupabase.from("kng_activity_log").insert(row);
+  if (error) console.warn("KNG activity log not saved; apply the supplied migration and verify permissions:", error.message);
+}
+
+window.kngSaveOrderManagement = async function(orderId) {
+  if (typeof can === "function" && !can("canManageOrders")) {
+    showKNGToast("You do not have permission to manage orders.", "error"); return;
+  }
+  const state = window.kngOrderControlState || {orders:[],items:[]};
+  const order = (state.orders||[]).find(o=>String(o.id)===String(orderId));
+  if (!order) return;
+  const modal = document.getElementById("kngDeliveryOrderModal");
+  const status = String(modal?.querySelector("#kngEditOrderStatus")?.value || kngOrderStatus(order)).toUpperCase();
+  const oldStatus = kngOrderStatus(order);
+  const covenant = kngIsCovenantOrder(order);
+  const riderName = String(modal?.querySelector("#kngRiderName")?.value || "").trim();
+  const riderPhone = String(modal?.querySelector("#kngRiderPhone")?.value || "").trim();
+  const dispatchCompany = String(modal?.querySelector("#kngDispatchCompany")?.value || "").trim();
+  const dispatchFeeRaw = String(modal?.querySelector("#kngDispatchFee")?.value || "").trim();
+  const dispatchFee = dispatchFeeRaw === "" ? null : Number(dispatchFeeRaw);
+  if (!covenant && ["DISPATCHED","DELIVERED"].includes(status) && !riderName) {
+    showKNGToast("Enter and save the external dispatch rider before marking this order dispatched or delivered.", "error"); return;
+  }
+  if (dispatchFee !== null && (!Number.isFinite(dispatchFee) || dispatchFee < 0)) {
+    showKNGToast("Enter a valid dispatch fee.", "error"); return;
+  }
+  if (!kngPaymentPaid(order) && ["CONFIRMED","IN PRODUCTION","READY","DISPATCHED","DELIVERED"].includes(status)) {
+    showKNGToast("This order is not marked paid. Verify payment before advancing it.", "error"); return;
+  }
+  const btn = modal?.querySelector("#kngSaveOrderManagement");
+  if (btn) { btn.disabled = true; btn.textContent = "SAVING..."; }
+  try {
+    if (status !== oldStatus) {
+      const { error } = await kngSupabase.from("orders").update({order_status:status}).eq("id", order.id);
+      if (error) throw error;
+    }
+    if (!covenant && (riderName || riderPhone || dispatchCompany || dispatchFee !== null)) {
+      if (!riderName || !riderPhone) throw new Error("Rider name and phone number are required to save an assignment.");
+      const { error } = await kngSupabase.from("kng_dispatch_assignments").upsert({
+        order_id:String(order.id), order_number:String(order.order_number||order.id), rider_name:riderName,
+        rider_phone:riderPhone, dispatch_company:dispatchCompany || null, dispatch_fee:dispatchFee,
+        assigned_at:dispatch?.assigned_at || new Date().toISOString(), updated_at:new Date().toISOString()
+      }, {onConflict:"order_id"});
+      if (error) throw new Error("Status was saved if changed, but rider assignment failed. Apply the KNG dashboard migration. " + error.message);
+    }
+    showKNGToast("Order management saved.", "success");
+    modal?.remove();
+    await loadOrders();
+  } catch (e) {
+    console.error("Order management save failed",e);
+    showKNGToast(e.message || "Unable to save order management changes.","error");
+    if (btn) {btn.disabled=false;btn.textContent="SAVE ORDER CHANGES";}
+  }
+};
+
+window.kngViewOrderDetails = async function(orderId) {
+  const state = window.kngOrderControlState || { orders: [], items: [] };
   const order = (state.orders || []).find(item => String(item.id) === String(orderId));
   if (!order) return;
   const items = kngItemsForOrder(state.items || [], order.id);
   const covenant = kngIsCovenantOrder(order);
+  let dispatch = null;
+  try {
+    if (!covenant) {
+      const result = await kngSupabase.from("kng_dispatch_assignments").select("*").eq("order_id",String(order.id)).maybeSingle();
+      if (!result.error) dispatch = result.data;
+    }
+  } catch (_) {}
   const modal = document.createElement("div");
   modal.id = "kngDeliveryOrderModal";
   modal.style.cssText = "position:fixed;inset:0;z-index:999999;background:rgba(0,0,0,.82);display:flex;align-items:center;justify-content:center;padding:20px;";
+  const statusOptions = ["PENDING","CONFIRMED","IN PRODUCTION","READY","DISPATCHED","DELIVERED","CANCELLED"];
   modal.innerHTML = `
-    <div style="width:min(900px,100%);max-height:90vh;overflow:auto;background:#111;border:1px solid #333;border-radius:18px;padding:28px;color:#fff;box-shadow:0 25px 80px rgba(0,0,0,.7);">
-      <div style="display:flex;justify-content:space-between;gap:15px;align-items:flex-start;margin-bottom:22px;">
-        <div><div style="font-size:10px;letter-spacing:3px;color:#888;">KNG / ORDER</div><h2 style="margin:7px 0 0;">${kngSafe(order.order_number || order.id)}</h2></div>
-        <button type="button" onclick="this.closest('#kngDeliveryOrderModal').remove()" style="width:40px;height:40px;border-radius:50%;border:1px solid #444;background:#181818;color:#fff;font-size:20px;cursor:pointer;">&times;</button>
+    <div style="width:min(1000px,100%);max-height:92vh;overflow:auto;background:#111;border:1px solid #333;border-radius:18px;padding:28px;color:#fff;box-shadow:0 25px 80px rgba(0,0,0,.7);">
+      <div style="display:flex;justify-content:space-between;gap:15px;align-items:flex-start;margin-bottom:22px;"><div><div style="font-size:10px;letter-spacing:3px;color:#888;">KNG / ORDER</div><h2 style="margin:7px 0 0;">${kngSafe(order.order_number || order.id)}</h2><div style="color:#888;font-size:12px;margin-top:8px;">Created: ${kngSafe(kngFormatDateTime(order.created_at))}</div></div><button type="button" onclick="this.closest('#kngDeliveryOrderModal').remove()" style="width:40px;height:40px;border-radius:50%;border:1px solid #444;background:#181818;color:#fff;font-size:20px;cursor:pointer;">&times;</button></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;">
+        <div class="order-info-box"><small>Customer</small><strong>${kngSafe(order.customer_name || "â€”")}</strong></div><div class="order-info-box"><small>Phone</small><strong>${kngSafe(order.customer_phone || "â€”")}</strong></div><div class="order-info-box"><small>Payment</small><strong>${kngSafe(String(order.payment_status || "PENDING").toUpperCase())}</strong></div><div class="order-info-box"><small>Status</small><strong>${kngSafe(kngOrderStatus(order))}</strong></div><div class="order-info-box"><small>Delivery</small><strong>${covenant ? "OGUN STATE â€” COVENANT UNIVERSITY" : "LAGOS STATE"}</strong></div><div class="order-info-box"><small>Delivered By</small><strong>${covenant ? "KNG Team" : kngSafe(dispatch?.rider_name || "Not assigned")}</strong></div>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;">
-        <div class="order-info-box"><small>Customer</small><strong>${kngSafe(order.customer_name || "Ã¢â‚¬â€")}</strong></div>
-        <div class="order-info-box"><small>Phone</small><strong>${kngSafe(order.customer_phone || "Ã¢â‚¬â€")}</strong></div>
-        <div class="order-info-box"><small>Payment</small><strong>${kngSafe(String(order.payment_status || "PENDING").toUpperCase())}</strong></div>
-        <div class="order-info-box"><small>Status</small><strong>${kngSafe(kngOrderStatus(order))}</strong></div>
-        <div class="order-info-box"><small>Delivery</small><strong>${covenant ? "OGUN Ã¢â‚¬â€ COVENANT UNIVERSITY" : "LAGOS STATE"}</strong></div>
-        <div class="order-info-box"><small>Delivered By</small><strong>${covenant ? "KNG Team" : (order.dispatcher_id || "External dispatcher")}</strong></div>
-      </div>
-      <div style="margin-top:16px;padding:15px;border:1px solid #292929;border-radius:12px;background:#0b0b0b;">
-        <div style="font-size:9px;letter-spacing:2px;color:#777;margin-bottom:7px;">${covenant ? "OGUN STATE Ã¢â‚¬â€ COVENANT UNIVERSITY" : "LAGOS STATE DELIVERY"}</div>
-        ${covenant ? (()=>{const c=kngCovenantDetails(order);return `<div style="font-size:13px;line-height:1.8;"><strong>Hall:</strong> ${kngSafe(c.hall)}<br><strong>Room Number:</strong> ${kngSafe(c.room)}<br><span style="color:#888;">KM. 10 Idiroko Road, Canaan Land, Ota, Ogun State, Nigeria</span></div>`})() : `<div style="font-size:13px;line-height:1.6;">${kngSafe(order.delivery_address || "Ã¢â‚¬â€")}</div>`}
-      </div>
-      <h3 style="margin:24px 0 12px;border-bottom:1px solid #292929;padding-bottom:10px;">ORDER ITEMS</h3>
-      <div class="table-wrap"><table style="min-width:620px;"><thead><tr><th>PRODUCT</th><th>COLOUR</th><th>SIZE</th><th>QTY</th><th>PRICE</th></tr></thead><tbody>
-        ${items.length ? items.map(item => `<tr><td>${kngSafe(item.product_name || "Ã¢â‚¬â€")}</td><td>${kngSafe(item.color || "Ã¢â‚¬â€")}</td><td>${kngSafe(item.size || "Ã¢â‚¬â€")}</td><td>${kngSafe(item.quantity || 0)}</td><td>${money(item.unit_price)}</td></tr>`).join("") : '<tr><td colspan="5" style="text-align:center;opacity:.6;padding:20px;">No order items found.</td></tr>'}
-      </tbody></table></div>
-      <div style="margin-top:18px;text-align:right;font-size:18px;"><span style="color:#888;margin-right:10px;">TOTAL</span><strong>${money(order.total_amount)}</strong></div>
-    </div>
-  `;
-  modal.addEventListener("click", e => { if (e.target === modal) modal.remove(); });
+      <div style="margin-top:16px;padding:15px;border:1px solid #292929;border-radius:12px;background:#0b0b0b;"><div style="font-size:9px;letter-spacing:2px;color:#777;margin-bottom:7px;">${covenant ? "OGUN STATE â€” COVENANT UNIVERSITY" : "LAGOS STATE DELIVERY"}</div>${covenant ? (()=>{const c=kngCovenantDetails(order);return `<div style="font-size:13px;line-height:1.8;"><strong>Hall:</strong> ${kngSafe(c.hall)}<br><strong>Room Number:</strong> ${kngSafe(c.room)}<br><span style="color:#888;">KM. 10 Idiroko Road, Canaan Land, Ota, Ogun State, Nigeria</span></div>`})() : `<div style="font-size:13px;line-height:1.6;">${kngSafe(order.delivery_address || "â€”")}</div>`}</div>
+      <h3 style="margin:24px 0 12px;border-bottom:1px solid #292929;padding-bottom:10px;">ORDER ITEMS</h3><div class="table-wrap"><table style="min-width:620px;"><thead><tr><th>PRODUCT</th><th>COLOUR</th><th>SIZE</th><th>QTY</th><th>UNIT PRICE</th></tr></thead><tbody>${items.length ? items.map(item=>`<tr><td>${kngSafe(item.product_name||"â€”")}</td><td>${kngSafe(item.color||"â€”")}</td><td>${kngSafe(item.size||"â€”")}</td><td>${kngSafe(item.quantity||0)}</td><td>${money(item.unit_price)}</td></tr>`).join("") : '<tr><td colspan="5" style="text-align:center;opacity:.6;padding:20px;">No order items found.</td></tr>'}</tbody></table></div><div style="margin-top:18px;text-align:right;font-size:18px;"><span style="color:#888;margin-right:10px;">TOTAL</span><strong>${money(order.total_amount)}</strong></div>
+      <section style="margin-top:24px;padding:18px;border:1px solid #333;border-radius:14px;background:#0b0b0b;"><h3 style="margin:0 0 14px;color:#c9a227;">ORDER MANAGEMENT</h3><label style="display:block;font-size:11px;color:#aaa;margin-bottom:7px;">ORDER STATUS</label><select id="kngEditOrderStatus" style="width:100%;padding:12px;border-radius:8px;border:1px solid #333;background:#080808;color:#fff;">${statusOptions.map(v=>`<option value="${v}" ${v===kngOrderStatus(order)?"selected":""}>${v}</option>`).join("")}</select>
+      ${covenant ? '<p style="font-size:12px;color:#888;line-height:1.6;">Covenant deliveries are handled by KNG Team on Sundays. No external rider assignment is needed.</p>' : `<h4 style="margin:20px 0 12px;">DISPATCH RIDER</h4><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;"><div><label style="display:block;font-size:11px;color:#aaa;margin-bottom:6px;">RIDER NAME</label><input id="kngRiderName" value="${kngSafe(dispatch?.rider_name||"")}" placeholder="Full name" style="width:100%;padding:11px;border-radius:8px;border:1px solid #333;background:#080808;color:#fff;"></div><div><label style="display:block;font-size:11px;color:#aaa;margin-bottom:6px;">RIDER PHONE</label><input id="kngRiderPhone" value="${kngSafe(dispatch?.rider_phone||"")}" placeholder="080..." style="width:100%;padding:11px;border-radius:8px;border:1px solid #333;background:#080808;color:#fff;"></div><div><label style="display:block;font-size:11px;color:#aaa;margin-bottom:6px;">DISPATCH COMPANY</label><input id="kngDispatchCompany" value="${kngSafe(dispatch?.dispatch_company||"")}" placeholder="Company (optional)" style="width:100%;padding:11px;border-radius:8px;border:1px solid #333;background:#080808;color:#fff;"></div><div><label style="display:block;font-size:11px;color:#aaa;margin-bottom:6px;">DISPATCH FEE (â‚¦)</label><input id="kngDispatchFee" type="number" min="0" step="0.01" value="${dispatch?.dispatch_fee==null?"":kngSafe(dispatch.dispatch_fee)}" placeholder="0" style="width:100%;padding:11px;border-radius:8px;border:1px solid #333;background:#080808;color:#fff;"></div></div><div style="font-size:11px;color:#888;margin-top:8px;">${dispatch ? `Rider assigned: ${kngSafe(kngFormatDateTime(dispatch.assigned_at))}` : "No rider assigned yet."}</div>`}
+      <button id="kngSaveOrderManagement" type="button" class="primary-btn" style="width:auto;margin-top:18px;padding:12px 18px;cursor:pointer;" onclick="kngSaveOrderManagement('${kngSafe(order.id)}')">SAVE ORDER CHANGES</button></section>
+      <section style="margin-top:18px;padding:18px;border:1px solid #292929;border-radius:14px;"><h3 style="margin:0 0 10px;">TIMELINE</h3><div style="font-size:12px;color:#aaa;line-height:1.8;">${kngSafe(kngFormatDateTime(order.created_at))} â€” Order created<br>${kngSafe(kngFormatDateTime(order.updated_at))} â€” Last database update (if recorded)</div><div style="font-size:11px;color:#777;margin-top:8px;">Full event history appears here after the audit migration is installed and new events are recorded.</div></section>
+    </div>`;
+  modal.addEventListener("click",e=>{if(e.target===modal)modal.remove();});
   document.body.appendChild(modal);
+};
+
+window.kngActivityRows = [];
+window.loadKNGActivityLog = async function() {
+  const box=document.getElementById("kngActivityTable"); if(!box)return;
+  box.innerHTML='<div class="empty">Loading activity...</div>';
+  const {data,error}=await kngSupabase.from("kng_activity_log").select("*").order("created_at",{ascending:false}).limit(1000);
+  if(error){box.innerHTML='<div class="empty">Activity Log is not connected yet. Apply the supplied KNG dashboard migration, then refresh this page.</div>';console.warn(error);return;}
+  window.kngActivityRows=data||[]; filterKNGActivityLog();
+};
+window.filterKNGActivityLog = function(){
+  const box=document.getElementById("kngActivityTable"); if(!box)return;
+  const q=String(document.getElementById("kngActivitySearch")?.value||"").toLowerCase();
+  const from=document.getElementById("kngActivityFrom")?.value||""; const to=document.getElementById("kngActivityTo")?.value||"";
+  const rows=(window.kngActivityRows||[]).filter(r=>{const hay=[r.order_number,r.activity_type,r.description,r.actor_email].join(" ").toLowerCase();const day=String(r.created_at||"").slice(0,10);return (!q||hay.includes(q))&&(!from||day>=from)&&(!to||day<=to);});
+  box.innerHTML=rows.length?`<div class="table-wrap"><table style="min-width:850px"><thead><tr><th>DATE & TIME (WAT)</th><th>ACTIVITY</th><th>ORDER</th><th>DETAILS</th><th>ACTOR</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${kngSafe(kngFormatDateTime(r.created_at))}</td><td>${kngSafe(r.activity_type)}</td><td>${kngSafe(r.order_number||"â€”")}</td><td>${kngSafe(r.description||"â€”")}</td><td>${kngSafe(r.actor_email||"â€”")}</td></tr>`).join("")}</tbody></table></div>`:'<div class="empty">No activity matches this filter.</div>';
 };
 
 async function loadOrders() {
@@ -3035,15 +3154,7 @@ async function loadOrders() {
     if (ordersError) throw ordersError;
 
     let orderList = initialOrders || [];
-    const advanced = await kngAutoAdvanceReadyOrders(orderList);
-    if (advanced) {
-      const { data: refreshed, error: refreshError } = await kngSupabase
-        .from("orders")
-        .select("*")
-        .order("created_at", { ascending: false });
-      if (refreshError) throw refreshError;
-      orderList = refreshed || [];
-    }
+    // Status changes are manual in Order Management so every transition can be audited.
 
     let orderItems = [];
     if (orderList.length) {
@@ -3086,11 +3197,11 @@ async function loadOrders() {
             <div style="display:flex;gap:8px;flex-wrap:wrap;">
               <input id="kngOrderSearch" oninput="kngFilterOrders()" placeholder="Search order / customer / phone" style="min-width:240px;padding:11px 12px;border-radius:9px;border:1px solid #333;background:#080808;color:#fff;outline:none;">
               <select id="kngOrderFilter" onchange="kngFilterOrders()" style="padding:11px 12px;border-radius:9px;border:1px solid #333;background:#080808;color:#fff;outline:none;">
-                <option value="ALL">ALL ORDERS</option><option value="LAGOS">LAGOS STATE</option><option value="COVENANT">OGUN Ã¢â‚¬â€ COVENANT UNIVERSITY</option><option value="READY">READY</option><option value="DELIVERED">DELIVERED</option>
+                <option value="ALL">ALL ORDERS</option><option value="PENDING">PENDING</option><option value="CONFIRMED">CONFIRMED</option><option value="READY">READY</option><option value="DISPATCHED">DISPATCHED</option><option value="DELIVERED">DELIVERED</option><option value="CANCELLED">CANCELLED</option><option value="PAID">PAID</option><option value="LAGOS">LAGOS STATE</option><option value="COVENANT">OGUN STATE â€” COVENANT UNIVERSITY</option>
               </select>
             </div>
           </div>
-          <div id="kngAllOrdersTable">${kngBuildAllOrdersTable(orderList)}</div>
+          <div id="kngAllOrdersTable">${kngBuildAllOrdersTable(orderList, orderItems)}</div>
         </div>
 
         <div style="display:grid;grid-template-columns:1fr;gap:18px;">
